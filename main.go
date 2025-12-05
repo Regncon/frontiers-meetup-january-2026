@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
-	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -16,7 +15,12 @@ func main() {
 
 	router.Use(middleware.Logger)
 
-	router.Get("/", rootIndexHandler)
+	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "static/favicon.ico")
+	})
+
+	root.RootLayoutRoute(router, nil)
 
 	address := ":8080"
 
@@ -26,12 +30,4 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-}
-
-func rootIndexHandler(w http.ResponseWriter, r *http.Request) {
-	component := root.RootIndex()
-
-	handler := templ.Handler(component)
-
-	handler.ServeHTTP(w, r)
 }

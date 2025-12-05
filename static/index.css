@@ -1,0 +1,23 @@
+:root {
+	--color-text-strong: #f1f3f9;
+	--color-text-soft: #ccd1e9;
+	--color-text-soft-50: hsl(from var(--color-text-soft) h s l / 50%);
+
+	--color-primary-text: var(--color-text-soft);
+
+	--color-bg-base: #1a1b26;
+
+	@view-transition {
+		navigation: Auto;
+	}
+
+	html {
+		color-scheme: dark;
+
+	}
+
+	body {
+		background: var(--color-bg-base);
+		color: var(--color-primary-text);
+	}
+}

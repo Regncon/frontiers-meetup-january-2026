@@ -2,9 +2,11 @@
 
 
 ToDo:
-- [ ] Setup task
-- [ ] Setup templ
-- [ ] Setup router
+- [x] Setup task
+- [x] Setup templ
+- [x] Setup router
+- [ ] Setup datastar
+- [ ] Setup logger
 - [ ] Setup nats
 - [ ] Setup sqlite
 

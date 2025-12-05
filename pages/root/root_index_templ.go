@@ -8,7 +8,23 @@ package root
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func RootIndex() templ.Component {
+import (
+	"github.com/Regncon/frontiers-meetup-january-2026/components"
+	"github.com/go-chi/chi/v5"
+	"net/http"
+)
+
+func RootLayoutRoute(router chi.Router, err error) {
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		var ctx = r.Context()
+		components.BaseLayout(
+			"Frontiers Meetup",
+			rootIndex(),
+		).Render(ctx, w)
+	})
+}
+
+func rootIndex() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {

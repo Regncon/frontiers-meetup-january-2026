@@ -1,6 +1,22 @@
 package root
 
-templ RootIndex() {
+import (
+	"github.com/Regncon/frontiers-meetup-january-2026/components"
+	"github.com/go-chi/chi/v5"
+	"net/http"
+)
+
+func RootLayoutRoute(router chi.Router, err error) {
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		var ctx = r.Context()
+		components.BaseLayout(
+			"Frontiers Meetup",
+			rootIndex(),
+		).Render(ctx, w)
+	})
+}
+
+templ rootIndex() {
 	<div>
 		<h1>Welcome to the Frontiers Meetup</h1>
 		<p>This is our first Templ-generated page.</p>
