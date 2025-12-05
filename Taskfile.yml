@@ -1,7 +1,6 @@
 version: "3"
 
 tasks:
-  # The `build:` tasks below are used together for production builds of a project
   build:templ:
     cmds:
       - go tool templ generate
@@ -10,57 +9,35 @@ tasks:
     generates:
       - "**/*_templ.go"
 
-  build:wc:
-    cmds:
-      - go run main.go
-    sources:
-      - "./web/libs/**/**/*.{html,css,ts}"
-    generates:
-      - "{{.STATIC_DIR}}/libs/**"
-
   build:
-    cmds:
-      - go build -tags=prod -o bin/main ./
     deps:
       - build:templ
-      - build:wc
-
-  # Use this task to debug with the delve debugger
-  debug:
     cmds:
-      - go tool dlv exec ./bin/main
-    deps:
-      - build
+      - go build -tags=prod -o bin/main ./
 
-  # The `start:` tasks below are used together for development builds and will live-reload the server
   start:templ:
     cmds:
       - go tool templ generate -watch
 
-  start:wc:
-    cmds:
-      - go run main.go -watch
-
   start:server:
     cmds:
       - |
-        go tool air  \
-         -build.cmd "go build -tags=dev -o tmp/bin/main ./" \
-         -build.bin "tmp/bin/main" \
-         -build.include_ext "go,templ" \
-         -misc.clean_on_exit "true"
+        go tool air \
+          -build.cmd "go build -tags=dev -o tmp/bin/main ./" \
+          -build.bin "tmp/bin/main" \
+          -build.include_ext "go,templ" \
+          -misc.clean_on_exit "true"
 
   start:
     deps:
       - start:templ
-      - start:wc
       - start:server
 
   run:
-    cmds:
-      - ./bin/main
     deps:
       - build
+    cmds:
+      - ./bin/main
 
   default:
     cmds:

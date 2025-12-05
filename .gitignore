@@ -8,6 +8,13 @@
 *.so
 *.dylib
 
+# The build output directory
+tmp/
+bin/
+
+# the task cache directory
+.task/
+
 # Test binary, built with `go test -c`
 *.test
 
