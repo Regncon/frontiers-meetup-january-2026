@@ -34,36 +34,33 @@ type Todo struct {
 
 type TodoViewMode int
 
-type TodoMVC struct {
+// pageState holds the full state for the user's page.
+type TodoPageState struct {
 	Todos      []*Todo      `json:"todos"`
 	EditingIdx int          `json:"editingIdx"`
 	Mode       TodoViewMode `json:"mode"`
 }
 
-// RootLayoutRoute sets up the main layout and the SSE endpoint used by Datastar.
-//
-// It starts an embedded NATS server once, configures JetStream KV,
-// and exposes an SSE endpoint at /root/api that watches per-session state.
-func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
-	// Start embedded NATS once for this router.
+func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) error {
 	rootCtx := context.Background()
+
+	// Start embedded NATS
 	ns, err := embeddednats.New(rootCtx, embeddednats.WithNATSServerOptions(&natsserver.Options{
 		JetStream: true,
 		Port:      natsPort,
 	}))
 	if err != nil {
-		// You may want to replace panic with proper logging/handling.
-		panic(fmt.Sprintf("failed to start embedded nats: %v", err))
+		return fmt.Errorf("failed to create embedded nats server: %w", err)
 	}
 
 	nc, err := ns.Client()
 	if err != nil {
-		panic(fmt.Sprintf("failed to create nats client: %v", err))
+		return fmt.Errorf("failed to create nats client: %w", err)
 	}
 
 	js, err := jetstream.New(nc)
 	if err != nil {
-		panic(fmt.Sprintf("failed to create jetstream client: %v", err))
+		return fmt.Errorf("failed to create jetstream context: %w", err)
 	}
 
 	kv, err := js.CreateOrUpdateKeyValue(rootCtx, jetstream.KeyValueConfig{
@@ -74,18 +71,15 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
 		MaxBytes:    16 * 1024 * 1024,
 	})
 	if err != nil {
-		panic(fmt.Sprintf("failed to create key value bucket: %v", err))
+		return fmt.Errorf("failed to create or update key value: %w", err)
 	}
 
-	// Optional: a "poke" function if you later decide to also use subjects.
 	notifyUpdate := func(sessionID string) {
-		// For now this is intentionally empty.
-		// You can add NATS publish logic here if you want a subject-based pattern.
 		_ = sessionID
 	}
 
-	// Helper for getting/creating the session's MVC state.
-	session := func(w http.ResponseWriter, r *http.Request) (string, *TodoMVC, error) {
+	// Loads or initializes the per-user state
+	loadOrCreateState := func(w http.ResponseWriter, r *http.Request) (string, *TodoPageState, error) {
 		ctx := r.Context()
 
 		sessionID, err := upsertSessionID(store, r, w)
@@ -93,28 +87,28 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
 			return "", nil, fmt.Errorf("failed to get session id: %w", err)
 		}
 
-		mvc := &TodoMVC{}
+		pageState := &TodoPageState{}
 		entry, err := kv.Get(ctx, sessionID)
 		if err != nil {
 			if err != jetstream.ErrKeyNotFound {
 				return "", nil, fmt.Errorf("failed to get key value: %w", err)
 			}
 
-			// First visit for this session: create an empty snapshot
-			if err := saveMVC(ctx, mvc, sessionID, kv, notifyUpdate); err != nil {
-				return "", nil, fmt.Errorf("failed to save mvc: %w", err)
+			// First visit → save an empty state
+			if err := savePageState(ctx, pageState, sessionID, kv, notifyUpdate); err != nil {
+				return "", nil, fmt.Errorf("failed to save initial state: %w", err)
 			}
-			return sessionID, mvc, nil
+			return sessionID, pageState, nil
 		}
 
-		if err := json.Unmarshal(entry.Value(), mvc); err != nil {
-			return "", nil, fmt.Errorf("failed to unmarshal mvc: %w", err)
+		if err := json.Unmarshal(entry.Value(), pageState); err != nil {
+			return "", nil, fmt.Errorf("failed to unmarshal page state: %w", err)
 		}
 
-		return sessionID, mvc, nil
+		return sessionID, pageState, nil
 	}
 
-	// Initial page load: Datastar will call /root/api via SSE on load.
+	// Initial page load
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		components.BaseLayout(
@@ -123,25 +117,26 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
 		).Render(ctx, w)
 	})
 
-	// SSE endpoint used by Datastar
+	// Datastar SSE endpoint
 	router.Route("/root", func(rootRouter chi.Router) {
 		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
 			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 				ctx := r.Context()
 				sse := datastar.NewSSE(w, r)
 
-				sessionID, mvc, err := session(w, r)
+				sessionID, pageState, err := loadOrCreateState(w, r)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
-				// Initial render over SSE (so the client gets something right away).
+				// Initial patch
 				if err := sse.PatchElementTempl(rootPage()); err != nil {
 					_ = sse.ConsoleError(err)
 					return
 				}
 
+				// Watch for KV updates
 				watcher, err := kv.Watch(ctx, sessionID)
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -152,20 +147,18 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
 				for {
 					select {
 					case <-ctx.Done():
-						// Client disconnected or server shutting down.
 						return
+
 					case entry := <-watcher.Updates():
 						if entry == nil {
 							continue
 						}
 
-						if err := json.Unmarshal(entry.Value(), mvc); err != nil {
+						if err := json.Unmarshal(entry.Value(), pageState); err != nil {
 							http.Error(w, err.Error(), http.StatusInternalServerError)
 							return
 						}
 
-						// TODO: when you hook mvc into the UI, use it inside rootPage()
-						// or change rootPage to accept mvc as input.
 						if err := sse.PatchElementTempl(rootPage()); err != nil {
 							_ = sse.ConsoleError(err)
 							return
@@ -175,13 +168,21 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
 			})
 		})
 	})
+
+	return nil
 }
 
-// saveMVC stores the MVC state for this session in the JetStream KV.
-func saveMVC(ctx context.Context, mvc *TodoMVC, sessionID string, kv jetstream.KeyValue, poke func(string)) error {
-	bytes, err := json.Marshal(mvc)
+func savePageState(
+	ctx context.Context,
+	state *TodoPageState,
+	sessionID string,
+	kv jetstream.KeyValue,
+	poke func(string),
+) error {
+
+	bytes, err := json.Marshal(state)
 	if err != nil {
-		return fmt.Errorf("failed to marshal mvc: %w", err)
+		return fmt.Errorf("failed to marshal page state: %w", err)
 	}
 
 	if _, err := kv.Put(ctx, sessionID, bytes); err != nil {
@@ -195,7 +196,6 @@ func saveMVC(ctx context.Context, mvc *TodoMVC, sessionID string, kv jetstream.K
 	return nil
 }
 
-// upsertSessionID finds or creates a simple string session ID and stores it in the "connections" cookie.
 func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWriter) (string, error) {
 	sess, err := store.Get(r, "connections")
 	if err != nil {
@@ -214,7 +214,6 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 	return id, nil
 }
 
-// Templ components
 func rootPageFirstLoad() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -243,7 +242,7 @@ func rootPageFirstLoad() templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 211, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 210, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
