@@ -9,22 +9,213 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/Regncon/frontiers-meetup-january-2026/components"
-	"github.com/go-chi/chi/v5"
+	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"time"
+
+	"github.com/Regncon/frontiers-meetup-january-2026/components"
+	"github.com/delaneyj/toolbelt"
+	"github.com/delaneyj/toolbelt/embeddednats"
+	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/sessions"
+	natsserver "github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go/jetstream"
+	datastar "github.com/starfederation/datastar-go/datastar"
 )
 
-func RootLayoutRoute(router chi.Router, err error) {
+var TodoViewModeStrings = []string{"All", "Active", "Completed"}
+
+type Todo struct {
+	Text      string `json:"text"`
+	Completed bool   `json:"completed"`
+}
+
+type TodoViewMode int
+
+type TodoMVC struct {
+	Todos      []*Todo      `json:"todos"`
+	EditingIdx int          `json:"editingIdx"`
+	Mode       TodoViewMode `json:"mode"`
+}
+
+// RootLayoutRoute sets up the main layout and the SSE endpoint used by Datastar.
+//
+// It starts an embedded NATS server once, configures JetStream KV,
+// and exposes an SSE endpoint at /root/api that watches per-session state.
+func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
+	// Start embedded NATS once for this router.
+	rootCtx := context.Background()
+	ns, err := embeddednats.New(rootCtx, embeddednats.WithNATSServerOptions(&natsserver.Options{
+		JetStream: true,
+		Port:      natsPort,
+	}))
+	if err != nil {
+		// You may want to replace panic with proper logging/handling.
+		panic(fmt.Sprintf("failed to start embedded nats: %v", err))
+	}
+
+	nc, err := ns.Client()
+	if err != nil {
+		panic(fmt.Sprintf("failed to create nats client: %v", err))
+	}
+
+	js, err := jetstream.New(nc)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create jetstream client: %v", err))
+	}
+
+	kv, err := js.CreateOrUpdateKeyValue(rootCtx, jetstream.KeyValueConfig{
+		Bucket:      "presentation",
+		Description: "Frontiers Meetup Presentation Bucket",
+		Compression: true,
+		TTL:         time.Hour,
+		MaxBytes:    16 * 1024 * 1024,
+	})
+	if err != nil {
+		panic(fmt.Sprintf("failed to create key value bucket: %v", err))
+	}
+
+	// Optional: a "poke" function if you later decide to also use subjects.
+	notifyUpdate := func(sessionID string) {
+		// For now this is intentionally empty.
+		// You can add NATS publish logic here if you want a subject-based pattern.
+		_ = sessionID
+	}
+
+	// Helper for getting/creating the session's MVC state.
+	session := func(w http.ResponseWriter, r *http.Request) (string, *TodoMVC, error) {
+		ctx := r.Context()
+
+		sessionID, err := upsertSessionID(store, r, w)
+		if err != nil {
+			return "", nil, fmt.Errorf("failed to get session id: %w", err)
+		}
+
+		mvc := &TodoMVC{}
+		entry, err := kv.Get(ctx, sessionID)
+		if err != nil {
+			if err != jetstream.ErrKeyNotFound {
+				return "", nil, fmt.Errorf("failed to get key value: %w", err)
+			}
+
+			// First visit for this session: create an empty snapshot
+			if err := saveMVC(ctx, mvc, sessionID, kv, notifyUpdate); err != nil {
+				return "", nil, fmt.Errorf("failed to save mvc: %w", err)
+			}
+			return sessionID, mvc, nil
+		}
+
+		if err := json.Unmarshal(entry.Value(), mvc); err != nil {
+			return "", nil, fmt.Errorf("failed to unmarshal mvc: %w", err)
+		}
+
+		return sessionID, mvc, nil
+	}
+
+	// Initial page load: Datastar will call /root/api via SSE on load.
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		var ctx = r.Context()
+		ctx := r.Context()
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootIndex(),
+			rootPageFirstLoad(),
 		).Render(ctx, w)
+	})
+
+	// SSE endpoint used by Datastar
+	router.Route("/root", func(rootRouter chi.Router) {
+		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
+			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+				ctx := r.Context()
+				sse := datastar.NewSSE(w, r)
+
+				sessionID, mvc, err := session(w, r)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+
+				// Initial render over SSE (so the client gets something right away).
+				if err := sse.PatchElementTempl(rootPage()); err != nil {
+					_ = sse.ConsoleError(err)
+					return
+				}
+
+				watcher, err := kv.Watch(ctx, sessionID)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+					return
+				}
+				defer watcher.Stop()
+
+				for {
+					select {
+					case <-ctx.Done():
+						// Client disconnected or server shutting down.
+						return
+					case entry := <-watcher.Updates():
+						if entry == nil {
+							continue
+						}
+
+						if err := json.Unmarshal(entry.Value(), mvc); err != nil {
+							http.Error(w, err.Error(), http.StatusInternalServerError)
+							return
+						}
+
+						// TODO: when you hook mvc into the UI, use it inside rootPage()
+						// or change rootPage to accept mvc as input.
+						if err := sse.PatchElementTempl(rootPage()); err != nil {
+							_ = sse.ConsoleError(err)
+							return
+						}
+					}
+				}
+			})
+		})
 	})
 }
 
-func rootIndex() templ.Component {
+// saveMVC stores the MVC state for this session in the JetStream KV.
+func saveMVC(ctx context.Context, mvc *TodoMVC, sessionID string, kv jetstream.KeyValue, poke func(string)) error {
+	bytes, err := json.Marshal(mvc)
+	if err != nil {
+		return fmt.Errorf("failed to marshal mvc: %w", err)
+	}
+
+	if _, err := kv.Put(ctx, sessionID, bytes); err != nil {
+		return fmt.Errorf("failed to put key value: %w", err)
+	}
+
+	if poke != nil {
+		poke(sessionID)
+	}
+
+	return nil
+}
+
+// upsertSessionID finds or creates a simple string session ID and stores it in the "connections" cookie.
+func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWriter) (string, error) {
+	sess, err := store.Get(r, "connections")
+	if err != nil {
+		return "", fmt.Errorf("failed to get session: %w", err)
+	}
+
+	id, ok := sess.Values["id"].(string)
+	if !ok || id == "" {
+		id = toolbelt.NextEncodedID()
+		sess.Values["id"] = id
+		if err := sess.Save(r, w); err != nil {
+			return "", fmt.Errorf("failed to save session: %w", err)
+		}
+	}
+
+	return id, nil
+}
+
+// Templ components
+func rootPageFirstLoad() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -45,7 +236,94 @@ func rootIndex() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Welcome to the Frontiers Meetup</h1><p>This is our first Templ-generated page.</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"root-page-wrapper\" data-on-load=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 211, Col: 72}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><h1>First load</h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = rootPageContent().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func rootPage() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div id=\"root-page-wrapper\"><h1>Second load</h1>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = rootPageContent().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return nil
+	})
+}
+
+func rootPageContent() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var4 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var4 == nil {
+			templ_7745c5c3_Var4 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div><h1>Welcome to the Frontiers Meetup</h1><p>This is our first Templ-generated page.</p></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
