@@ -9,106 +9,19 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"context"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
-	"time"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
-	"github.com/delaneyj/toolbelt"
-	"github.com/delaneyj/toolbelt/embeddednats"
+	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
-	natsserver "github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go/jetstream"
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
 
-var TodoViewModeStrings = []string{"All", "Active", "Completed"}
-
-type Todo struct {
-	Text      string `json:"text"`
-	Completed bool   `json:"completed"`
-}
-
-type TodoViewMode int
-
-// pageState holds the full state for the user's page.
-type TodoPageState struct {
-	Todos      []*Todo      `json:"todos"`
-	EditingIdx int          `json:"editingIdx"`
-	Mode       TodoViewMode `json:"mode"`
-}
-
-func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) error {
-	rootCtx := context.Background()
-
-	// Start embedded NATS
-	ns, err := embeddednats.New(rootCtx, embeddednats.WithNATSServerOptions(&natsserver.Options{
-		JetStream: true,
-		Port:      natsPort,
-	}))
-	if err != nil {
-		return fmt.Errorf("failed to create embedded nats server: %w", err)
-	}
-
-	nc, err := ns.Client()
-	if err != nil {
-		return fmt.Errorf("failed to create nats client: %w", err)
-	}
-
-	js, err := jetstream.New(nc)
-	if err != nil {
-		return fmt.Errorf("failed to create jetstream context: %w", err)
-	}
-
-	kv, err := js.CreateOrUpdateKeyValue(rootCtx, jetstream.KeyValueConfig{
-		Bucket:      "presentation",
-		Description: "Frontiers Meetup Presentation Bucket",
-		Compression: true,
-		TTL:         time.Hour,
-		MaxBytes:    16 * 1024 * 1024,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create or update key value: %w", err)
-	}
-
-	notifyUpdate := func(sessionID string) {
-		_ = sessionID
-	}
-
-	// Loads or initializes the per-user state
-	loadOrCreateState := func(w http.ResponseWriter, r *http.Request) (string, *TodoPageState, error) {
-		ctx := r.Context()
-
-		sessionID, err := upsertSessionID(store, r, w)
-		if err != nil {
-			return "", nil, fmt.Errorf("failed to get session id: %w", err)
-		}
-
-		pageState := &TodoPageState{}
-		entry, err := kv.Get(ctx, sessionID)
-		if err != nil {
-			if err != jetstream.ErrKeyNotFound {
-				return "", nil, fmt.Errorf("failed to get key value: %w", err)
-			}
-
-			// First visit → save an empty state
-			if err := savePageState(ctx, pageState, sessionID, kv, notifyUpdate); err != nil {
-				return "", nil, fmt.Errorf("failed to save initial state: %w", err)
-			}
-			return sessionID, pageState, nil
-		}
-
-		if err := json.Unmarshal(entry.Value(), pageState); err != nil {
-			return "", nil, fmt.Errorf("failed to unmarshal page state: %w", err)
-		}
-
-		return sessionID, pageState, nil
-	}
-
-	// Initial page load
+func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyValue) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		components.BaseLayout(
@@ -117,32 +30,35 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) erro
 		).Render(ctx, w)
 	})
 
-	// Datastar SSE endpoint
 	router.Route("/root", func(rootRouter chi.Router) {
 		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
 			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
+				log.Println("Root API SSE connected")
 				ctx := r.Context()
 				sse := datastar.NewSSE(w, r)
 
-				sessionID, pageState, err := loadOrCreateState(w, r)
+				sessionID, pageState, err := helpers.LoadOrCreateState(w, r, kv, store)
 				if err != nil {
+					log.Println("Error loading or creating state:", err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
-				// Initial patch
 				if err := sse.PatchElementTempl(rootPage()); err != nil {
 					_ = sse.ConsoleError(err)
+					log.Println("Error patching element template:", err)
+					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
-				// Watch for KV updates
 				watcher, err := kv.Watch(ctx, sessionID)
 				if err != nil {
+					log.Println("Error setting up KV watcher:", err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 				defer watcher.Stop()
+				log.Println("Root API SSE watching for updates")
 
 				for {
 					select {
@@ -169,49 +85,6 @@ func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) erro
 		})
 	})
 
-	return nil
-}
-
-func savePageState(
-	ctx context.Context,
-	state *TodoPageState,
-	sessionID string,
-	kv jetstream.KeyValue,
-	poke func(string),
-) error {
-
-	bytes, err := json.Marshal(state)
-	if err != nil {
-		return fmt.Errorf("failed to marshal page state: %w", err)
-	}
-
-	if _, err := kv.Put(ctx, sessionID, bytes); err != nil {
-		return fmt.Errorf("failed to put key value: %w", err)
-	}
-
-	if poke != nil {
-		poke(sessionID)
-	}
-
-	return nil
-}
-
-func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWriter) (string, error) {
-	sess, err := store.Get(r, "connections")
-	if err != nil {
-		return "", fmt.Errorf("failed to get session: %w", err)
-	}
-
-	id, ok := sess.Values["id"].(string)
-	if !ok || id == "" {
-		id = toolbelt.NextEncodedID()
-		sess.Values["id"] = id
-		if err := sess.Save(r, w); err != nil {
-			return "", fmt.Errorf("failed to save session: %w", err)
-		}
-	}
-
-	return id, nil
 }
 
 func rootPageFirstLoad() templ.Component {
@@ -242,7 +115,7 @@ func rootPageFirstLoad() templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 210, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 83, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

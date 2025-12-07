@@ -1,15 +1,20 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
 	"github.com/delaneyj/toolbelt"
+	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/sessions"
+	natsserver "github.com/nats-io/nats-server/v2/server"
+	"github.com/nats-io/nats.go/jetstream"
 )
 
 func main() {
@@ -17,7 +22,11 @@ func main() {
 
 	router.Use(middleware.Logger)
 	sessionStore := sessions.NewCookieStore([]byte("session-secret"))
-	sessionStore.MaxAge(int(24 * time.Hour / time.Second))
+	sessionStore.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   int(24 * time.Hour / time.Second),
+		HttpOnly: true,
+	}
 
 	natsPort, err := toolbelt.FreePort()
 	if err != nil {
@@ -30,8 +39,38 @@ func main() {
 		http.ServeFile(w, r, "static/favicon.ico")
 	})
 
-	//func RootLayoutRoute(router chi.Router, natsPort int, store sessions.Store) {
-	root.RootLayoutRoute(router, natsPort, sessionStore)
+	rootCtx := context.Background()
+
+	ns, err := embeddednats.New(rootCtx, embeddednats.WithNATSServerOptions(&natsserver.Options{
+		JetStream: true,
+		Port:      natsPort,
+	}))
+	if err != nil {
+		panic(fmt.Sprintf("failed to start embedded nats server: %v", err))
+	}
+
+	nc, err := ns.Client()
+	if err != nil {
+		panic(fmt.Sprintf("failed to create nats client: %v", err))
+	}
+
+	js, err := jetstream.New(nc)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create jetstream context: %v", err))
+	}
+
+	kv, err := js.CreateOrUpdateKeyValue(rootCtx, jetstream.KeyValueConfig{
+		Bucket:      "presentation",
+		Description: "Frontiers Meetup Presentation Bucket",
+		Compression: true,
+		TTL:         time.Hour,
+		MaxBytes:    16 * 1024 * 1024,
+	})
+	if err != nil {
+		panic(fmt.Sprintf("failed to create or update key value store: %v", err))
+	}
+
+	root.RootLayoutRoute(router, sessionStore, kv)
 
 	address := ":8080"
 
