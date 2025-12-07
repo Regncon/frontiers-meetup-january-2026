@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
@@ -20,6 +21,8 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
+
+var counter int
 
 func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyValue) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +85,18 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 					}
 				}
 			})
+			rootApiRouter.Post("/counter/increment", func(w http.ResponseWriter, r *http.Request) {
+
+				counter++
+
+				if err := helpers.BroadcastUpdate(kv, r); err != nil {
+					log.Println("Error broadcasting update:", err)
+					http.Error(w, "unable to broadcast update", http.StatusInternalServerError)
+					return
+				}
+				// No content; the update will arrive via SSE
+				w.WriteHeader(http.StatusNoContent)
+			})
 		})
 	})
 
@@ -115,7 +130,7 @@ func rootPageFirstLoad() templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 83, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 98, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -195,7 +210,33 @@ func rootPageContent() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div><h1>Welcome to the Frontiers Meetup</h1><p>This is our first Templ-generated page.</p></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div><h1>Welcome to the Frontiers Meetup</h1><p>This is our first Templ-generated page.</p><p><strong>Counter:</strong> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(counter))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 117, Col: 26}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><button data-on-click=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL("@post('/root/api/counter/increment')"))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 120, Col: 68}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">Increment counter</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
@@ -12,6 +13,8 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
+
+var counter int
 
 func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyValue) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -74,6 +77,18 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 					}
 				}
 			})
+			rootApiRouter.Post("/counter/increment", func(w http.ResponseWriter, r *http.Request) {
+
+				counter++
+
+				if err := helpers.BroadcastUpdate(kv, r); err != nil {
+					log.Println("Error broadcasting update:", err)
+					http.Error(w, "unable to broadcast update", http.StatusInternalServerError)
+					return
+				}
+				// No content; the update will arrive via SSE
+				w.WriteHeader(http.StatusNoContent)
+			})
 		})
 	})
 
@@ -97,5 +112,14 @@ templ rootPageContent() {
 	<div>
 		<h1>Welcome to the Frontiers Meetup</h1>
 		<p>This is our first Templ-generated page.</p>
+		<p>
+			<strong>Counter:</strong>
+			{ strconv.Itoa(counter) }
+		</p>
+		<button
+			data-on-click={ templ.URL("@post('/root/api/counter/increment')") }
+		>
+			Increment counter
+		</button>
 	</div>
 }

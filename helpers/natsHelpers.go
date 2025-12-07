@@ -17,6 +17,35 @@ func notifyUpdate(sessionID string) {
 	_ = sessionID
 }
 
+func BroadcastUpdate(kv jetstream.KeyValue, r *http.Request) error {
+	ctx := r.Context()
+
+	allKeys, err := kv.Keys(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to retrieve keys: %w", err)
+	}
+
+	for _, sessionID := range allKeys {
+		entry, err := kv.Get(ctx, sessionID)
+		if err != nil {
+			// Key may have been deleted or changed between Keys and Get; skip it.
+			continue
+		}
+
+		var state models.TodoPageState
+		if err := json.Unmarshal(entry.Value(), &state); err != nil {
+			// If the stored value is not a valid TodoPageState, skip this session.
+			continue
+		}
+
+		if err := savePageState(ctx, &state, sessionID, kv, notifyUpdate); err != nil {
+			log.Printf("BroadcastUpdate: failed to save state for session %s: %v\n", sessionID, err)
+		}
+	}
+
+	return nil
+}
+
 func LoadOrCreateState(w http.ResponseWriter, r *http.Request, kv jetstream.KeyValue, store sessions.Store) (string, *models.TodoPageState, error) {
 	ctx := r.Context()
 
