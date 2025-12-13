@@ -9,6 +9,7 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -24,12 +25,12 @@ import (
 
 var counter int
 
-func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyValue) {
+func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(),
+			rootPageFirstLoad(db),
 		).Render(ctx, w)
 	})
 
@@ -47,7 +48,7 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 					return
 				}
 
-				if err := sse.PatchElementTempl(rootPage()); err != nil {
+				if err := sse.PatchElementTempl(rootPage(db)); err != nil {
 					_ = sse.ConsoleError(err)
 					log.Println("Error patching element template:", err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -78,13 +79,14 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage()); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
 					}
 				}
 			})
+			RegisterEmojiCounterRoutes(db, rootApiRouter, kv)
 			rootApiRouter.Post("/counter/increment", func(w http.ResponseWriter, r *http.Request) {
 
 				counter++
@@ -102,7 +104,7 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 
 }
 
-func rootPageFirstLoad() templ.Component {
+func rootPageFirstLoad(db *sql.DB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -130,7 +132,7 @@ func rootPageFirstLoad() templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 98, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 100, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -140,7 +142,7 @@ func rootPageFirstLoad() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -152,7 +154,7 @@ func rootPageFirstLoad() templ.Component {
 	})
 }
 
-func rootPage() templ.Component {
+func rootPage(db *sql.DB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -177,7 +179,7 @@ func rootPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent().Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -189,7 +191,7 @@ func rootPage() templ.Component {
 	})
 }
 
-func rootPageContent() templ.Component {
+func rootPageContent(db *sql.DB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -217,26 +219,50 @@ func rootPageContent() templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(strconv.Itoa(counter))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 117, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 119, Col: 26}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><button data-on-click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</p><div style=\"display:flex; gap:0.5rem; flex-wrap:wrap;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EmojiCounter(db, "👍").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EmojiCounter(db, "🎉").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EmojiCounter(db, "😂").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EmojiCounter(db, "🔥").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = EmojiCounter(db, "❤️").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><button data-on-click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL("@post('/root/api/counter/increment')"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 120, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 129, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">Increment counter</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "\">Increment counter</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

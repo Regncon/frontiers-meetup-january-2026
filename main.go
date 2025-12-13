@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,9 +16,21 @@ import (
 	"github.com/gorilla/sessions"
 	natsserver "github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go/jetstream"
+	_ "modernc.org/sqlite"
 )
 
 func main() {
+
+	db, dbErr := sql.Open("sqlite", "presentation.db")
+	if dbErr != nil {
+		log.Fatalf("failed to open DB: %v", dbErr)
+	}
+
+	if pingErr := db.Ping(); pingErr != nil {
+		log.Fatalf("failed to ping DB: %v", pingErr)
+	}
+	defer db.Close()
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.Logger)
@@ -70,7 +83,7 @@ func main() {
 		panic(fmt.Sprintf("failed to create or update key value store: %v", err))
 	}
 
-	root.RootLayoutRoute(router, sessionStore, kv)
+	root.RootLayoutRoute(router, db, sessionStore, kv)
 
 	address := ":8080"
 

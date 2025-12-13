@@ -1,6 +1,7 @@
 package root
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -16,12 +17,12 @@ import (
 
 var counter int
 
-func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyValue) {
+func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(),
+			rootPageFirstLoad(db),
 		).Render(ctx, w)
 	})
 
@@ -39,7 +40,7 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 					return
 				}
 
-				if err := sse.PatchElementTempl(rootPage()); err != nil {
+				if err := sse.PatchElementTempl(rootPage(db)); err != nil {
 					_ = sse.ConsoleError(err)
 					log.Println("Error patching element template:", err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -70,13 +71,14 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage()); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
 					}
 				}
 			})
+			RegisterEmojiCounterRoutes(db, rootApiRouter, kv)
 			rootApiRouter.Post("/counter/increment", func(w http.ResponseWriter, r *http.Request) {
 
 				counter++
@@ -94,21 +96,21 @@ func RootLayoutRoute(router chi.Router, store sessions.Store, kv jetstream.KeyVa
 
 }
 
-templ rootPageFirstLoad() {
+templ rootPageFirstLoad(db *sql.DB) {
 	<div id="root-page-wrapper" data-on-load={ datastar.GetSSE("/root/api") }>
 		<h1>First load</h1>
-		@rootPageContent()
+		@rootPageContent(db)
 	</div>
 }
 
-templ rootPage() {
+templ rootPage(db *sql.DB) {
 	<div id="root-page-wrapper">
 		<h1>Second load</h1>
-		@rootPageContent()
+		@rootPageContent(db)
 	</div>
 }
 
-templ rootPageContent() {
+templ rootPageContent(db *sql.DB) {
 	<div>
 		<h1>Welcome to the Frontiers Meetup</h1>
 		<p>This is our first Templ-generated page.</p>
@@ -116,6 +118,13 @@ templ rootPageContent() {
 			<strong>Counter:</strong>
 			{ strconv.Itoa(counter) }
 		</p>
+		<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+			@EmojiCounter(db, "👍")
+			@EmojiCounter(db, "🎉")
+			@EmojiCounter(db, "😂")
+			@EmojiCounter(db, "🔥")
+			@EmojiCounter(db, "❤️")
+		</div>
 		<button
 			data-on-click={ templ.URL("@post('/root/api/counter/increment')") }
 		>

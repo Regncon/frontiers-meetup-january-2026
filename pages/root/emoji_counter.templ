@@ -1,0 +1,79 @@
+package root
+
+import (
+	"database/sql"
+	"fmt"
+	"net/http"
+	"net/url"
+
+	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
+	"github.com/go-chi/chi/v5"
+	"github.com/nats-io/nats.go/jetstream"
+)
+
+// --- Database logic ---
+
+func getEmojiCount(db *sql.DB, emoji string) (int64, error) {
+	var count int64
+	err := db.QueryRow(`SELECT click_count FROM emoji_counter WHERE emoji = ?`, emoji).Scan(&count)
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func incrementEmojiCounter(db *sql.DB, emoji string) error {
+	_, err := db.Exec(`INSERT OR IGNORE INTO emoji_counter (emoji, click_count) VALUES (?, 0)`, emoji)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
+	return err
+}
+
+// --- HTTP / routing ---
+
+func RegisterEmojiCounterRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
+	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
+		emoji := r.URL.Query().Get("emoji")
+		if emoji == "" {
+			http.Error(w, "missing emoji", http.StatusBadRequest)
+			return
+		}
+
+		if err := incrementEmojiCounter(db, emoji); err != nil {
+			http.Error(w, "failed to increment emoji counter", http.StatusInternalServerError)
+			return
+		}
+
+		if err := helpers.BroadcastUpdate(kv, r); err != nil {
+			http.Error(w, "unable to broadcast update", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusNoContent)
+	})
+}
+
+// --- Templ helpers ---
+
+func emojiIncrementPostURL(emoji string) string {
+	escapedEmoji := url.QueryEscape(emoji)
+	return fmt.Sprintf("@post('/root/api/emoji/increment?emoji=%s')", escapedEmoji)
+}
+
+// --- Component ---
+templ EmojiCounter(db *sql.DB, emoji string) {
+	{{ count, _ := getEmojiCount(db, emoji) }}
+	<button
+		style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;"
+		data-on-click={ templ.URL(emojiIncrementPostURL(emoji)) }
+	>
+		<span style="font-size:1.25rem;">{ emoji }</span>
+		<span>{ fmt.Sprintf("%d", count) }</span>
+	</button>
+}
