@@ -3,112 +3,112 @@ package components
 import ()
 
 func emojiBalloonScript() string {
-	// Keep it as a plain string so it’s easy to edit and stays self-contained.
 	return `
 <script type="module">
   class EmojiBalloon extends HTMLElement {
-    static get observedAttributes() { return ["data-emoji", "data-count"]; }
-
     constructor() {
       super();
       this._storageKey = null;
-      this._initialised = false;
       this._cleanupTimer = null;
+      this._hasConnected = false;
+      this._activeAnimation = null;
     }
 
     connectedCallback() {
-      const emoji = this.getAttribute("data-emoji") || "";
-      const countStr = this.getAttribute("data-count") || "0";
-      const count = Number(countStr);
+      this._hasConnected = true;
+      this._runCheck("connectedCallback");
+    }
 
-      this._storageKey = this._makeStorageKey(emoji);
-
-      // No animation on first load: if we have no stored value, store and exit.
-      const previous = this._readStoredCount();
-      if (previous === null) {
-        this._writeStoredCount(count);
-        this._initialised = true;
-        return;
-      }
-
-      // If element is inserted later (due to patch), treat it as initialised
-      // and only animate on actual increase.
-      if (count > previous) {
-        this._animate();
-      }
-
-      this._writeStoredCount(count);
-      this._initialised = true;
+    static get observedAttributes() {
+      return ["data-emoji", "data-count"];
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
-      // Ignore parser-initial sets and no-op changes.
       if (!this.isConnected) return;
-      if (oldValue === null) return;
+      if (!this._hasConnected) return;
+
+      // Datastar patches can update attributes; re-check on changes.
       if (oldValue === newValue) return;
+      this._runCheck("attributeChangedCallback: " + name);
+    }
 
-      // Wait until connectedCallback has run at least once.
-      if (!this._initialised) return;
-
-      // On any update, compare counts.
-      const emoji = this.getAttribute("data-emoji") || "";
-      const countStr = this.getAttribute("data-count") || "0";
+    _runCheck(source) {
+      const emoji = (this.getAttribute("data-emoji") || "").trim();
+      const countStrRaw = this.getAttribute("data-count") || "0";
+      const countStr = countStrRaw.trim();
       const count = Number(countStr);
 
-      this._storageKey = this._makeStorageKey(emoji);
+      this._storageKey = "fmj26:emojiCount:" + encodeURIComponent(emoji);
 
-      const previous = this._readStoredCount();
-      if (previous !== null && count > previous) {
+      const storedRaw = sessionStorage.getItem(this._storageKey);
+      const stored = storedRaw === null ? null : Number(storedRaw);
+
+      // Debug: comment out these logs once it works.
+      console.log("[emoji-balloon]", source, {
+        emoji,
+        countStrRaw,
+        count,
+        storedRaw,
+        stored,
+        storageKey: this._storageKey
+      });
+
+      if (!Number.isFinite(count)) {
+        console.warn("[emoji-balloon] count is not a number:", countStrRaw);
+        return;
+      }
+
+      // First time for this emoji in this tab: store and do not animate.
+      if (storedRaw === null) {
+        sessionStorage.setItem(this._storageKey, String(count));
+        return;
+      }
+
+      if (Number.isFinite(stored) && count > stored) {
         this._animate();
       }
 
-      this._writeStoredCount(count);
-    }
-
-    _makeStorageKey(emoji) {
-      // Key is per-tab (sessionStorage) and per-emoji.
-      // If emoji is empty, we still get a stable key.
-      return "fmj26:emojiCount:" + encodeURIComponent(emoji);
-    }
-
-    _readStoredCount() {
-      if (!this._storageKey) return null;
-      const raw = sessionStorage.getItem(this._storageKey);
-      if (raw === null) return null;
-      const n = Number(raw);
-      return Number.isFinite(n) ? n : null;
-    }
-
-    _writeStoredCount(count) {
-      if (!this._storageKey) return;
-      if (!Number.isFinite(count)) return;
       sessionStorage.setItem(this._storageKey, String(count));
     }
 
     _animate() {
       const target = this.querySelector("[data-emoji-balloon-target]");
+      console.log("[emoji-balloon] animate target:", target);
       if (!target) return;
 
-      target.classList.remove("emoji-balloon-pop");
-      // Force reflow so the animation reliably restarts.
-      void target.offsetWidth;
-      target.classList.add("emoji-balloon-pop");
+      // Cancel any in-flight animation so repeated clicks feel snappy.
+      if (this._activeAnimation) {
+        this._activeAnimation.cancel();
+        this._activeAnimation = null;
+      }
 
-      clearTimeout(this._cleanupTimer);
-      this._cleanupTimer = setTimeout(() => {
-        target.classList.remove("emoji-balloon-pop");
-      }, 320);
+      // Cute balloon pop: up + slight overshoot.
+      this._activeAnimation = target.animate(
+        [
+          { transform: "translateY(0px) scale(1)" },
+          { transform: "translateY(-12px) scale(1.14)", offset: 0.45 },
+          { transform: "translateY(-18px) scale(1.02)" },
+        ],
+        {
+          duration: 320,
+          easing: "cubic-bezier(0.2, 0.9, 0.2, 1)",
+          fill: "none",
+        }
+      );
     }
   }
 
   if (!customElements.get("emoji-balloon")) {
     customElements.define("emoji-balloon", EmojiBalloon);
+    console.log("[emoji-balloon] custom element defined");
+  } else {
+    console.log("[emoji-balloon] custom element already defined");
   }
 </script>
 
 <style>
   @keyframes emojiBalloonPop {
-    0%   { transform: translateY(0) scale(1);    }
+    0%   { transform: translateY(0) scale(1); }
     45%  { transform: translateY(-10px) scale(1.14); }
     100% { transform: translateY(-16px) scale(1.02); }
   }
