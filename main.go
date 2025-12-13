@@ -25,6 +25,14 @@ func main() {
 	if dbErr != nil {
 		log.Fatalf("failed to open DB: %v", dbErr)
 	}
+	_, pragmaErr := db.Exec(`
+		PRAGMA journal_mode = WAL;
+		PRAGMA synchronous = NORMAL;
+		PRAGMA busy_timeout = 5000;
+		`)
+	if pragmaErr != nil {
+		log.Fatalf("failed to set PRAGMA: %v", pragmaErr)
+	}
 
 	if pingErr := db.Ping(); pingErr != nil {
 		log.Fatalf("failed to ping DB: %v", pingErr)

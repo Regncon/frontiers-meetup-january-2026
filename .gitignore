@@ -10,6 +10,8 @@
 
 # The database file
 *.db
+*.db-shm
+*.db-wal
 
 # The build output directory
 tmp/

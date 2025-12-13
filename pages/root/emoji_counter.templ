@@ -23,16 +23,6 @@ func getEmojiCount(db *sql.DB, emoji string) (int64, error) {
 	return count, nil
 }
 
-func incrementEmojiCounter(db *sql.DB, emoji string) error {
-	_, err := db.Exec(`INSERT OR IGNORE INTO emoji_counter (emoji, click_count) VALUES (?, 0)`, emoji)
-	if err != nil {
-		return err
-	}
-
-	_, err = db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
-	return err
-}
-
 func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
 		emoji := r.URL.Query().Get("emoji")
@@ -40,9 +30,10 @@ func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 			http.Error(w, "missing emoji", http.StatusBadRequest)
 			return
 		}
+		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
 
-		if err := incrementEmojiCounter(db, emoji); err != nil {
-			http.Error(w, "failed to increment emoji counter", http.StatusInternalServerError)
+		if err != nil {
+			http.Error(w, "failed to increment emoji counter: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
