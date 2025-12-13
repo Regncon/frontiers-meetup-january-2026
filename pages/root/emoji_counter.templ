@@ -62,11 +62,18 @@ func emojiIncrementPostURL(emoji string) string {
 
 templ EmojiCounter(db *sql.DB, emoji string) {
 	{{ count, _ := getEmojiCount(db, emoji) }}
-	<button
-		style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;"
-		data-on-click={ templ.URL(emojiIncrementPostURL(emoji)) }
-	>
-		<span style="font-size:1.25rem;">{ emoji }</span>
-		<span>{ fmt.Sprintf("%d", count) }</span>
-	</button>
+	<emoji-balloon data-emoji={ emoji } data-count={ fmt.Sprintf("%d", count) }>
+		<button
+			style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;"
+			data-on-click={ templ.URL(emojiIncrementPostURL(emoji)) }
+		>
+			<span
+				data-emoji-balloon-target
+				style="font-size:1.25rem;"
+			>
+				{ emoji }
+			</span>
+			<span>{ fmt.Sprintf("%d", count) }</span>
+		</button>
+	</emoji-balloon>
 }
