@@ -35,7 +35,6 @@ func emojiBalloonScript() string {
       if (!this.isConnected) return;
       if (!this._hasConnected) return;
 
-      // Datastar patches can update attributes; re-check on changes.
       if (oldValue === newValue) return;
       this._runCheck("attributeChangedCallback: " + name);
     }
@@ -51,22 +50,11 @@ func emojiBalloonScript() string {
       const storedRaw = sessionStorage.getItem(this._storageKey);
       const stored = storedRaw === null ? null : Number(storedRaw);
 
-      // Debug: comment out these logs once it works.
-      console.log("[emoji-balloon]", source, {
-        emoji,
-        countStrRaw,
-        count,
-        storedRaw,
-        stored,
-        storageKey: this._storageKey
-      });
-
       if (!Number.isFinite(count)) {
         console.warn("[emoji-balloon] count is not a number:", countStrRaw);
         return;
       }
 
-      // First time for this emoji in this tab: store and do not animate.
       if (storedRaw === null) {
         sessionStorage.setItem(this._storageKey, String(count));
         return;
@@ -81,7 +69,6 @@ func emojiBalloonScript() string {
 
     _animate() {
       const target = this.querySelector("[data-emoji-balloon-target]");
-      console.log("[emoji-balloon] animate target:", target);
       if (!target) return;
 
       // Cancel any in-flight animation so repeated clicks feel snappy.
@@ -108,9 +95,6 @@ func emojiBalloonScript() string {
 
   if (!customElements.get("emoji-balloon")) {
     customElements.define("emoji-balloon", EmojiBalloon);
-    console.log("[emoji-balloon] custom element defined");
-  } else {
-    console.log("[emoji-balloon] custom element already defined");
   }
 </script>
 
