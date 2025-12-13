@@ -11,8 +11,6 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-// --- Database logic ---
-
 func getEmojiCount(db *sql.DB, emoji string) (int64, error) {
 	var count int64
 	err := db.QueryRow(`SELECT click_count FROM emoji_counter WHERE emoji = ?`, emoji).Scan(&count)
@@ -35,9 +33,7 @@ func incrementEmojiCounter(db *sql.DB, emoji string) error {
 	return err
 }
 
-// --- HTTP / routing ---
-
-func RegisterEmojiCounterRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
+func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
 		emoji := r.URL.Query().Get("emoji")
 		if emoji == "" {
@@ -59,14 +55,11 @@ func RegisterEmojiCounterRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyV
 	})
 }
 
-// --- Templ helpers ---
-
 func emojiIncrementPostURL(emoji string) string {
 	escapedEmoji := url.QueryEscape(emoji)
 	return fmt.Sprintf("@post('/root/api/emoji/increment?emoji=%s')", escapedEmoji)
 }
 
-// --- Component ---
 templ EmojiCounter(db *sql.DB, emoji string) {
 	{{ count, _ := getEmojiCount(db, emoji) }}
 	<button

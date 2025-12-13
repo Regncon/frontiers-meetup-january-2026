@@ -19,8 +19,6 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-// --- Database logic ---
-
 func getEmojiCount(db *sql.DB, emoji string) (int64, error) {
 	var count int64
 	err := db.QueryRow(`SELECT click_count FROM emoji_counter WHERE emoji = ?`, emoji).Scan(&count)
@@ -43,9 +41,7 @@ func incrementEmojiCounter(db *sql.DB, emoji string) error {
 	return err
 }
 
-// --- HTTP / routing ---
-
-func RegisterEmojiCounterRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
+func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
 		emoji := r.URL.Query().Get("emoji")
 		if emoji == "" {
@@ -67,14 +63,11 @@ func RegisterEmojiCounterRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyV
 	})
 }
 
-// --- Templ helpers ---
-
 func emojiIncrementPostURL(emoji string) string {
 	escapedEmoji := url.QueryEscape(emoji)
 	return fmt.Sprintf("@post('/root/api/emoji/increment?emoji=%s')", escapedEmoji)
 }
 
-// --- Component ---
 func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -104,7 +97,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(emojiIncrementPostURL(emoji)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 74, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 67, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -117,7 +110,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(emoji)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 76, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 69, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -130,7 +123,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 77, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 70, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
