@@ -77,8 +77,6 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				}
 			})
 			IncrementEmojiRoute(db, rootApiRouter, kv)
-
-			//func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 			slides.SlideControlRoutes(db, rootApiRouter, kv)
 		})
 	})
@@ -87,22 +85,18 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 
 templ rootPageFirstLoad(db *sql.DB) {
 	<div id="root-page-wrapper" data-on-load={ datastar.GetSSE("/root/api") }>
-		<h1>First load</h1>
 		@rootPageContent(db)
 	</div>
 }
 
 templ rootPage(db *sql.DB) {
 	<div id="root-page-wrapper">
-		<h1>Second load</h1>
 		@rootPageContent(db)
 	</div>
 }
 
 templ rootPageContent(db *sql.DB) {
 	<div>
-		<h1>Welcome to the Frontiers Meetup</h1>
-		<p>This is our first Templ-generated page.</p>
 		@slides.SlideController(db)
 		@slides.ActiveSlide(db)
 		<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">

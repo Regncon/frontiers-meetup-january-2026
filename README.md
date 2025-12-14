@@ -8,9 +8,9 @@
 - [x] Setup datastar
 - [x] Setup nats
 - [x] Setup sqlite
+- [x] Setup slides
 - [ ] Setup logger
 - [ ] Setup styling
 - [ ] Add secret keys to prevent the internet from accessing the services
-- [ ] Setup slides
 
 
