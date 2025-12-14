@@ -11,20 +11,6 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-/*
-SQL (run once):
-
-CREATE TABLE IF NOT EXISTS slide_state (
-  id INTEGER PRIMARY KEY CHECK (id = 1),
-  current_index INTEGER NOT NULL DEFAULT 0,
-  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
-);
-
-INSERT OR IGNORE INTO slide_state (id, current_index) VALUES (1, 0);
-*/
-
-// --- Database helpers ---
-
 func GetCurrentSlideIndex(db *sql.DB) (int, error) {
 	var index int
 	err := db.QueryRow(`SELECT current_index FROM slide_state WHERE id = 1`).Scan(&index)
@@ -37,15 +23,12 @@ func GetCurrentSlideIndex(db *sql.DB) (int, error) {
 func SetCurrentSlideIndex(db *sql.DB, index int) error {
 	_, err := db.Exec(
 		`UPDATE slide_state
-		 SET current_index = ?,
-		     updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')
+		 SET current_index = ?
 		 WHERE id = 1`,
 		index,
 	)
 	return err
 }
-
-// --- Routes ---
 
 func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	router.Post("/slides/set", func(w http.ResponseWriter, r *http.Request) {
@@ -70,13 +53,11 @@ func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	})
 }
 
-// --- Templ components ---
-
 func slideSetPostURL(index int) string {
 	return fmt.Sprintf("@post('/root/api/slides/set?index=%d')", index)
 }
 
-templ SlideController(db *sql.DB, maxSlides int) {
+templ SlideController(db *sql.DB) {
 	{{ current, _ := GetCurrentSlideIndex(db) }}
 	<div
 		data-signals={ fmt.Sprintf("{ slideIndex: %d, maxSlides: %d }", current, maxSlides) }
@@ -108,6 +89,8 @@ templ SlideController(db *sql.DB, maxSlides int) {
 		</span>
 	</div>
 }
+
+const maxSlides = 3
 
 templ ActiveSlide(db *sql.DB) {
 	{{ index, _ := GetCurrentSlideIndex(db) }}

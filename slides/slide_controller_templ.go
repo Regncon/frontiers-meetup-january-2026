@@ -19,20 +19,6 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-/*
-SQL (run once):
-
-CREATE TABLE IF NOT EXISTS slide_state (
-  id INTEGER PRIMARY KEY CHECK (id = 1),
-  current_index INTEGER NOT NULL DEFAULT 0,
-  updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
-);
-
-INSERT OR IGNORE INTO slide_state (id, current_index) VALUES (1, 0);
-*/
-
-// --- Database helpers ---
-
 func GetCurrentSlideIndex(db *sql.DB) (int, error) {
 	var index int
 	err := db.QueryRow(`SELECT current_index FROM slide_state WHERE id = 1`).Scan(&index)
@@ -45,15 +31,12 @@ func GetCurrentSlideIndex(db *sql.DB) (int, error) {
 func SetCurrentSlideIndex(db *sql.DB, index int) error {
 	_, err := db.Exec(
 		`UPDATE slide_state
-		 SET current_index = ?,
-		     updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')
+		 SET current_index = ?
 		 WHERE id = 1`,
 		index,
 	)
 	return err
 }
-
-// --- Routes ---
 
 func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	router.Post("/slides/set", func(w http.ResponseWriter, r *http.Request) {
@@ -78,13 +61,11 @@ func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	})
 }
 
-// --- Templ components ---
-
 func slideSetPostURL(index int) string {
 	return fmt.Sprintf("@post('/root/api/slides/set?index=%d')", index)
 }
 
-func SlideController(db *sql.DB, maxSlides int) templ.Component {
+func SlideController(db *sql.DB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -113,7 +94,7 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d, maxSlides: %d }", current, maxSlides))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 82, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 63, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -126,7 +107,7 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(0)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 88, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 69, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -139,7 +120,7 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(current - 1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 95, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 76, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -152,7 +133,7 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(current + 1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 102, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 83, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -165,7 +146,7 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d / %d", current+1, maxSlides))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 107, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 88, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -178,6 +159,8 @@ func SlideController(db *sql.DB, maxSlides int) templ.Component {
 		return nil
 	})
 }
+
+const maxSlides = 3
 
 func ActiveSlide(db *sql.DB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -208,7 +191,7 @@ func ActiveSlide(db *sql.DB) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 114, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_controller.templ`, Line: 97, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {

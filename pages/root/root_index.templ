@@ -103,7 +103,7 @@ templ rootPageContent(db *sql.DB) {
 	<div>
 		<h1>Welcome to the Frontiers Meetup</h1>
 		<p>This is our first Templ-generated page.</p>
-		@slides.SlideController(db, 3)
+		@slides.SlideController(db)
 		@slides.ActiveSlide(db)
 		<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
 			@EmojiCounter(db, "👍")
