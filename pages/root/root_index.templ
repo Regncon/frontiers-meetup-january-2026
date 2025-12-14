@@ -96,15 +96,17 @@ templ rootPage(db *sql.DB) {
 }
 
 templ rootPageContent(db *sql.DB) {
-	<div>
-		@slides.SlideController(db)
-		@slides.ActiveSlide(db)
-		<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+	<div class="root-page">
+		<main class="root-main">
+			@slides.SlideController(db)
+			@slides.ActiveSlide(db)
+		</main>
+		<footer class="emoji-bar" aria-label="Reactions">
 			@EmojiCounter(db, "👍")
 			@EmojiCounter(db, "🎉")
 			@EmojiCounter(db, "😂")
 			@EmojiCounter(db, "🔥")
 			@EmojiCounter(db, "❤️")
-		</div>
+		</footer>
 	</div>
 }

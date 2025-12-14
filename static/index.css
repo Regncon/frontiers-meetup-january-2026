@@ -11,13 +11,43 @@
 		navigation: Auto;
 	}
 
+
 	html {
 		color-scheme: dark;
-
+		height: 100%;
 	}
 
 	body {
+		min-height: 100%;
+		margin: 0;
 		background: var(--color-bg-base);
 		color: var(--color-primary-text);
+	}
+
+	.root-page {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.root-main {
+		flex: 1;
+		padding: 1rem;
+	}
+
+	.emoji-bar {
+		position: sticky;
+		bottom: 0;
+
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+
+		padding: 0.75rem 1rem;
+
+		background: hsl(from var(--color-bg-base) h s l / 90%);
+		backdrop-filter: blur(8px);
+
+		border-top: 1px solid var(--color-text-soft-50);
 	}
 }
