@@ -8,6 +8,7 @@ import (
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
+	"github.com/Regncon/frontiers-meetup-january-2026/slides"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
 	"github.com/nats-io/nats.go/jetstream"
@@ -76,6 +77,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				}
 			})
 			IncrementEmojiRoute(db, rootApiRouter, kv)
+
+			//func SlideControlRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
+			slides.SlideControlRoutes(db, rootApiRouter, kv)
 		})
 	})
 
@@ -99,6 +103,8 @@ templ rootPageContent(db *sql.DB) {
 	<div>
 		<h1>Welcome to the Frontiers Meetup</h1>
 		<p>This is our first Templ-generated page.</p>
+		@slides.SlideController(db, 3)
+		@slides.ActiveSlide(db)
 		<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
 			@EmojiCounter(db, "👍")
 			@EmojiCounter(db, "🎉")
