@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
@@ -23,7 +23,7 @@ import (
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
 
-func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue) {
+func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		components.BaseLayout(
@@ -35,32 +35,32 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 	router.Route("/root", func(rootRouter chi.Router) {
 		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
 			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
-				log.Println("Root API SSE connected")
+				logger.Info("Root API SSE connected")
 				ctx := r.Context()
 				sse := datastar.NewSSE(w, r)
 
 				sessionID, pageState, err := helpers.LoadOrCreateState(w, r, kv, store)
 				if err != nil {
-					log.Println("Error loading or creating state:", err)
+					logger.Error("Error loading or creating state:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
 				if err := sse.PatchElementTempl(rootPage(db)); err != nil {
 					_ = sse.ConsoleError(err)
-					log.Println("Error patching element template:", err)
+					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 
 				watcher, err := kv.Watch(ctx, sessionID)
 				if err != nil {
-					log.Println("Error setting up KV watcher:", err)
+					logger.Error("Error setting up KV watcher:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
 				defer watcher.Stop()
-				log.Println("Root API SSE watching for updates")
+				logger.Info("Root API SSE watcher started", slog.String("sessionID", sessionID))
 
 				for {
 					select {

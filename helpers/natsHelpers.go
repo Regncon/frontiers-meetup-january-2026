@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/models"
@@ -39,7 +38,7 @@ func BroadcastUpdate(kv jetstream.KeyValue, r *http.Request) error {
 		}
 
 		if err := savePageState(ctx, &state, sessionID, kv, notifyUpdate); err != nil {
-			log.Printf("BroadcastUpdate: failed to save state for session %s: %v\n", sessionID, err)
+			return fmt.Errorf("failed to re-save page state for session %s: %w", sessionID, err)
 		}
 	}
 
@@ -104,7 +103,7 @@ func upsertSessionID(store sessions.Store, r *http.Request, w http.ResponseWrite
 
 	sess, err := store.Get(r, cookieName)
 	if err != nil {
-		log.Printf("upsertSessionID: session decode error (using fresh session): %v\n", err)
+		return "", fmt.Errorf("failed to get session: %w", err)
 	}
 
 	id, ok := sess.Values["id"].(string)

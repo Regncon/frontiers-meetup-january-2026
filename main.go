@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
@@ -20,10 +21,12 @@ import (
 )
 
 func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	db, dbErr := sql.Open("sqlite", "presentation.db")
 	if dbErr != nil {
-		log.Fatalf("failed to open DB: %v", dbErr)
+		logger.Error("failed to open DB", slog.String("error", dbErr.Error()))
+		return
 	}
 	_, pragmaErr := db.Exec(`
 		PRAGMA journal_mode = WAL;
@@ -31,11 +34,13 @@ func main() {
 		PRAGMA busy_timeout = 5000;
 		`)
 	if pragmaErr != nil {
-		log.Fatalf("failed to set PRAGMA: %v", pragmaErr)
+		logger.Error("failed to set pragmas", slog.String("error", pragmaErr.Error()))
+		return
 	}
 
 	if pingErr := db.Ping(); pingErr != nil {
-		log.Fatalf("failed to ping DB: %v", pingErr)
+		logger.Error("failed to ping DB", slog.String("error", pingErr.Error()))
+		return
 	}
 	defer db.Close()
 
@@ -51,7 +56,7 @@ func main() {
 
 	natsPort, err := toolbelt.FreePort()
 	if err != nil {
-		log.Fatalf("error finding free port: %v", err)
+		logger.Error("failed to get free port for nats", slog.String("error", err.Error()))
 		return
 	}
 
@@ -91,14 +96,14 @@ func main() {
 		panic(fmt.Sprintf("failed to create or update key value store: %v", err))
 	}
 
-	root.RootLayoutRoute(router, db, sessionStore, kv)
+	root.RootLayoutRoute(router, db, sessionStore, kv, logger)
 
 	address := ":8080"
 
-	log.Printf("Server listening on %s", address)
+	logger.Info("starting HTTP server", slog.String("address", address))
 
 	httpServerError := http.ListenAndServe(address, router)
 	if httpServerError != nil {
-		log.Fatal(err)
+		logger.Error("HTTP server error", slog.String("error", httpServerError.Error()))
 	}
 }
