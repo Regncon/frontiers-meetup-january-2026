@@ -1,6 +1,5 @@
 # frontiers-meetup-january-2026
 
-
 ## ToDo:
 - [x] Setup task
 - [x] Setup templ
@@ -9,8 +8,7 @@
 - [x] Setup nats
 - [x] Setup sqlite
 - [x] Setup slides
-- [ ] Setup logger
+- [x] Setup logger
 - [ ] Setup styling
 - [ ] Add secret keys to prevent the internet from accessing the services
-
 
