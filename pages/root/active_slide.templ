@@ -1,0 +1,57 @@
+package root
+
+import (
+	"database/sql"
+	"fmt"
+
+	//slides "github.com/Regncon/frontiers-meetup-january-2026/slides/slides"
+	"github.com/Regncon/frontiers-meetup-january-2026/slides"
+)
+
+type slideFunc func() templ.Component
+
+var deck = []slideFunc{
+	func() templ.Component { return slides.Wellcome() },
+	func() templ.Component { return slides.What() },
+	func() templ.Component { return slides.Agenda() },
+}
+
+func deckSize() int {
+	return len(deck)
+}
+
+func clampSlideIndex(index int) int {
+	if index < 0 {
+		return 0
+	}
+	if len(deck) == 0 {
+		return 0
+	}
+	if index >= len(deck) {
+		return len(deck) - 1
+	}
+	return index
+}
+
+func slideAt(index int) slideFunc {
+	if index < 0 || index >= len(deck) {
+		return func() templ.Component { return UnknownSlide() }
+	}
+	return deck[index]
+}
+
+// --- Components ---
+
+templ ActiveSlide(db *sql.DB) {
+	{{ index, _ := GetCurrentSlideIndex(db) }}
+	{{ index = clampSlideIndex(index) }}
+	{{ slideComponent := slideAt(index) }}
+
+	<div data-signals={ fmt.Sprintf("{ slideIndex: %d }", index) }>
+		@slideComponent()
+	</div>
+}
+
+templ UnknownSlide() {
+	<p>Unknown slide</p>
+}

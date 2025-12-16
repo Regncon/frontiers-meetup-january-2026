@@ -8,7 +8,6 @@ import (
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
-	"github.com/Regncon/frontiers-meetup-january-2026/slides"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
 	"github.com/nats-io/nats.go/jetstream"
@@ -77,7 +76,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				}
 			})
 			IncrementEmojiRoute(db, rootApiRouter, kv)
-			slides.SlideControlRoutes(db, rootApiRouter, kv)
+			TopNavigationRoutes(db, rootApiRouter, kv)
 		})
 	})
 
@@ -98,8 +97,8 @@ templ rootPage(db *sql.DB) {
 templ rootPageContent(db *sql.DB) {
 	<div class="root-page">
 		<main class="root-main">
-			@slides.SlideController(db)
-			@slides.ActiveSlide(db)
+			@TopNavigation(db)
+			@ActiveSlide(db)
 		</main>
 		<footer class="emoji-bar" aria-label="Reactions">
 			@EmojiCounter(db, "👍")

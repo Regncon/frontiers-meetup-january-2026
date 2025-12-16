@@ -16,7 +16,6 @@ import (
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
-	"github.com/Regncon/frontiers-meetup-january-2026/slides"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
 	"github.com/nats-io/nats.go/jetstream"
@@ -85,7 +84,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				}
 			})
 			IncrementEmojiRoute(db, rootApiRouter, kv)
-			slides.SlideControlRoutes(db, rootApiRouter, kv)
+			TopNavigationRoutes(db, rootApiRouter, kv)
 		})
 	})
 
@@ -119,7 +118,7 @@ func rootPageFirstLoad(db *sql.DB) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(datastar.GetSSE("/root/api"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 87, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 86, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -203,11 +202,11 @@ func rootPageContent(db *sql.DB) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = slides.SlideController(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = TopNavigation(db).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = slides.ActiveSlide(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ActiveSlide(db).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
