@@ -144,18 +144,41 @@ The next levels of - represent text on that slide.
     - Go prop drilling is is good
 
 
-### Structure & complexity
+### Complexity
+- Accidental vs essential complexity
+- Why is complexity bad?
+    - Cohesion
+    - Coupling
+    - Separation of concerns
+    - Obfuscation
+- Risks: obfuscation / complexity creep
+- Go respects your intellect
+- Culture for writing your own code (instead of over reliance on packages)
 - "No magic" vs framework abstraction
 - Low accidental complexity
-- Cohesion, coupling, separation of concerns
 - Where discipline is required (e.g., JS not being opinionated  easy to drift)
-- Risks: obfuscation / complexity creep
+- We need to talk
+    - As developers we like complexity
+    - We like surten languages / frameworks 
+    - We like abstractions
+    - We don't like to admit what this actually costs 
+
+### Structure 
+- Next.js is very opinionated about structure
+- Endless folders
+- Go is unopinionated about structure
+- Philosophy: simple / flat structure
+- Unfamiliarity with Go project structure
+- Routing pains  
 
 ### Styling
 - UI library (MUI) vs custom CSS
+    - Mui was very nice
+- TSX/JSX keeps styling where it is being used
 - Next.js was challenging without a UI library
 - Component styling approaches
-- Issues seen with `<style>` tags in templates:
+- Styling in templ was a nightmare
+  - Issues seen with `<style>` tags in templates:
   - Duplicated CSS in the DOM when reused
   - Fragile placement/selector issues (e.g., IDs needing to exist at the top level)
   - Ending up with a mixed approach (component `<style>` + global CSS files)
@@ -163,13 +186,22 @@ The next levels of - represent text on that slide.
 ### Tooling / DX
 - The tooling for next.js is superb
 - The tooling for templ was immature
+    - Go to defenition
+    - Syntax highlighting
+    - Linting
+    - Formatting
+    - Debugging
 - Logging visibility (difficulty spotting log output)
 - Hot reload setup feeling immature / fiddly
+- Pain to run Go, templ with hot reload on windows
+    - Vs Code docker remote containers helped a lot here
 
 ### LLM assistance
-- Where LLMs helped a lot
-- Where LLMs struggled (edge cases, project-specific conventions)
+- Next.js llm support is superb
+- Next.js excellent llm support can be a real problem
+- Go llm support suprb
+- Templ llm support is terrible
+    - In the templ docs there is a llm helper file
 
 ## Closing
 - Summary / takeaways
-- Questions & discussion (including "what if we had 1 million concurrent users?"-style prompts)
