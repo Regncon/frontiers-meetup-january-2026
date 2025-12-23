@@ -107,7 +107,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button style=\"display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;\" data-on-click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button style=\"display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;\" data-on:click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

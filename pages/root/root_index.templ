@@ -83,7 +83,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 }
 
 templ rootPageFirstLoad(db *sql.DB) {
-	<div id="root-page-wrapper" data-on-load={ datastar.GetSSE("/root/api") }>
+	<div id="root-page-wrapper" data-init={ "@get('/root/api',{requestCancellation: 'disabled'})" }>
 		@rootPageContent(db)
 	</div>
 }

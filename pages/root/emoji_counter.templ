@@ -56,7 +56,7 @@ templ EmojiCounter(db *sql.DB, emoji string) {
 	<emoji-balloon data-emoji={ emoji } data-count={ fmt.Sprintf("%d", count) }>
 		<button
 			style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;"
-			data-on-click={ templ.URL(emojiIncrementPostURL(emoji)) }
+			data-on:click={ templ.URL(emojiIncrementPostURL(emoji)) }
 		>
 			<span
 				data-emoji-balloon-target

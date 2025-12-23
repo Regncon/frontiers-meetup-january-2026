@@ -77,39 +77,33 @@ func slideSetPostURL(index int) string {
 }
 
 // --- Component ---
-
 templ TopNavigation(db *sql.DB) {
 	{{ current, _ := GetCurrentSlideIndex(db) }}
 	{{ maxSlides := deckSize() }}
-
 	<div
 		data-signals={ fmt.Sprintf("{ slideIndex: %d, maxSlides: %d }", current, maxSlides) }
 		style="display:flex; gap:0.5rem; margin:1rem 0; align-items:center; flex-wrap:wrap;"
 	>
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
-			data-on-click={ templ.URL(slideSetPostURL(0)) }
-			data-attr="{ disabled: $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
+			data-on:click={ templ.URL(slideSetPostURL(0)) }
 		>
 			Home
 		</button>
-
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
 			data-attr="{ disabled: $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
-			data-on-click={ templ.URL(slideSetPostURL(current - 1)) }
+			data-on:click={ templ.URL(slideSetPostURL(current - 1)) }
 		>
 			Previous
 		</button>
-
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
 			data-attr="{ disabled: $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }"
-			data-on-click={ templ.URL(slideSetPostURL(current + 1)) }
+			data-on:click={ templ.URL(slideSetPostURL(current + 1)) }
 		>
 			Next
 		</button>
-
 		<span style="margin-left:0.75rem;">
 			Slide { fmt.Sprintf("%d / %d", current+1, maxSlides) }
 		</span>
