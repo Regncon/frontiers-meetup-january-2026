@@ -10,10 +10,13 @@ import (
 
 type slideFunc func() templ.Component
 
+var isPresenterMode = true
+
 var deck = []slideFunc{
+	func() templ.Component { return slides.LobbyWelcome(isPresenterMode) },
 	func() templ.Component { return slides.Wellcome() },
 	func() templ.Component { return slides.What() },
-	func() templ.Component { return slides.Agenda() },
+	func() templ.Component { return slides.Agenda(isPresenterMode) },
 	func() templ.Component { return slides.IntroNextJs() },
 }
 
@@ -42,12 +45,10 @@ func slideAt(index int) slideFunc {
 }
 
 // --- Components ---
-
 templ ActiveSlide(db *sql.DB) {
 	{{ index, _ := GetCurrentSlideIndex(db) }}
 	{{ index = clampSlideIndex(index) }}
 	{{ slideComponent := slideAt(index) }}
-
 	<div data-signals={ fmt.Sprintf("{ slideIndex: %d }", index) }>
 		@slideComponent()
 	</div>

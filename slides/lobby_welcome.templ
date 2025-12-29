@@ -1,0 +1,94 @@
+package slides
+
+templ LobbyWelcome(isPresenter bool) {
+	<div
+		class="slide"
+		style="
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 2.5rem;
+	"
+	>
+		<div style="display:flex; justify-content: space-between; align-items: center; gap: 1rem;">
+			<div style="display:flex; align-items:center; gap: 1rem;">
+				<img
+					src="/static/brand/frontiers-logo.svg"
+					alt="Frontiers"
+					style="height: 40px; width: auto;"
+				/>
+				<img
+					src="/static/brand/regncon-logo.svg"
+					alt="Regncon"
+					style="height: 40px; width: auto;"
+				/>
+			</div>
+			<div style="font-size: 1.1rem; opacity: 0.85;">
+				Starting soon
+			</div>
+		</div>
+		<div style="display:flex; flex-direction:column; gap: 1rem;">
+			<h1 style="margin: 0; font-size: 4rem; letter-spacing: 0.02em;">
+				THE GOOD · THE BAD · THE UGLY
+			</h1>
+			<div style="font-size: 1.6rem; opacity: 0.9;">
+				An honest comparison of two stacks — and what it did to complexity
+			</div>
+		</div>
+		<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+			<div
+				style="
+				border: 2px solid rgba(255,255,255,0.15);
+				border-radius: 18px;
+				padding: 1.25rem 1.5rem;
+			"
+			>
+				<div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;">
+					<img
+						src="/static/tech/nextjs.svg"
+						alt="Next.js"
+						style="height: 26px; width: auto; opacity: 0.9;"
+					/>
+					<div style="font-size: 1.2rem; opacity: 0.85;">2024</div>
+				</div>
+				<div style="font-size: 1.8rem; font-weight: 700;">
+					Heavy frontend
+				</div>
+				<div style="font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;">
+					Next.js + Firebase
+				</div>
+			</div>
+			<div
+				style="
+				border: 2px solid rgba(255,255,255,0.15);
+				border-radius: 18px;
+				padding: 1.25rem 1.5rem;
+			"
+			>
+				<div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;">
+					<img
+						src="/static/tech/go.svg"
+						alt="Go"
+						style="height: 26px; width: auto; opacity: 0.9;"
+					/>
+					<div style="font-size: 1.2rem; opacity: 0.85;">2025</div>
+				</div>
+				<div style="font-size: 1.8rem; font-weight: 700;">
+					Grug brain simple
+				</div>
+				<div style="font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;">
+					Go + Datastar + SQLite <span style="opacity: 0.75;">(+ NATS)</span>
+				</div>
+			</div>
+		</div>
+		<div style="display:flex; justify-content: space-between; align-items: baseline; opacity: 0.85;">
+			<div>Frontiers Meetup · January 2026</div>
+			<div style="font-size: 1.05rem;">Regncon dev team</div>
+		</div>
+	</div>
+	if isPresenter {
+		<div class="presenter-notes">
+			Leave this slide on screen while people arrive. No QR code (stream-safe).
+		</div>
+	}
+}
