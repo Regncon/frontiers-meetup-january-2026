@@ -12,7 +12,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	//slides "github.com/Regncon/frontiers-meetup-january-2026/slides/slides"
 	"github.com/Regncon/frontiers-meetup-january-2026/slides"
 )
 
@@ -22,10 +21,8 @@ var isPresenterMode = true
 
 var deck = []slideFunc{
 	func() templ.Component { return slides.LobbyWelcome(isPresenterMode) },
-	func() templ.Component { return slides.Wellcome() },
-	func() templ.Component { return slides.What() },
+	func() templ.Component { return slides.WhyThisTalk(isPresenterMode) },
 	func() templ.Component { return slides.Agenda(isPresenterMode) },
-	func() templ.Component { return slides.IntroNextJs() },
 }
 
 func deckSize() int {
@@ -84,7 +81,7 @@ func ActiveSlide(db *sql.DB) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 52, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 49, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

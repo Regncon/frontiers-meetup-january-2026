@@ -8,6 +8,36 @@ package slides
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+/*
+Slide: Lobby / Welcome (mingling slide)
+
+Purpose:
+- This slide is shown before the talk starts while people mingle (pizza/beer/networking).
+- It must work as a “lobby poster”: readable from ~10 meters away in ~2 seconds.
+- Job: communicate that the talk is an honest comparison of two real builds (“THE GOOD · THE BAD · THE UGLY”),
+  and that we’re comparing a “heavy frontend” stack vs a “grug brain simple” stack.
+- No presenter narration required; optional presenter note can just say “leave this up until start”.
+
+Key messages (keep big, minimal):
+- Title/brand: THE GOOD · THE BAD · THE UGLY
+- Framing: honest comparison + (optionally) “what it did to complexity” as a secondary hook
+- Stack cards:
+  - 2024: Heavy frontend — Next.js + Firebase
+  - 2025: Grug brain simple — Go + Datastar + SQLite (+ NATS)
+- Footer: Frontiers Meetup · January 2026 + “Regncon dev team”
+- Include “Starting soon” to make the waiting time feel intentional.
+
+Visual guidance:
+- Prefer clean layout with two “stack cards” rather than many bullets.
+- Include Frontiers + Regncon logos (small, tasteful, anchors context).
+- Tech logos: use sparingly to avoid clutter; a good default is only Next.js + Go logos (optional).
+- Optional subtle background: split “2024 vs 2025” or a faint screenshot, but keep contrast high.
+
+Constraints:
+- DO NOT show a QR code (stream-safe; leaves option for different links/features for remote vs local audiences).
+- Prioritize readability and low visual noise over showing every technology logo.
+*/
+
 func LobbyWelcome(isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	//slides "github.com/Regncon/frontiers-meetup-january-2026/slides/slides"
 	"github.com/Regncon/frontiers-meetup-january-2026/slides"
 )
 
@@ -14,10 +13,8 @@ var isPresenterMode = true
 
 var deck = []slideFunc{
 	func() templ.Component { return slides.LobbyWelcome(isPresenterMode) },
-	func() templ.Component { return slides.Wellcome() },
-	func() templ.Component { return slides.What() },
+	func() templ.Component { return slides.WhyThisTalk(isPresenterMode) },
 	func() templ.Component { return slides.Agenda(isPresenterMode) },
-	func() templ.Component { return slides.IntroNextJs() },
 }
 
 func deckSize() int {
