@@ -11,6 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -25,9 +26,19 @@ import (
 func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		inviteKey := chi.URLParam(r, "inviteKey")
+
+		sseURL := fmt.Sprintf("/%s/root/api", inviteKey)
+		if r.URL.RawQuery != "" {
+			sseURL = sseURL + "?" + r.URL.RawQuery
+		}
+
+		dataInit := fmt.Sprintf("@get('%s',{requestCancellation: 'disabled'})", sseURL)
+
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(db),
+			rootPageFirstLoad(db, inviteKey, dataInit),
 		).Render(ctx, w)
 	})
 
@@ -35,6 +46,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
 			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 				logger.Info("Root API SSE connected")
+
 				ctx := r.Context()
 				sse := datastar.NewSSE(w, r)
 
@@ -45,7 +57,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 					return
 				}
 
-				if err := sse.PatchElementTempl(rootPage(db)); err != nil {
+				inviteKey := chi.URLParam(r, "inviteKey")
+
+				if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
 					_ = sse.ConsoleError(err)
 					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -59,6 +73,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 					return
 				}
 				defer watcher.Stop()
+
 				logger.Info("Root API SSE watcher started", slog.String("sessionID", sessionID))
 
 				for {
@@ -76,21 +91,21 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage(db)); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
 					}
 				}
 			})
+
 			IncrementEmojiRoute(db, rootApiRouter, kv)
 			TopNavigationRoutes(db, rootApiRouter, kv)
 		})
 	})
-
 }
 
-func rootPageFirstLoad(db *sql.DB) templ.Component {
+func rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -116,9 +131,9 @@ func rootPageFirstLoad(db *sql.DB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("@get('/root/api',{requestCancellation: 'disabled'})")
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(dataInit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 86, Col: 94}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 101, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -128,7 +143,7 @@ func rootPageFirstLoad(db *sql.DB) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db, inviteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -140,7 +155,7 @@ func rootPageFirstLoad(db *sql.DB) templ.Component {
 	})
 }
 
-func rootPage(db *sql.DB) templ.Component {
+func rootPage(db *sql.DB, inviteKey string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -165,7 +180,7 @@ func rootPage(db *sql.DB) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db, inviteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -177,7 +192,7 @@ func rootPage(db *sql.DB) templ.Component {
 	})
 }
 
-func rootPageContent(db *sql.DB) templ.Component {
+func rootPageContent(db *sql.DB, inviteKey string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -202,7 +217,7 @@ func rootPageContent(db *sql.DB) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = TopNavigation(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = TopNavigation(db, inviteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -214,23 +229,23 @@ func rootPageContent(db *sql.DB) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EmojiCounter(db, "👍").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EmojiCounter(db, inviteKey, "👍").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EmojiCounter(db, "🎉").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EmojiCounter(db, inviteKey, "🎉").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EmojiCounter(db, "😂").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EmojiCounter(db, inviteKey, "😂").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EmojiCounter(db, "🔥").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EmojiCounter(db, inviteKey, "🔥").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = EmojiCounter(db, "❤️").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = EmojiCounter(db, inviteKey, "❤️").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
@@ -15,15 +16,22 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 	natsserver "github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go/jetstream"
 	_ "modernc.org/sqlite"
 )
 
+const inviteSessionName = "invite"
+
 func main() {
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
+	if err := godotenv.Load(); err != nil {
+		logger.Info("no .env file loaded (this is fine in prod)", slog.String("error", err.Error()))
+	}
 	db, dbErr := sql.Open("sqlite", "presentation.db")
+
 	if dbErr != nil {
 		logger.Error("failed to open DB", slog.String("error", dbErr.Error()))
 		return
@@ -44,9 +52,12 @@ func main() {
 	}
 	defer db.Close()
 
-	router := chi.NewRouter()
+	localKey := readEnvOrDefault(logger, "ATTENDEE_LOCAL_KEY", "local-dev-key")
+	remoteKey := readEnvOrDefault(logger, "ATTENDEE_REMOTE_KEY", "remote-dev-key")
 
+	router := chi.NewRouter()
 	router.Use(middleware.Logger)
+
 	sessionStore := sessions.NewCookieStore([]byte("session-secret"))
 	sessionStore.Options = &sessions.Options{
 		Path:     "/",
@@ -63,6 +74,13 @@ func main() {
 	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	router.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "static/favicon.ico")
+	})
+
+	// Root (no key): show a "you need a key" page.
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		if err := root.NeedKeyPage().Render(r.Context(), w); err != nil {
+			logger.Error("failed to render NeedKeyPage", slog.String("error", err.Error()))
+		}
 	})
 
 	rootCtx := context.Background()
@@ -96,14 +114,64 @@ func main() {
 		panic(fmt.Sprintf("failed to create or update key value store: %v", err))
 	}
 
-	root.RootLayoutRoute(router, db, sessionStore, kv, logger)
+	// Keyed access: /<key>/...
+	router.Route("/{inviteKey}", func(inviteRouter chi.Router) {
+		inviteRouter.Use(inviteKeyMiddleware(sessionStore, localKey, remoteKey, logger))
+		root.RootLayoutRoute(inviteRouter, db, sessionStore, kv, logger)
+	})
 
 	address := ":8080"
-
 	logger.Info("starting HTTP server", slog.String("address", address))
 
 	httpServerError := http.ListenAndServe(address, router)
 	if httpServerError != nil {
 		logger.Error("HTTP server error", slog.String("error", httpServerError.Error()))
+	}
+}
+
+func readEnvOrDefault(logger *slog.Logger, name, fallback string) string {
+	v := strings.TrimSpace(os.Getenv(name))
+	if v == "" {
+		logger.Warn("missing env var, using fallback (dev only)", slog.String("env", name))
+		return fallback
+	}
+	return v
+}
+
+func inviteKeyMiddleware(store sessions.Store, localKey, remoteKey string, logger *slog.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			inviteKey := chi.URLParam(r, "inviteKey")
+
+			var audience string
+			switch inviteKey {
+			case localKey:
+				audience = "local"
+			case remoteKey:
+				audience = "remote"
+			default:
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			}
+
+			// Persist which audience this key represents (useful later in handlers/templates).
+			sess, err := store.Get(r, inviteSessionName)
+			if err != nil {
+				logger.Error("failed to get invite session", slog.String("error", err.Error()))
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			}
+
+			if sess.Values["audience"] != audience {
+				sess.Values["audience"] = audience
+				if err := sess.Save(r, w); err != nil {
+					logger.Error("failed to save invite session", slog.String("error", err.Error()))
+					http.Redirect(w, r, "/", http.StatusFound)
+					return
+				}
+			}
+
+			next.ServeHTTP(w, r)
+		})
 	}
 }

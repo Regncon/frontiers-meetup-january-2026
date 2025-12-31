@@ -30,8 +30,8 @@ func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 			http.Error(w, "missing emoji", http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
 
+		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
 		if err != nil {
 			http.Error(w, "failed to increment emoji counter: "+err.Error(), http.StatusInternalServerError)
 			return
@@ -46,22 +46,19 @@ func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	})
 }
 
-func emojiIncrementPostURL(emoji string) string {
+func emojiIncrementPostURL(inviteKey string, emoji string) string {
 	escapedEmoji := url.QueryEscape(emoji)
-	return fmt.Sprintf("@post('/root/api/emoji/increment?emoji=%s')", escapedEmoji)
+	return fmt.Sprintf("@post('/%s/root/api/emoji/increment?emoji=%s')", inviteKey, escapedEmoji)
 }
 
-templ EmojiCounter(db *sql.DB, emoji string) {
+templ EmojiCounter(db *sql.DB, inviteKey string, emoji string) {
 	{{ count, _ := getEmojiCount(db, emoji) }}
 	<emoji-balloon data-emoji={ emoji } data-count={ fmt.Sprintf("%d", count) }>
 		<button
 			style="display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;"
-			data-on:click={ templ.URL(emojiIncrementPostURL(emoji)) }
+			data-on:click={ templ.URL(emojiIncrementPostURL(inviteKey, emoji)) }
 		>
-			<span
-				data-emoji-balloon-target
-				style="font-size:1.25rem;"
-			>
+			<span data-emoji-balloon-target style="font-size:1.25rem;">
 				{ emoji }
 			</span>
 			<span>{ fmt.Sprintf("%d", count) }</span>

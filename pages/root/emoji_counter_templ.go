@@ -38,8 +38,8 @@ func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 			http.Error(w, "missing emoji", http.StatusBadRequest)
 			return
 		}
-		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
 
+		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
 		if err != nil {
 			http.Error(w, "failed to increment emoji counter: "+err.Error(), http.StatusInternalServerError)
 			return
@@ -54,12 +54,12 @@ func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 	})
 }
 
-func emojiIncrementPostURL(emoji string) string {
+func emojiIncrementPostURL(inviteKey string, emoji string) string {
 	escapedEmoji := url.QueryEscape(emoji)
-	return fmt.Sprintf("@post('/root/api/emoji/increment?emoji=%s')", escapedEmoji)
+	return fmt.Sprintf("@post('/%s/root/api/emoji/increment?emoji=%s')", inviteKey, escapedEmoji)
 }
 
-func EmojiCounter(db *sql.DB, emoji string) templ.Component {
+func EmojiCounter(db *sql.DB, inviteKey string, emoji string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -112,9 +112,9 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(emojiIncrementPostURL(emoji)))
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(emojiIncrementPostURL(inviteKey, emoji)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 59, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 59, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -127,7 +127,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(emoji)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 65, Col: 11}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 62, Col: 11}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -140,7 +140,7 @@ func EmojiCounter(db *sql.DB, emoji string) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 67, Col: 35}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 64, Col: 35}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {

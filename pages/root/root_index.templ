@@ -3,6 +3,7 @@ package root
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -17,9 +18,19 @@ import (
 func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		inviteKey := chi.URLParam(r, "inviteKey")
+
+		sseURL := fmt.Sprintf("/%s/root/api", inviteKey)
+		if r.URL.RawQuery != "" {
+			sseURL = sseURL + "?" + r.URL.RawQuery
+		}
+
+		dataInit := fmt.Sprintf("@get('%s',{requestCancellation: 'disabled'})", sseURL)
+
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(db),
+			rootPageFirstLoad(db, inviteKey, dataInit),
 		).Render(ctx, w)
 	})
 
@@ -27,6 +38,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 		rootRouter.Route("/api", func(rootApiRouter chi.Router) {
 			rootApiRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 				logger.Info("Root API SSE connected")
+
 				ctx := r.Context()
 				sse := datastar.NewSSE(w, r)
 
@@ -37,7 +49,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 					return
 				}
 
-				if err := sse.PatchElementTempl(rootPage(db)); err != nil {
+				inviteKey := chi.URLParam(r, "inviteKey")
+
+				if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
 					_ = sse.ConsoleError(err)
 					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -51,6 +65,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 					return
 				}
 				defer watcher.Stop()
+
 				logger.Info("Root API SSE watcher started", slog.String("sessionID", sessionID))
 
 				for {
@@ -68,44 +83,44 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage(db)); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
 					}
 				}
 			})
+
 			IncrementEmojiRoute(db, rootApiRouter, kv)
 			TopNavigationRoutes(db, rootApiRouter, kv)
 		})
 	})
-
 }
 
-templ rootPageFirstLoad(db *sql.DB) {
-	<div id="root-page-wrapper" data-init={ "@get('/root/api',{requestCancellation: 'disabled'})" }>
-		@rootPageContent(db)
+templ rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string) {
+	<div id="root-page-wrapper" data-init={ dataInit }>
+		@rootPageContent(db, inviteKey)
 	</div>
 }
 
-templ rootPage(db *sql.DB) {
+templ rootPage(db *sql.DB, inviteKey string) {
 	<div id="root-page-wrapper">
-		@rootPageContent(db)
+		@rootPageContent(db, inviteKey)
 	</div>
 }
 
-templ rootPageContent(db *sql.DB) {
+templ rootPageContent(db *sql.DB, inviteKey string) {
 	<div class="root-page">
 		<main class="root-main">
-			@TopNavigation(db)
+			@TopNavigation(db, inviteKey)
 			@ActiveSlide(db)
 		</main>
 		<footer class="emoji-bar" aria-label="Reactions">
-			@EmojiCounter(db, "👍")
-			@EmojiCounter(db, "🎉")
-			@EmojiCounter(db, "😂")
-			@EmojiCounter(db, "🔥")
-			@EmojiCounter(db, "❤️")
+			@EmojiCounter(db, inviteKey, "👍")
+			@EmojiCounter(db, inviteKey, "🎉")
+			@EmojiCounter(db, inviteKey, "😂")
+			@EmojiCounter(db, inviteKey, "🔥")
+			@EmojiCounter(db, inviteKey, "❤️")
 		</footer>
 	</div>
 }

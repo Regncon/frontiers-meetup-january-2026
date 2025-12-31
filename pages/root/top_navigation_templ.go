@@ -80,12 +80,12 @@ func TopNavigationRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 
 // --- Templ helper ---
 
-func slideSetPostURL(index int) string {
-	return fmt.Sprintf("@post('/root/api/slides/set?index=%d')", index)
+func slideSetPostURL(inviteKey string, index int) string {
+	return fmt.Sprintf("@post('/%s/root/api/slides/set?index=%d')", inviteKey, index)
 }
 
 // --- Component ---
-func TopNavigation(db *sql.DB) templ.Component {
+func TopNavigation(db *sql.DB, inviteKey string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -126,9 +126,9 @@ func TopNavigation(db *sql.DB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(0)))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, 0)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 89, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 89, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
@@ -139,9 +139,9 @@ func TopNavigation(db *sql.DB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(current - 1)))
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, current-1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 96, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 96, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -152,9 +152,9 @@ func TopNavigation(db *sql.DB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(current + 1)))
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, current+1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 103, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 103, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {

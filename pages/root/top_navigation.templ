@@ -72,12 +72,12 @@ func TopNavigationRoutes(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
 
 // --- Templ helper ---
 
-func slideSetPostURL(index int) string {
-	return fmt.Sprintf("@post('/root/api/slides/set?index=%d')", index)
+func slideSetPostURL(inviteKey string, index int) string {
+	return fmt.Sprintf("@post('/%s/root/api/slides/set?index=%d')", inviteKey, index)
 }
 
 // --- Component ---
-templ TopNavigation(db *sql.DB) {
+templ TopNavigation(db *sql.DB, inviteKey string) {
 	{{ current, _ := GetCurrentSlideIndex(db) }}
 	{{ maxSlides := deckSize() }}
 	<div
@@ -86,21 +86,21 @@ templ TopNavigation(db *sql.DB) {
 	>
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
-			data-on:click={ templ.URL(slideSetPostURL(0)) }
+			data-on:click={ templ.URL(slideSetPostURL(inviteKey, 0)) }
 		>
 			Home
 		</button>
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
 			data-attr="{ disabled: $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
-			data-on:click={ templ.URL(slideSetPostURL(current - 1)) }
+			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current-1)) }
 		>
 			Previous
 		</button>
 		<button
 			style="padding:0.5rem 0.75rem; border-radius:10px;"
 			data-attr="{ disabled: $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }"
-			data-on:click={ templ.URL(slideSetPostURL(current + 1)) }
+			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current+1)) }
 		>
 			Next
 		</button>

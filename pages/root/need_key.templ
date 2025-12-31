@@ -1,0 +1,20 @@
+package root
+
+import "github.com/Regncon/frontiers-meetup-january-2026/components"
+
+templ NeedKeyPage() {
+	@components.BaseLayout("Frontiers Meetup", NeedKeyContent())
+}
+
+templ NeedKeyContent() {
+	<main style="max-width: 48rem; margin: 5rem auto; padding: 0 1rem; text-align: center;">
+		<h1 style="font-size: 2rem; margin-bottom: 1rem;">You need an invite link</h1>
+		<p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1rem;">
+			These slides are shared via an unlisted URL.
+			Open the invite link you received (it looks like <code>/&lt;key&gt;/</code>).
+		</p>
+		<p style="opacity: 0.8;">
+			If you don’t have the link, ask the organizer in the meetup chat.
+		</p>
+	</main>
+}
