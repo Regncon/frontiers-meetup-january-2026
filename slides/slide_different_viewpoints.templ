@@ -1,0 +1,40 @@
+package slides
+
+/*
+Slide: Different viewpoints
+
+Intent:
+- Signal diversity of opinions inside the team.
+- Make space for the audience to disagree without conflict.
+- Light humor, not hostile.
+
+Design:
+- Two big quotes.
+- Optional: a simple spectrum line via inline CSS.
+*/
+
+templ DifferentViewpoints(isPresenter bool) {
+	<div class="slide">
+		<h1>Different viewpoints</h1>
+		<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+			<div style="font-size: 1.6rem;">
+				“I can’t see the value of heavy frontend frameworks.
+				<br/>
+				Everything can be done with simple HTML, CSS, Go, Datastar…
+				<br/>
+				<strong>Prove me wrong.</strong>”
+			</div>
+			<div style="font-size: 1.6rem;">
+				“I’m trying to decide where to get my
+				<br/>
+				<strong>VS Code + React</strong> tattoos.”
+			</div>
+		</div>
+	</div>
+	if isPresenter {
+		<div class="presenter-notes">
+			We disagree internally — and that makes the comparison more honest.
+			This is not a debate; it’s sharing perspectives and tradeoffs.
+		</div>
+	}
+}
