@@ -8,7 +8,49 @@ package slides
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Agenda(isPresenter bool) templ.Component {
+/*
+Slide: Agenda (with progress indicator)
+
+Intent:
+- Provide a simple “where are we in the story?” anchor.
+- Reuse the same slide multiple times during the talk by passing a current step.
+- Not a persistent header/footer: show only when needed (e.g., after intro, between major sections).
+
+Design:
+- Keep it short (max ~5 items).
+- Highlight the current step clearly (arrow + stronger weight).
+- Past steps are slightly faded; future steps are more faded.
+- No fancy animations; readability first.
+
+Usage:
+- Call Agenda(AgendaWhoWeAre, isPresenter) early.
+- Later, call again between sections: Agenda(Agenda2024, ...), Agenda(Agenda2025, ...), etc.
+*/
+
+type AgendaStep int
+
+const (
+	AgendaWhoWeAre AgendaStep = iota
+	Agenda2024
+	Agenda2025
+	AgendaCompare
+	AgendaTakeaways
+)
+
+type agendaItem struct {
+	step  AgendaStep
+	label string
+}
+
+var agendaItems = []agendaItem{
+	{step: AgendaWhoWeAre, label: "Who we are + what we built"},
+	{step: Agenda2024, label: "2024: Heavy frontend (Next.js + Firebase)"},
+	{step: Agenda2025, label: "2025: Grug brain (Go + Datastar + SQLite + NATS)"},
+	{step: AgendaCompare, label: "The Good / Bad / Ugly (by topic)"},
+	{step: AgendaTakeaways, label: "Takeaways"},
+}
+
+func Agenda(current AgendaStep, isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +71,56 @@ func Agenda(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Aenda</h1><ul><li>Who are we?</li><li>Next.js</li><li>Go, Nats, Datastar, Sqlite</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Agenda</h1><ul style=\"list-style: none; padding-left: 0; margin: 0;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		for _, it := range agendaItems {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<li style=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(agendaItemStyle(current, it.step))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 50, Col: 49}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><span style=\"display:inline-block; width: 2ch;\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(agendaItemPrefix(current, it.step))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 52, Col: 42}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span> ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(it.label)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 54, Col: 15}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</li>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -41,6 +132,26 @@ func Agenda(isPresenter bool) templ.Component {
 		}
 		return nil
 	})
+}
+
+func agendaItemStyle(current, step AgendaStep) string {
+	if step == current {
+		return "font-weight:700; font-size: 1.6rem; margin: 0.6rem 0;"
+	}
+	if step < current {
+		return "opacity:0.75; margin: 0.5rem 0;"
+	}
+	return "opacity:0.55; margin: 0.5rem 0;"
+}
+
+func agendaItemPrefix(current, step AgendaStep) string {
+	if step == current {
+		return "→"
+	}
+	if step < current {
+		return "✓"
+	}
+	return ""
 }
 
 func agendaPresenterNotes() templ.Component {
@@ -59,12 +170,12 @@ func agendaPresenterNotes() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var5 == nil {
+			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">This is a an example of presenter note.</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"presenter-notes\">Use this slide as a recurring “where we are” marker by passing the current AgendaStep. Show only when needed (not on every slide).</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

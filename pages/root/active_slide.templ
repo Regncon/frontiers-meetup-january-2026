@@ -14,7 +14,11 @@ var isPresenterMode = true
 var deck = []slideFunc{
 	func() templ.Component { return slides.LobbyWelcome(isPresenterMode) },
 	func() templ.Component { return slides.WhyThisTalk(isPresenterMode) },
-	func() templ.Component { return slides.Agenda(isPresenterMode) },
+	func() templ.Component { return slides.Agenda(slides.AgendaWhoWeAre, isPresenterMode) },
+	func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenterMode) },
+	func() templ.Component { return slides.Agenda(slides.Agenda2025, isPresenterMode) },
+	func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenterMode) },
+	func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenterMode) },
 }
 
 func deckSize() int {
