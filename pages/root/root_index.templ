@@ -124,14 +124,16 @@ templ rootPage(db *sql.DB, inviteKey string, isPresenter bool) {
 }
 
 templ rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) {
-	<div class="root-page">
-		<main class="root-main">
-			if isPresenter {
+	<div class="app">
+		if isPresenter {
+			<header class="presenter-bar" aria-label="Presenter controls">
 				@TopNavigation(db, inviteKey)
-			}
+			</header>
+		}
+		<main class="stage" aria-label="Presentation">
 			@ActiveSlide(db, isPresenter)
 		</main>
-		<footer class="emoji-bar" aria-label="Reactions">
+		<footer class="reactions" aria-label="Reactions">
 			@EmojiCounter(db, inviteKey, "👍")
 			@EmojiCounter(db, inviteKey, "🎉")
 			@EmojiCounter(db, inviteKey, "😂")

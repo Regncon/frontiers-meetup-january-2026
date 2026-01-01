@@ -80,7 +80,7 @@ func slideSetPostURL(inviteKey string, index int) string {
 templ TopNavigation(db *sql.DB, inviteKey string) {
 	{{ current, _ := GetCurrentSlideIndex(db) }}
 	{{ maxSlides := deckSize() }}
-	<div
+	<nav
 		data-signals={ fmt.Sprintf("{ slideIndex: %d, maxSlides: %d }", current, maxSlides) }
 		style="display:flex; gap:0.5rem; margin:1rem 0; align-items:center; flex-wrap:wrap;"
 	>
@@ -107,5 +107,5 @@ templ TopNavigation(db *sql.DB, inviteKey string) {
 		<span style="margin-left:0.75rem;">
 			Slide { fmt.Sprintf("%d / %d", current+1, maxSlides) }
 		</span>
-	</div>
+	</nav>
 }

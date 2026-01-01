@@ -1,53 +1,177 @@
+@view-transition {
+	navigation: auto;
+}
+
 :root {
+	/* Colors */
 	--color-text-strong: #f1f3f9;
 	--color-text-soft: #ccd1e9;
 	--color-text-soft-50: hsl(from var(--color-text-soft) h s l / 50%);
 
 	--color-primary-text: var(--color-text-soft);
-
 	--color-bg-base: #1a1b26;
 
-	@view-transition {
-		navigation: Auto;
-	}
+	/* Layout */
+	--stage-max-width: 62rem;
 
+	/* Spacing (base: 1rem = 16px) */
+	--space-1: 0.5rem;
+	/* 8px */
+	--space-2: 1rem;
+	/* 16px */
+	--space-3: 1.5rem;
+	/* 24px */
+	--space-4: 2rem;
+	/* 32px */
+	--space-5: 3rem;
+	/* 48px */
 
-	html {
-		color-scheme: dark;
-		height: 100%;
-	}
+	/* Type scale */
+	--font-body: clamp(1.05rem, 1.2vw + 0.8rem, 1.5rem);
+	--font-h1: clamp(2rem, 3.2vw + 1rem, 3.5rem);
+	--font-small: clamp(0.95rem, 0.5vw + 0.85rem, 1.1rem);
 
-	body {
-		min-height: 100%;
-		margin: 0;
-		background: var(--color-bg-base);
-		color: var(--color-primary-text);
-	}
+	/* Surfaces */
+	--surface-presenter: hsl(from var(--color-bg-base) h s calc(l + 6%) / 85%);
+	--surface-glass: hsl(from var(--color-bg-base) h s l / 90%);
+	--border-subtle: 1px solid var(--color-text-soft-50);
 
-	.root-page {
-		min-height: 100vh;
-		display: flex;
-		flex-direction: column;
-	}
+	--radius: 12px;
+}
 
-	.root-main {
-		flex: 1;
-		padding: 1rem;
-	}
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
 
-	.emoji-bar {
-		position: sticky;
-		bottom: 0;
+html {
+	color-scheme: dark;
+	height: 100%;
+	font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
 
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
+body {
+	min-height: 100%;
+	margin: 0;
+	background: var(--color-bg-base);
+	color: var(--color-primary-text);
+}
 
-		padding: 0.75rem 1rem;
+#root-page-wrapper {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
 
-		background: hsl(from var(--color-bg-base) h s l / 90%);
-		backdrop-filter: blur(8px);
+.app {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
 
-		border-top: 1px solid var(--color-text-soft-50);
-	}
+/* Presenter UI (not part of the slide stage) */
+.presenter-bar {
+	background: var(--surface-presenter);
+	border-bottom: var(--border-subtle);
+	padding: var(--space-2) var(--space-3);
+}
+
+.presenter-bar>* {
+	max-width: var(--stage-max-width);
+	margin: 0 auto;
+}
+
+/* Stage wrapper */
+.stage {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	padding: clamp(1rem, 3vw, 2rem);
+}
+
+/* Slide "canvas" */
+.slide {
+	flex: 1;
+	width: 100%;
+	max-width: var(--stage-max-width);
+	margin: 0 auto;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	padding-block: clamp(1rem, 5vh, 3rem);
+}
+
+.slide h1 {
+	margin: 0 0 var(--space-3) 0;
+	font-size: var(--font-h1);
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	color: var(--color-text-strong);
+}
+
+.slide ul {
+	margin: 0;
+	padding-left: 1.2em;
+	font-size: var(--font-body);
+	line-height: 1.45;
+	color: var(--color-text-soft);
+}
+
+.slide li {
+	margin-bottom: var(--space-2);
+}
+
+.slide li:last-child {
+	margin-bottom: 0;
+}
+
+.slide li::marker {
+	color: var(--color-text-soft-50);
+}
+
+/* Presenter notes (backstage strip at bottom) */
+.presenter-notes {
+	width: 100%;
+	max-width: var(--stage-max-width);
+	margin: var(--space-3) auto 0 auto;
+
+	padding: var(--space-3);
+	border: var(--border-subtle);
+	border-radius: var(--radius);
+	background: var(--surface-presenter);
+
+	font-size: var(--font-small);
+	line-height: 1.4;
+	color: var(--color-text-soft);
+}
+
+.presenter-notes::before {
+	content: "Presenter notes";
+	display: block;
+	margin-bottom: var(--space-2);
+
+	font-size: 0.85em;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-text-soft-50);
+}
+
+/* Reactions bar */
+.reactions {
+	position: sticky;
+	bottom: 0;
+
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-1);
+
+	padding: var(--space-2) var(--space-3);
+	padding-bottom: calc(var(--space-2) + env(safe-area-inset-bottom));
+
+	background: var(--surface-glass);
+	backdrop-filter: blur(8px);
+	border-top: var(--border-subtle);
 }
