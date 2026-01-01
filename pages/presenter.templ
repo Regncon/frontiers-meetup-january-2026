@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"path"
 	"strings"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
@@ -14,126 +13,113 @@ import (
 
 const presenterSessionName = "presenter-auth"
 
+const (
+	presenterFlagKey = "presenter"
+	presenterEnvKey  = "PRESENTER_KEY"
+)
+
+const (
+	errNone         = ""
+	errInvalidForm  = "invalid_form"
+	errInvalidKey   = "invalid_key"
+	errEnableFailed = "enable_failed"
+	errLogoutFailed = "logout_failed"
+)
+
 func PresenterRoutes(router chi.Router, store sessions.Store, logger *slog.Logger) {
 	router.Route("/presenter", func(presenterRouter chi.Router) {
 		presenterRouter.Get("/", func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()
 
-			isPresenter, err := getPresenterFlag(r, store)
-			if err != nil {
-				logger.Error("failed to read presenter session", slog.String("error", err.Error()))
-				http.Redirect(w, r, "../", http.StatusFound)
-				return
-			}
-
-			flash, err := popPresenterFlash(r, w, store)
-			if err != nil {
-				logger.Error("failed to read presenter flash", slog.String("error", err.Error()))
-				flash = ""
-			}
+			isPresenter := presenterEnabled(r, store, logger)
+			errorMessage := presenterErrorMessage(r)
 
 			components.BaseLayout(
 				"Presenter mode",
-				PresenterPage(isPresenter, flash),
+				PresenterPage(isPresenter, errorMessage),
 			).Render(ctx, w)
 		})
 
 		presenterRouter.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			if err := r.ParseForm(); err != nil {
-				_ = setPresenterFlash(w, r, store, "Invalid form submission.")
-				redirectToPresenterHome(w, r)
+				http.Redirect(w, r, "/presenter/?err="+errInvalidForm, http.StatusSeeOther)
 				return
 			}
 
-			entered := strings.TrimSpace(r.FormValue("key"))
-			expected := strings.TrimSpace(os.Getenv("PRESENTER_KEY"))
-
-			if entered == "" || expected == "" || entered != expected {
-				_ = setPresenterFlash(w, r, store, "Invalid presenter key.")
-				redirectToPresenterHome(w, r)
+			if !presenterKeyMatches(r.FormValue("key")) {
+				http.Redirect(w, r, "/presenter/?err="+errInvalidKey, http.StatusSeeOther)
 				return
 			}
 
-			if err := setPresenterFlag(w, r, store, true); err != nil {
-				logger.Error("failed to set presenter session", slog.String("error", err.Error()))
-				_ = setPresenterFlash(w, r, store, "Failed to enable presenter mode.")
-				redirectToPresenterHome(w, r)
+			if err := presenterFlagSet(w, r, store, true); err != nil {
+				logger.Error("failed to enable presenter mode", slog.String("error", err.Error()))
+				http.Redirect(w, r, "/presenter/?err="+errEnableFailed, http.StatusSeeOther)
 				return
 			}
 
-			redirectToPresenterHome(w, r)
+			http.Redirect(w, r, "/presenter/", http.StatusSeeOther)
 		})
 
 		presenterRouter.Post("/logout", func(w http.ResponseWriter, r *http.Request) {
-			if err := setPresenterFlag(w, r, store, false); err != nil {
-				logger.Error("failed to clear presenter session", slog.String("error", err.Error()))
-				_ = setPresenterFlash(w, r, store, "Failed to log out.")
-				redirectToPresenterHome(w, r)
+			if err := presenterFlagSet(w, r, store, false); err != nil {
+				logger.Error("failed to disable presenter mode", slog.String("error", err.Error()))
+				http.Redirect(w, r, "/presenter/?err="+errLogoutFailed, http.StatusSeeOther)
 				return
 			}
 
-			redirectToPresenterHome(w, r)
+			http.Redirect(w, r, "/presenter/", http.StatusSeeOther)
 		})
 	})
 }
 
-func redirectToPresenterHome(w http.ResponseWriter, r *http.Request) {
-	// When mounted under a secret prefix, r.URL.Path looks like:
-	// /a_super_secret_key_12345/presenter/login
-	// We want:
-	// /a_super_secret_key_12345/presenter
-	//
-	// path.Dir => /a_super_secret_key_12345/presenter
-	http.Redirect(w, r, path.Dir(r.URL.Path), http.StatusSeeOther) // 303
+func presenterKeyMatches(enteredRaw string) bool {
+	entered := strings.TrimSpace(enteredRaw)
+	expected := strings.TrimSpace(os.Getenv(presenterEnvKey))
+
+	if entered == "" || expected == "" {
+		return false
+	}
+	return entered == expected
 }
 
-func getPresenterFlag(r *http.Request, store sessions.Store) (bool, error) {
+func presenterEnabled(r *http.Request, store sessions.Store, logger *slog.Logger) bool {
 	sess, err := store.Get(r, presenterSessionName)
 	if err != nil {
-		return false, err
+		logger.Error("failed to read presenter session", slog.String("error", err.Error()))
+		return false
 	}
 
-	v, ok := sess.Values["presenter"].(bool)
-	return ok && v, nil
+	v, ok := sess.Values[presenterFlagKey].(bool)
+	return ok && v
 }
 
-func setPresenterFlag(w http.ResponseWriter, r *http.Request, store sessions.Store, isPresenter bool) error {
-	sess, err := store.Get(r, presenterSessionName)
-	if err != nil {
-		return err
-	}
-
-	sess.Values["presenter"] = isPresenter
-	return sess.Save(r, w)
-}
-
-func setPresenterFlash(w http.ResponseWriter, r *http.Request, store sessions.Store, message string) error {
+func presenterFlagSet(w http.ResponseWriter, r *http.Request, store sessions.Store, enabled bool) error {
 	sess, err := store.Get(r, presenterSessionName)
 	if err != nil {
 		return err
 	}
 
-	sess.Values["flash"] = message
+	sess.Values[presenterFlagKey] = enabled
 	return sess.Save(r, w)
 }
 
-func popPresenterFlash(r *http.Request, w http.ResponseWriter, store sessions.Store) (string, error) {
-	sess, err := store.Get(r, presenterSessionName)
-	if err != nil {
-		return "", err
-	}
+func presenterErrorMessage(r *http.Request) string {
+	code := strings.TrimSpace(r.URL.Query().Get("err"))
 
-	msg, _ := sess.Values["flash"].(string)
-	if msg == "" {
-		return "", nil
+	switch code {
+	case errNone:
+		return ""
+	case errInvalidForm:
+		return "Invalid form submission."
+	case errInvalidKey:
+		return "Invalid presenter key."
+	case errEnableFailed:
+		return "Failed to enable presenter mode."
+	case errLogoutFailed:
+		return "Failed to log out."
+	default:
+		return "Something went wrong."
 	}
-
-	delete(sess.Values, "flash")
-	if err := sess.Save(r, w); err != nil {
-		return "", err
-	}
-
-	return msg, nil
 }
 
 templ PresenterPage(isPresenter bool, errorMessage string) {
