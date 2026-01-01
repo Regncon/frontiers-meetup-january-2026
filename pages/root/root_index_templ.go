@@ -237,7 +237,7 @@ func rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) templ.Compo
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = ActiveSlide(db).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ActiveSlide(db, isPresenter).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

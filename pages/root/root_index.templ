@@ -129,7 +129,7 @@ templ rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) {
 			if isPresenter {
 				@TopNavigation(db, inviteKey)
 			}
-			@ActiveSlide(db)
+			@ActiveSlide(db, isPresenter)
 		</main>
 		<footer class="emoji-bar" aria-label="Reactions">
 			@EmojiCounter(db, inviteKey, "👍")

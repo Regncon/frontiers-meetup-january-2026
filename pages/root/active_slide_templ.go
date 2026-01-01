@@ -17,39 +17,40 @@ import (
 
 type slideFunc func() templ.Component
 
-var isPresenterMode = true
-
-var deck = []slideFunc{
-	func() templ.Component { return slides.LobbyWelcome(isPresenterMode) },
-	func() templ.Component { return slides.WhyThisTalk(isPresenterMode) },
-	func() templ.Component { return slides.Agenda(slides.AgendaWhoWeAre, isPresenterMode) },
-	func() templ.Component { return slides.WhatIsRegncon(isPresenterMode) },
-	func() templ.Component { return slides.WhoWeAre(isPresenterMode) },
-	func() templ.Component { return slides.DifferentViewpoints(isPresenterMode) },
-	func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenterMode) },
-	func() templ.Component { return slides.Agenda(slides.Agenda2025, isPresenterMode) },
-	func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenterMode) },
-	func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenterMode) },
+func deck(isPresenter bool) []slideFunc {
+	return []slideFunc{
+		func() templ.Component { return slides.LobbyWelcome(isPresenter) },
+		func() templ.Component { return slides.WhyThisTalk(isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.AgendaWhoWeAre, isPresenter) },
+		func() templ.Component { return slides.WhatIsRegncon(isPresenter) },
+		func() templ.Component { return slides.WhoWeAre(isPresenter) },
+		func() templ.Component { return slides.DifferentViewpoints(isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.Agenda2025, isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
+	}
 }
 
 func deckSize() int {
-	return len(deck)
+	return len(deck(true))
 }
 
 func clampSlideIndex(index int) int {
 	if index < 0 {
 		return 0
 	}
-	if len(deck) == 0 {
+	deckSize := deckSize()
+	if deckSize == 0 {
 		return 0
 	}
-	if index >= len(deck) {
-		return len(deck) - 1
+	if index >= deckSize {
+		return deckSize - 1
 	}
 	return index
 }
 
-func slideAt(index int) slideFunc {
+func slideAt(deck []slideFunc, index int) slideFunc {
 	if index < 0 || index >= len(deck) {
 		return func() templ.Component { return UnknownSlide() }
 	}
@@ -57,7 +58,7 @@ func slideAt(index int) slideFunc {
 }
 
 // --- Components ---
-func ActiveSlide(db *sql.DB) templ.Component {
+func ActiveSlide(db *sql.DB, isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -79,8 +80,9 @@ func ActiveSlide(db *sql.DB) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		index, _ := GetCurrentSlideIndex(db)
+		deckLocal := deck(isPresenter)
 		index = clampSlideIndex(index)
-		slideComponent := slideAt(index)
+		slideComponent := slideAt(deckLocal, index)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div data-signals=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -88,7 +90,7 @@ func ActiveSlide(db *sql.DB) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 56, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 58, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
