@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Regncon/frontiers-meetup-january-2026/pages"
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
@@ -113,6 +114,8 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("failed to create or update key value store: %v", err))
 	}
+
+	pages.PresenterRoutes(router, sessionStore, logger)
 
 	// Keyed access: /<key>/...
 	router.Route("/{inviteKey}", func(inviteRouter chi.Router) {

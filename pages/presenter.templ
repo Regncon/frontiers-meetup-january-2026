@@ -1,9 +1,10 @@
-package root
+package pages
 
 import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
@@ -40,7 +41,7 @@ func PresenterRoutes(router chi.Router, store sessions.Store, logger *slog.Logge
 		presenterRouter.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			if err := r.ParseForm(); err != nil {
 				_ = setPresenterFlash(w, r, store, "Invalid form submission.")
-				http.Redirect(w, r, "./", http.StatusFound)
+				redirectToPresenterHome(w, r)
 				return
 			}
 
@@ -49,31 +50,41 @@ func PresenterRoutes(router chi.Router, store sessions.Store, logger *slog.Logge
 
 			if entered == "" || expected == "" || entered != expected {
 				_ = setPresenterFlash(w, r, store, "Invalid presenter key.")
-				http.Redirect(w, r, "./", http.StatusFound)
+				redirectToPresenterHome(w, r)
 				return
 			}
 
 			if err := setPresenterFlag(w, r, store, true); err != nil {
 				logger.Error("failed to set presenter session", slog.String("error", err.Error()))
 				_ = setPresenterFlash(w, r, store, "Failed to enable presenter mode.")
-				http.Redirect(w, r, "./", http.StatusFound)
+				redirectToPresenterHome(w, r)
 				return
 			}
 
-			http.Redirect(w, r, "./", http.StatusFound)
+			redirectToPresenterHome(w, r)
 		})
 
 		presenterRouter.Post("/logout", func(w http.ResponseWriter, r *http.Request) {
 			if err := setPresenterFlag(w, r, store, false); err != nil {
 				logger.Error("failed to clear presenter session", slog.String("error", err.Error()))
 				_ = setPresenterFlash(w, r, store, "Failed to log out.")
-				http.Redirect(w, r, "./", http.StatusFound)
+				redirectToPresenterHome(w, r)
 				return
 			}
 
-			http.Redirect(w, r, "./", http.StatusFound)
+			redirectToPresenterHome(w, r)
 		})
 	})
+}
+
+func redirectToPresenterHome(w http.ResponseWriter, r *http.Request) {
+	// When mounted under a secret prefix, r.URL.Path looks like:
+	// /a_super_secret_key_12345/presenter/login
+	// We want:
+	// /a_super_secret_key_12345/presenter
+	//
+	// path.Dir => /a_super_secret_key_12345/presenter
+	http.Redirect(w, r, path.Dir(r.URL.Path), http.StatusSeeOther) // 303
 }
 
 func getPresenterFlag(r *http.Request, store sessions.Store) (bool, error) {
@@ -137,7 +148,7 @@ templ PresenterPage(isPresenter bool, errorMessage string) {
 			<p style="opacity: 0.85; margin-bottom: 1rem;">
 				Enter the presenter key to enable presenter controls on this device.
 			</p>
-			<form method="post" action="./login" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+			<form method="post" action="/presenter/login" style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
 				<input
 					type="password"
 					name="key"
@@ -153,7 +164,7 @@ templ PresenterPage(isPresenter bool, errorMessage string) {
 			<p style="opacity: 0.85; margin-bottom: 1rem;">
 				This device is currently in presenter mode.
 			</p>
-			<form method="post" action="./logout">
+			<form method="post" action="/presenter/logout">
 				<button type="submit" style="padding: 0.65rem 0.9rem; border-radius: 10px;">
 					Log out presenter mode
 				</button>
