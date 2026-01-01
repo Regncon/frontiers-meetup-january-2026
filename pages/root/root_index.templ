@@ -15,6 +15,8 @@ import (
 	datastar "github.com/starfederation/datastar-go/datastar"
 )
 
+const presenterSessionName = "presenter-auth"
+
 func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
@@ -25,12 +27,13 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 		if r.URL.RawQuery != "" {
 			sseURL = sseURL + "?" + r.URL.RawQuery
 		}
-
 		dataInit := fmt.Sprintf("@get('%s',{requestCancellation: 'disabled'})", sseURL)
+
+		isPresenter := isPresenterFromSession(r, store)
 
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(db, inviteKey, dataInit),
+			rootPageFirstLoad(db, inviteKey, dataInit, isPresenter),
 		).Render(ctx, w)
 	})
 
@@ -50,8 +53,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				}
 
 				inviteKey := chi.URLParam(r, "inviteKey")
+				isPresenter := isPresenterFromSession(r, store)
 
-				if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
+				if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
 					_ = sse.ConsoleError(err)
 					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -83,7 +87,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage(db, inviteKey)); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
@@ -97,22 +101,34 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 	})
 }
 
-templ rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string) {
+func isPresenterFromSession(r *http.Request, store sessions.Store) bool {
+	sess, err := store.Get(r, presenterSessionName)
+	if err != nil {
+		return false
+	}
+
+	v, ok := sess.Values["presenter"].(bool)
+	return ok && v
+}
+
+templ rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresenter bool) {
 	<div id="root-page-wrapper" data-init={ dataInit }>
-		@rootPageContent(db, inviteKey)
+		@rootPageContent(db, inviteKey, isPresenter)
 	</div>
 }
 
-templ rootPage(db *sql.DB, inviteKey string) {
+templ rootPage(db *sql.DB, inviteKey string, isPresenter bool) {
 	<div id="root-page-wrapper">
-		@rootPageContent(db, inviteKey)
+		@rootPageContent(db, inviteKey, isPresenter)
 	</div>
 }
 
-templ rootPageContent(db *sql.DB, inviteKey string) {
+templ rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) {
 	<div class="root-page">
 		<main class="root-main">
-			@TopNavigation(db, inviteKey)
+			if isPresenter {
+				@TopNavigation(db, inviteKey)
+			}
 			@ActiveSlide(db)
 		</main>
 		<footer class="emoji-bar" aria-label="Reactions">
