@@ -23,6 +23,7 @@ func deck(isPresenter bool) []slideFunc {
 		func() templ.Component { return slides.WhyThisTalk(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaWhoWeAre, isPresenter) },
 		func() templ.Component { return slides.WhatIsRegncon(isPresenter) },
+		func() templ.Component { return slides.ProjectVision(isPresenter) },
 		func() templ.Component { return slides.WhoWeAre(isPresenter) },
 		func() templ.Component { return slides.DifferentViewpoints(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenter) },
@@ -90,7 +91,7 @@ func ActiveSlide(db *sql.DB, isPresenter bool) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 58, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 59, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
