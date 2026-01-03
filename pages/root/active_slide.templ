@@ -28,6 +28,8 @@ func deck(isPresenter bool) []slideFunc {
 		func() templ.Component { return slides.Build2025Philosophy(isPresenter) },
 		func() templ.Component { return slides.GrugBrainMeme(isPresenter) },
 		func() templ.Component { return slides.Build2025HowWeChoseTheStack(isPresenter) },
+		func() templ.Component { return slides.WhatIsGo(isPresenter) },
+		func() templ.Component { return slides.WhatIsTempl(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
 	}

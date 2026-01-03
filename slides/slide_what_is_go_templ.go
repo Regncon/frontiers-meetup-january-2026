@@ -9,23 +9,17 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 /*
-Slide: Grug brain meme (tone + transition)
+Slide: What is Go?
 
 Intent:
-- Lighten the mood and lock in the “grug brain simple” theme for the 2025 section.
-- Reinforce the idea that “simple HTML + CSS + backend” can be powerful.
-- This is not meant to be spicy or insulting — it’s self-aware humor.
-- Works best right after Build2025Philosophy, before we explain the individual technologies.
-
-Visual:
-- Prefer an original “IQ curve inspired” graphic that we own (stream/recording friendly).
-- If using a meme image file, keep it large and readable.
+- Give a neutral, high-level explanation of Go for attendees who haven't used it.
+- Keep it short and relevant to our talk: compiled, simple, strong stdlib, good for servers/CLI tooling.
 
 Design:
-- Minimal text. Let the image do the work.
+- 3–5 bullets max. No deep language trivia yet (we’ll cover comparisons later).
 */
 
-func GrugBrainMeme(isPresenter bool) templ.Component {
+func WhatIsGo(isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -46,12 +40,12 @@ func GrugBrainMeme(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; flex-direction:column; justify-content:center; gap: 1.5rem;\"><h1 style=\"margin: 0;\">Grug brain developer?</h1><img src=\"/static/iq-bell-curve-grug.webp\" alt=\"IQ bell curve: grug brain and jedi dev agree: HTML + CSS + Go is fine. Middle insists on heavy frameworks.\" style=\"max-width: 100%; max-height: 70vh; object-fit: contain; border-radius: 14px;\"></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What is Go?</h1><ul><li>A compiled programming language designed for <strong>simplicity</strong> and <strong>maintainability</strong></li><li>Great standard library for building <strong>servers</strong> and <strong>tools</strong></li><li>Fast builds, easy deployment (single binary)</li><li>Strong conventions → codebases tend to look similar</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = grugBrainMemePresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = whatIsGoPresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -60,7 +54,7 @@ func GrugBrainMeme(isPresenter bool) templ.Component {
 	})
 }
 
-func grugBrainMemePresenterNotes() templ.Component {
+func whatIsGoPresenterNotes() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -81,7 +75,7 @@ func grugBrainMemePresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Quick laugh + reset the vibe: we’re not here to dunk on anyone.</li><li>The point: “simple” can be more capable than people assume.</li><li>Transition: “Ok — now let’s explain what Datastar/templ/SQLite/NATS actually are.”</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Keep it neutral. This is just context for the rest of the 2025 stack.</li><li>We’ll talk later about where Go really shines for us (tooling, upgrades, simplicity).</li><li>For this project: Go is the backend and a lot of the “app” logic lives server-side.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
