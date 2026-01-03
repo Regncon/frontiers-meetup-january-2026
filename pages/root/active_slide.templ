@@ -21,6 +21,7 @@ func deck(isPresenter bool) []slideFunc {
 		func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenter) },
 		func() templ.Component { return slides.Build2024Philosophy(isPresenter) },
 		func() templ.Component { return slides.Build2024Snapshot(isPresenter) },
+		func() templ.Component { return slides.Build2024HowDidItGo(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.Agenda2025, isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
