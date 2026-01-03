@@ -1,0 +1,41 @@
+package slides
+
+/*
+Slide: 2025 philosophy (the opposite experiment)
+
+Intent:
+- Frame 2025 as a deliberate inversion of the 2024 approach (stack + architecture).
+- Keep this slide high-level and story-driven.
+- Mention the HTMX -> Datastar path and the goal (simplicity + reactive UI).
+
+Details saved for later slides:
+- Why templ (cohesion / TSX-like locality)
+- Why SQLite (SQL vs NoSQL learning)
+- Why NATS (recommended by Datastar community)
+*/
+
+templ Build2025Philosophy(isPresenter bool) {
+	<div class="slide">
+		<h1>2025: The opposite experiment</h1>
+		<ul>
+			<li>We went in the complete opposite direction from 2024</li>
+			<li>Not just stack — also architecture</li>
+			<li>Started with <strong>HTMX + Go</strong> … then discovered <strong>Datastar</strong></li>
+			<li>Goal: simpler system, still reactive UI</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@build2025PhilosophyPresenterNotes()
+	}
+}
+
+templ build2025PhilosophyPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li>2025 was an experiment: what happens if we invert almost every assumption from 2024?</li>
+			<li>We originally planned HTMX + Go.</li>
+			<li>One of us had HTMX experience and suggested something even simpler — that led us to Datastar.</li>
+			<li>Reactivity being a first-class feature was a big “yes!” moment for us.</li>
+		</ul>
+	</div>
+}
