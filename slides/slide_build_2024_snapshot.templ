@@ -1,0 +1,41 @@
+package slides
+
+/*
+Slide: What we built in 2024 (factual snapshot)
+
+Intent:
+- Give the audience a concrete picture of what the 2024 app actually did.
+- Keep it factual and grounded so later tradeoffs (RSC, Firebase, complexity) have context.
+- Highlight the core workflow: participants indicate interest in events.
+
+Domain terms:
+- "Pulje" = time slot grouping (e.g., Friday evening, Saturday morning, ...).
+
+Key flows:
+- Participant: browse events by pulje → mark interest level → submit to the festival.
+- Admin: edit/clean/publish event text, help with ticketing issues, assign participants to events based on interest.
+*/
+
+templ Build2024Snapshot(isPresenter bool) {
+	<div class="slide">
+		<h1>What we built in 2024</h1>
+		<ul>
+			<li>Browse events by <strong>pulje</strong> (time slots: Friday evening, Saturday morning, …)</li>
+			<li>Participants mark interest: <strong>Not interested</strong> → <strong>Very interested</strong></li>
+			<li>Submit interest to the festival (core workflow)</li>
+			<li>Admins edit/publish events + assign participants based on interest</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@build2024SnapshotPresenterNotes()
+	}
+}
+
+templ build2024SnapshotPresenterNotes() {
+	<div class="presenter-notes">
+		Sorry, puje is a bit of a domain language there.
+		Everything revolves around one thing: find an event and indicate interest.
+		We spent a lot of UX attention on making that flow feel good.
+		Admin work was real: editing/publishing, support, and allocation.
+	</div>
+}
