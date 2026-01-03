@@ -26,10 +26,10 @@
 	--space-5: 3rem;
 	/* 48px */
 
-	/* Type scale */
-	--font-body: clamp(1.05rem, 1.2vw + 0.8rem, 1.5rem);
-	--font-h1: clamp(2rem, 3.2vw + 1rem, 3.5rem);
-	--font-small: clamp(0.95rem, 0.5vw + 0.85rem, 1.1rem);
+	/* Type scale (bigger on desktop) */
+	--font-body: clamp(1.2rem, 1vw + 1rem, 2.1rem);
+	--font-h1: clamp(2.4rem, 2.4vw + 1.4rem, 4.6rem);
+	--font-small: clamp(1.05rem, 0.4vw + 1rem, 1.35rem);
 
 	/* Surfaces */
 	--surface-presenter: hsl(from var(--color-bg-base) h s calc(l + 6%) / 85%);
@@ -37,6 +37,9 @@
 	--border-subtle: 1px solid var(--color-text-soft-50);
 
 	--radius: 12px;
+
+	/* Reserve space so sticky reactions never overlap stage content */
+	--reactions-min-height: 3.75rem;
 }
 
 *,
@@ -87,7 +90,16 @@ body {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
+
 	padding: clamp(1rem, 3vw, 2rem);
+	padding-bottom: calc(clamp(1rem, 3vw, 2rem) + var(--reactions-min-height) + env(safe-area-inset-bottom));
+}
+
+.stage>* {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
 }
 
 /* Slide "canvas" */
@@ -101,7 +113,9 @@ body {
 	flex-direction: column;
 	justify-content: center;
 
-	padding-block: clamp(1rem, 5vh, 3rem);
+	/* Bias content downward: more top padding than bottom padding */
+	padding-top: clamp(2.5rem, 12vh, 9rem);
+	padding-bottom: clamp(1.5rem, 6vh, 5rem);
 }
 
 .slide h1 {
@@ -136,7 +150,11 @@ body {
 .presenter-notes {
 	width: 100%;
 	max-width: var(--stage-max-width);
-	margin: var(--space-3) auto 0 auto;
+
+	/* Push notes to the bottom of the stage */
+	margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
 
 	padding: var(--space-3);
 	border: var(--border-subtle);
@@ -163,6 +181,8 @@ body {
 .reactions {
 	position: sticky;
 	bottom: 0;
+
+	min-height: var(--reactions-min-height);
 
 	display: flex;
 	flex-wrap: wrap;
