@@ -17,9 +17,25 @@ import (
 
 const presenterSessionName = "presenter-auth"
 
-func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
+func RootLayoutRoute(
+	router chi.Router,
+	db *sql.DB,
+	store sessions.Store,
+	kv jetstream.KeyValue,
+	logger *slog.Logger,
+	localKey string,
+	remoteKey string,
+) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		// Path A: ensure we have a session ID on the *initial* HTML render.
+		sessionID, _, err := helpers.LoadOrCreateState(w, r, kv, store)
+		if err != nil {
+			logger.Error("Error loading or creating state:", slog.String("error", err.Error()))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		inviteKey := chi.URLParam(r, "inviteKey")
 
@@ -33,7 +49,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(db, inviteKey, dataInit, isPresenter),
+			rootPageFirstLoad(db, inviteKey, dataInit, isPresenter, sessionID, localKey, remoteKey),
 		).Render(ctx, w)
 	})
 
@@ -55,7 +71,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				inviteKey := chi.URLParam(r, "inviteKey")
 				isPresenter := isPresenterFromSession(r, store)
 
-				if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
+				if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)); err != nil {
 					_ = sse.ConsoleError(err)
 					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -87,7 +103,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
@@ -97,6 +113,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 
 			IncrementEmojiRoute(db, rootApiRouter, kv)
 			TopNavigationRoutes(db, rootApiRouter, kv)
+
+			// Poll feature routes (vote writes DB + broadcast update).
+			PollVoteRoutes(db, rootApiRouter, kv, store)
 		})
 	})
 }
@@ -111,19 +130,41 @@ func isPresenterFromSession(r *http.Request, store sessions.Store) bool {
 	return ok && v
 }
 
-templ rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresenter bool) {
+templ rootPageFirstLoad(
+	db *sql.DB,
+	inviteKey string,
+	dataInit string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) {
 	<div id="root-page-wrapper" data-init={ dataInit }>
-		@rootPageContent(db, inviteKey, isPresenter)
+		@rootPageContent(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)
 	</div>
 }
 
-templ rootPage(db *sql.DB, inviteKey string, isPresenter bool) {
+templ rootPage(
+	db *sql.DB,
+	inviteKey string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) {
 	<div id="root-page-wrapper">
-		@rootPageContent(db, inviteKey, isPresenter)
+		@rootPageContent(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)
 	</div>
 }
 
-templ rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) {
+templ rootPageContent(
+	db *sql.DB,
+	inviteKey string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) {
 	<div class="app">
 		if isPresenter {
 			<header class="presenter-bar" aria-label="Presenter controls">
@@ -131,7 +172,7 @@ templ rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) {
 			</header>
 		}
 		<main class="stage" aria-label="Presentation">
-			@ActiveSlide(db, isPresenter)
+			@ActiveSlide(db, inviteKey, sessionID, isPresenter, localKey, remoteKey)
 		</main>
 		<footer class="reactions" aria-label="Reactions">
 			@EmojiCounter(db, inviteKey, "👍")

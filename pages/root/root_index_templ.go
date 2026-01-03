@@ -25,9 +25,25 @@ import (
 
 const presenterSessionName = "presenter-auth"
 
-func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jetstream.KeyValue, logger *slog.Logger) {
+func RootLayoutRoute(
+	router chi.Router,
+	db *sql.DB,
+	store sessions.Store,
+	kv jetstream.KeyValue,
+	logger *slog.Logger,
+	localKey string,
+	remoteKey string,
+) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
+
+		// Path A: ensure we have a session ID on the *initial* HTML render.
+		sessionID, _, err := helpers.LoadOrCreateState(w, r, kv, store)
+		if err != nil {
+			logger.Error("Error loading or creating state:", slog.String("error", err.Error()))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
 		inviteKey := chi.URLParam(r, "inviteKey")
 
@@ -41,7 +57,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 
 		components.BaseLayout(
 			"Frontiers Meetup",
-			rootPageFirstLoad(db, inviteKey, dataInit, isPresenter),
+			rootPageFirstLoad(db, inviteKey, dataInit, isPresenter, sessionID, localKey, remoteKey),
 		).Render(ctx, w)
 	})
 
@@ -63,7 +79,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 				inviteKey := chi.URLParam(r, "inviteKey")
 				isPresenter := isPresenterFromSession(r, store)
 
-				if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
+				if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)); err != nil {
 					_ = sse.ConsoleError(err)
 					logger.Error("Error sending initial page patch:", slog.String("error", err.Error()))
 					http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -95,7 +111,7 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 							return
 						}
 
-						if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter)); err != nil {
+						if err := sse.PatchElementTempl(rootPage(db, inviteKey, isPresenter, sessionID, localKey, remoteKey)); err != nil {
 							_ = sse.ConsoleError(err)
 							return
 						}
@@ -105,6 +121,9 @@ func RootLayoutRoute(router chi.Router, db *sql.DB, store sessions.Store, kv jet
 
 			IncrementEmojiRoute(db, rootApiRouter, kv)
 			TopNavigationRoutes(db, rootApiRouter, kv)
+
+			// Poll feature routes (vote writes DB + broadcast update).
+			PollVoteRoutes(db, rootApiRouter, kv, store)
 		})
 	})
 }
@@ -119,7 +138,15 @@ func isPresenterFromSession(r *http.Request, store sessions.Store) bool {
 	return ok && v
 }
 
-func rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresenter bool) templ.Component {
+func rootPageFirstLoad(
+	db *sql.DB,
+	inviteKey string,
+	dataInit string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -147,7 +174,7 @@ func rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresente
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(dataInit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 115, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 142, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -157,7 +184,7 @@ func rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresente
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent(db, inviteKey, isPresenter).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db, inviteKey, isPresenter, sessionID, localKey, remoteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -169,7 +196,14 @@ func rootPageFirstLoad(db *sql.DB, inviteKey string, dataInit string, isPresente
 	})
 }
 
-func rootPage(db *sql.DB, inviteKey string, isPresenter bool) templ.Component {
+func rootPage(
+	db *sql.DB,
+	inviteKey string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -194,7 +228,7 @@ func rootPage(db *sql.DB, inviteKey string, isPresenter bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = rootPageContent(db, inviteKey, isPresenter).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = rootPageContent(db, inviteKey, isPresenter, sessionID, localKey, remoteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -206,7 +240,14 @@ func rootPage(db *sql.DB, inviteKey string, isPresenter bool) templ.Component {
 	})
 }
 
-func rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) templ.Component {
+func rootPageContent(
+	db *sql.DB,
+	inviteKey string,
+	isPresenter bool,
+	sessionID string,
+	localKey string,
+	remoteKey string,
+) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -249,7 +290,7 @@ func rootPageContent(db *sql.DB, inviteKey string, isPresenter bool) templ.Compo
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = ActiveSlide(db, isPresenter).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = ActiveSlide(db, inviteKey, sessionID, isPresenter, localKey, remoteKey).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

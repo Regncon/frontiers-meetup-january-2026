@@ -17,7 +17,16 @@ import (
 
 type slideFunc func() templ.Component
 
-func deck(isPresenter bool) []slideFunc {
+func deck(
+	db *sql.DB,
+	inviteKey string,
+	sessionID string,
+	isPresenter bool,
+	localKey string,
+	remoteKey string,
+) []slideFunc {
+	poll := MustPoll("preferred-stack")
+
 	return []slideFunc{
 		func() templ.Component { return slides.LobbyWelcome(isPresenter) },
 		func() templ.Component { return slides.WhyThisTalk(isPresenter) },
@@ -39,25 +48,34 @@ func deck(isPresenter bool) []slideFunc {
 		func() templ.Component { return slides.WhatIsGo(isPresenter) },
 		func() templ.Component { return slides.WhatIsTempl(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
+
+		// Poll + Results
+		func() templ.Component { return PollSlide(db, inviteKey, sessionID, poll) },
+		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
+
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
 	}
 }
 
 func deckSize() int {
-	return len(deck(true))
+	// Only used for clamping; closures won't be executed.
+	return len(deck(nil, "", "", true, "", ""))
 }
 
 func clampSlideIndex(index int) int {
 	if index < 0 {
 		return 0
 	}
-	deckSize := deckSize()
-	if deckSize == 0 {
+
+	size := deckSize()
+	if size == 0 {
 		return 0
 	}
-	if index >= deckSize {
-		return deckSize - 1
+
+	if index >= size {
+		return size - 1
 	}
+
 	return index
 }
 
@@ -69,7 +87,14 @@ func slideAt(deck []slideFunc, index int) slideFunc {
 }
 
 // --- Components ---
-func ActiveSlide(db *sql.DB, isPresenter bool) templ.Component {
+func ActiveSlide(
+	db *sql.DB,
+	inviteKey string,
+	sessionID string,
+	isPresenter bool,
+	localKey string,
+	remoteKey string,
+) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -91,7 +116,7 @@ func ActiveSlide(db *sql.DB, isPresenter bool) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		index, _ := GetCurrentSlideIndex(db)
-		deckLocal := deck(isPresenter)
+		deckLocal := deck(db, inviteKey, sessionID, isPresenter, localKey, remoteKey)
 		index = clampSlideIndex(index)
 		slideComponent := slideAt(deckLocal, index)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div data-signals=\"")
@@ -101,7 +126,7 @@ func ActiveSlide(db *sql.DB, isPresenter bool) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 69, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 94, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

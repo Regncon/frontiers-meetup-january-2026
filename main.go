@@ -120,7 +120,7 @@ func main() {
 	// Keyed access: /<key>/...
 	router.Route("/{inviteKey}", func(inviteRouter chi.Router) {
 		inviteRouter.Use(inviteKeyMiddleware(sessionStore, localKey, remoteKey, logger))
-		root.RootLayoutRoute(inviteRouter, db, sessionStore, kv, logger)
+		root.RootLayoutRoute(inviteRouter, db, sessionStore, kv, logger, localKey, remoteKey)
 	})
 
 	address := ":8080"

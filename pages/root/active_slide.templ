@@ -9,7 +9,16 @@ import (
 
 type slideFunc func() templ.Component
 
-func deck(isPresenter bool) []slideFunc {
+func deck(
+	db *sql.DB,
+	inviteKey string,
+	sessionID string,
+	isPresenter bool,
+	localKey string,
+	remoteKey string,
+) []slideFunc {
+	poll := MustPoll("preferred-stack")
+
 	return []slideFunc{
 		func() templ.Component { return slides.LobbyWelcome(isPresenter) },
 		func() templ.Component { return slides.WhyThisTalk(isPresenter) },
@@ -31,25 +40,34 @@ func deck(isPresenter bool) []slideFunc {
 		func() templ.Component { return slides.WhatIsGo(isPresenter) },
 		func() templ.Component { return slides.WhatIsTempl(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
+
+		// Poll + Results
+		func() templ.Component { return PollSlide(db, inviteKey, sessionID, poll) },
+		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
+
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
 	}
 }
 
 func deckSize() int {
-	return len(deck(true))
+	// Only used for clamping; closures won't be executed.
+	return len(deck(nil, "", "", true, "", ""))
 }
 
 func clampSlideIndex(index int) int {
 	if index < 0 {
 		return 0
 	}
-	deckSize := deckSize()
-	if deckSize == 0 {
+
+	size := deckSize()
+	if size == 0 {
 		return 0
 	}
-	if index >= deckSize {
-		return deckSize - 1
+
+	if index >= size {
+		return size - 1
 	}
+
 	return index
 }
 
@@ -61,9 +79,16 @@ func slideAt(deck []slideFunc, index int) slideFunc {
 }
 
 // --- Components ---
-templ ActiveSlide(db *sql.DB, isPresenter bool) {
+templ ActiveSlide(
+	db *sql.DB,
+	inviteKey string,
+	sessionID string,
+	isPresenter bool,
+	localKey string,
+	remoteKey string,
+) {
 	{{ index, _ := GetCurrentSlideIndex(db) }}
-	{{ deckLocal := deck(isPresenter) }}
+	{{ deckLocal := deck(db, inviteKey, sessionID, isPresenter, localKey, remoteKey) }}
 	{{ index = clampSlideIndex(index) }}
 	{{ slideComponent := slideAt(deckLocal, index) }}
 	<div data-signals={ fmt.Sprintf("{ slideIndex: %d }", index) }>
