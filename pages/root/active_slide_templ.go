@@ -25,33 +25,41 @@ func deck(
 	localKey string,
 	remoteKey string,
 ) []slideFunc {
-	poll := MustPoll("preferred-stack")
+	poll := MustPoll("dom-checkbox-limit")
 
 	return []slideFunc{
 		func() templ.Component { return slides.LobbyWelcome(isPresenter) },
 		func() templ.Component { return slides.WhyThisTalk(isPresenter) },
+
 		func() templ.Component { return slides.Agenda(slides.AgendaWhoWeAre, isPresenter) },
 		func() templ.Component { return slides.WhatIsRegncon(isPresenter) },
 		func() templ.Component { return slides.ProjectVision(isPresenter) },
 		func() templ.Component { return slides.WhoWeAre(isPresenter) },
 		func() templ.Component { return slides.DifferentViewpoints(isPresenter) },
+
 		func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenter) },
 		func() templ.Component { return slides.Build2024Philosophy(isPresenter) },
 		func() templ.Component { return slides.WhatIsNextJS(isPresenter) },
 		func() templ.Component { return slides.WhatIsFirebase(isPresenter) },
 		func() templ.Component { return slides.Build2024Snapshot(isPresenter) },
 		func() templ.Component { return slides.Build2024HowDidItGo(isPresenter) },
+
 		func() templ.Component { return slides.Agenda(slides.Agenda2025, isPresenter) },
 		func() templ.Component { return slides.Build2025Philosophy(isPresenter) },
 		func() templ.Component { return slides.GrugBrainMeme(isPresenter) },
 		func() templ.Component { return slides.Build2025HowWeChoseTheStack(isPresenter) },
 		func() templ.Component { return slides.WhatIsGo(isPresenter) },
 		func() templ.Component { return slides.WhatIsTempl(isPresenter) },
-		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 
-		// Poll + Results
+		// Datastar + trick question poll
+		func() templ.Component { return slides.WhatIsDatastar(isPresenter) },
+		func() templ.Component { return slides.DatastarCheckboxTrickSetup(isPresenter) },
 		func() templ.Component { return PollSlide(db, inviteKey, sessionID, poll) },
 		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
+		func() templ.Component { return slides.DatastarCheckboxTrickReveal(isPresenter) },
+		func() templ.Component { return slides.DatastarCheckboxTrickDemo(isPresenter) },
+
+		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
 	}
@@ -126,7 +134,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 94, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 102, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

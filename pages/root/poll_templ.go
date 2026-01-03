@@ -54,14 +54,20 @@ type PollDefinition struct {
 }
 
 var pollDefinitions = map[string]PollDefinition{
-	"preferred-stack": {
-		Key:          "preferred-stack",
-		QuestionText: "Which stack would you pick for your next project?",
+	"dom-checkbox-limit": {
+		Key:          "dom-checkbox-limit",
+		QuestionText: "How many checkboxes can a simple Datastar + Go + SQLite app handle on a cheap VPS?",
 		Options: []PollOption{
-			{Key: "nextjs-firebase", Text: "Next.js + Firebase"},
-			{Key: "go-templ-sqlite", Text: "Go + templ + SQLite"},
-			{Key: "depends", Text: "It depends"},
-			{Key: "other", Text: "Something else"},
+			{Key: "two", Text: "2 (DOM is slow)",
+				ImageURL: "/static/slow.webp",
+			},
+			{Key: "tenk", Text: "About ~10,000 before the dom struggles)"},
+			{Key: "fourfifty", Text: "The dom has gotten fast. About ~452,600 on my laptop)"},
+			{
+				Key:      "oneb",
+				Text:     "One billion",
+				ImageURL: "/static/one_billion.webp",
+			},
 		},
 	},
 }
@@ -214,7 +220,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(poll.QuestionText)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 180, Col: 45}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 186, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -233,7 +239,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(poll.QuestionImageURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 183, Col: 36}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 189, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -258,7 +264,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(pollVotePostURL(inviteKey, poll.Key, opt.Key)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 195, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 201, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -271,7 +277,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", isSelected))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 196, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 202, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -299,7 +305,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 				}(),
 			))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 212, Col: 6}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 218, Col: 6}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -312,7 +318,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(badge)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 215, Col: 13}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 221, Col: 13}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -330,7 +336,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(opt.ImageURL)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 219, Col: 30}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 225, Col: 30}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
@@ -349,7 +355,7 @@ func PollSlide(db *sql.DB, inviteKey string, sessionID string, poll PollDefiniti
 				var templ_7745c5c3_Var9 string
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(opt.Text)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 223, Col: 18}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/poll.templ`, Line: 229, Col: 18}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
