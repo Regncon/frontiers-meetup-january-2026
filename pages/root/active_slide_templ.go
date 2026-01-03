@@ -58,6 +58,12 @@ func deck(
 		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
 		func() templ.Component { return slides.DatastarCheckboxTrickReveal(isPresenter) },
 		func() templ.Component { return slides.DatastarCheckboxTrickDemo(isPresenter) },
+		func() templ.Component { return slides.WhatIsSQLite(isPresenter) },
+		func() templ.Component { return slides.WhatIsNATS(isPresenter) },
+		func() templ.Component { return slides.Build2025Snapshot(isPresenter) },
+		func() templ.Component { return slides.Build2025HowDidItGoQuestion(isPresenter) },
+		func() templ.Component { return slides.Build2025ServerExplosion(isPresenter) },
+		func() templ.Component { return slides.Build2025HowDidItGo(isPresenter) },
 
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 
@@ -134,7 +140,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 102, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 108, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

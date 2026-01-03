@@ -9,20 +9,17 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 /*
-Slide: 2024 - How did it go?
+Slide: 2025 - How did it go? (setup)
 
 Intent:
-- Story beat + foreshadowing: we underestimated, crunched, shipped not-prod-ready, but made it usable.
-- Keep the slide readable. Save the technical blame/analysis for later comparison slides.
+- Create suspense and pacing before the “explosion” story beat.
+- Minimal content: just the question.
 
-Notes:
-- We will revisit two major design mistakes later:
-  1) Overusing Server Components (wrong fit in several places).
-  2) Firebase is excellent when used correctly, but our usage (and mixing patterns with Server Components)
-     contributed to poor performance, including in the core interest-selection flow.
+Design:
+- One line. Big. Pause before moving on.
 */
 
-func Build2024HowDidItGo(isPresenter bool) templ.Component {
+func Build2025HowDidItGoQuestion(isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,12 +40,12 @@ func Build2024HowDidItGo(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>How did it go in 2024?</h1><ul><li>We underestimated the work (by a lot)</li><li>We shipped <strong>not production-ready</strong></li><li>Crunch happened — even coding during the festival</li><li>But it was usable in the end</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; align-items:center; justify-content:center;\"><h1 style=\"margin:0; font-size:4rem;\">So… how did it go in 2025?</h1></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = build2024HowDidItGoPresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = build2025HowDidItGoQuestionPresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -57,7 +54,7 @@ func Build2024HowDidItGo(isPresenter bool) templ.Component {
 	})
 }
 
-func build2024HowDidItGoPresenterNotes() templ.Component {
+func build2025HowDidItGoQuestionPresenterNotes() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -78,7 +75,7 @@ func build2024HowDidItGoPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, so of course we grossly underestimated how much work was involved.</li><li>We didn’t complete all the features and the website was definitely not production ready.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul><div style=\"margin-top: 1rem;\">We’ll come back to two major design mistakes later in the talk:</div><ul><li>We tried to use Server Components everywhere, even when it was the wrong fit.</li><li>Firebase is amazing and very performant when implemented correctly, but our usage (and mixing patterns with Server Components) resulted in poor performance, including in the core interest selection flow.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Pause. Let the room sit with it.</li><li>Then advance to the explosion slide.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

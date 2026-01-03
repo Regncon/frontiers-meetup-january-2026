@@ -50,6 +50,12 @@ func deck(
 		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
 		func() templ.Component { return slides.DatastarCheckboxTrickReveal(isPresenter) },
 		func() templ.Component { return slides.DatastarCheckboxTrickDemo(isPresenter) },
+		func() templ.Component { return slides.WhatIsSQLite(isPresenter) },
+		func() templ.Component { return slides.WhatIsNATS(isPresenter) },
+		func() templ.Component { return slides.Build2025Snapshot(isPresenter) },
+		func() templ.Component { return slides.Build2025HowDidItGoQuestion(isPresenter) },
+		func() templ.Component { return slides.Build2025ServerExplosion(isPresenter) },
+		func() templ.Component { return slides.Build2025HowDidItGo(isPresenter) },
 
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 

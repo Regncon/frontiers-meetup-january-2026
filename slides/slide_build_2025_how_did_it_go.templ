@@ -1,0 +1,49 @@
+package slides
+
+/*
+Slide: 2025 - How did it go? (real answer)
+
+Intent:
+- Mirror the 2024 “how did it go” slide for consistency.
+- Complete the foreshadowing: we repeated the same mistake, but this time it didn’t fully work.
+- Keep it readable; save technical deep dive for later topics.
+
+Notes:
+- This year’s failure mode included replication issues (Litestream VFS immaturity) and data loss.
+- We had a manual Excel backup process and used it to get through the festival.
+*/
+
+templ Build2025HowDidItGo(isPresenter bool) {
+	<div class="slide">
+		<h1>How did it go in 2025?</h1>
+		<ul>
+			<li>We underestimated the work (by a lot)</li>
+			<li>We shipped <strong>not production-ready</strong></li>
+			<li>Crunch happened — even coding during the festival</li>
+			<li>We were unsuccessful — it was not fully usable in the end</li>
+			<li>We survived with our manual Excel backup process</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@build2025HowDidItGoPresenterNotes()
+	}
+}
+
+templ build2025HowDidItGoPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li>Not even dozens of concurrent users — just several — and things started breaking.</li>
+			<li>Replication failed because the Litestream VFS package was immature. We lost data.</li>
+			<li>We had a backup plan: Excel. We’ve done this before, so it wasn’t new.</li>
+			<li>The veterans kept a cool head. We were prepared.</li>
+		</ul>
+		<div style="margin-top: 1rem;">
+			We’ll come back to this later in the talk (hosting/deployment + scaling + “production ready”):
+		</div>
+		<ul>
+			<li>SQLite replication and the “wrong tool for the job” trap</li>
+			<li>Immutable containers + our stack choice (why it didn’t fit)</li>
+			<li>How “simple” can still fail if you pick the wrong supporting pieces</li>
+		</ul>
+	</div>
+}

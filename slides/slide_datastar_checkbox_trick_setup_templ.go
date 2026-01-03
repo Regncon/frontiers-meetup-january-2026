@@ -41,7 +41,20 @@ func DatastarCheckboxTrickSetup(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Datastar demo</h1><ul><li>Remember the “1,000,000 checkboxes in React” meme?</li><li>Now the real question:</li><li><strong>How many can a simple Go + Datastar app handle?</strong></li><li><strong>Don’t spoil it</strong> if_you already know.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Datastar demo</h1><ul><li>Remember the “1,000,000 checkboxes in React” meme?</li><li>Now the real question:</li><li><strong>How many can a simple Go + Datastar app handle?</strong></li><li><strong>Don’t spoil it</strong> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("if")
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_datastar_checkbox_trick_setup.templ`, Line: 22, Col: 47}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " you already know.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,12 +84,12 @@ func datastarCheckboxTrickSetupPresenterNotes() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Tell the “React 1M checkboxes” story quickly.</li><li>Set the rules: don’t spoil it if you know.</li><li>Then immediately go to the poll slide and let chaos happen.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Tell the “React 1M checkboxes” story quickly.</li><li>Set the rules: don’t spoil it if you know.</li><li>Then immediately go to the poll slide and let chaos happen.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

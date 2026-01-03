@@ -9,20 +9,19 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 /*
-Slide: 2024 - How did it go?
+Slide: 2025 - How did it go? (real answer)
 
 Intent:
-- Story beat + foreshadowing: we underestimated, crunched, shipped not-prod-ready, but made it usable.
-- Keep the slide readable. Save the technical blame/analysis for later comparison slides.
+- Mirror the 2024 “how did it go” slide for consistency.
+- Complete the foreshadowing: we repeated the same mistake, but this time it didn’t fully work.
+- Keep it readable; save technical deep dive for later topics.
 
 Notes:
-- We will revisit two major design mistakes later:
-  1) Overusing Server Components (wrong fit in several places).
-  2) Firebase is excellent when used correctly, but our usage (and mixing patterns with Server Components)
-     contributed to poor performance, including in the core interest-selection flow.
+- This year’s failure mode included replication issues (Litestream VFS immaturity) and data loss.
+- We had a manual Excel backup process and used it to get through the festival.
 */
 
-func Build2024HowDidItGo(isPresenter bool) templ.Component {
+func Build2025HowDidItGo(isPresenter bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -43,12 +42,12 @@ func Build2024HowDidItGo(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>How did it go in 2024?</h1><ul><li>We underestimated the work (by a lot)</li><li>We shipped <strong>not production-ready</strong></li><li>Crunch happened — even coding during the festival</li><li>But it was usable in the end</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>How did it go in 2025?</h1><ul><li>We underestimated the work (by a lot)</li><li>We shipped <strong>not production-ready</strong></li><li>Crunch happened — even coding during the festival</li><li>We were unsuccessful — it was not fully usable in the end</li><li>We survived with our manual Excel backup process</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = build2024HowDidItGoPresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = build2025HowDidItGoPresenterNotes().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -57,7 +56,7 @@ func Build2024HowDidItGo(isPresenter bool) templ.Component {
 	})
 }
 
-func build2024HowDidItGoPresenterNotes() templ.Component {
+func build2025HowDidItGoPresenterNotes() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -78,7 +77,7 @@ func build2024HowDidItGoPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, so of course we grossly underestimated how much work was involved.</li><li>We didn’t complete all the features and the website was definitely not production ready.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul><div style=\"margin-top: 1rem;\">We’ll come back to two major design mistakes later in the talk:</div><ul><li>We tried to use Server Components everywhere, even when it was the wrong fit.</li><li>Firebase is amazing and very performant when implemented correctly, but our usage (and mixing patterns with Server Components) resulted in poor performance, including in the core interest selection flow.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Not even dozens of concurrent users — just several — and things started breaking.</li><li>Replication failed because the Litestream VFS package was immature. We lost data.</li><li>We had a backup plan: Excel. We’ve done this before, so it wasn’t new.</li><li>The veterans kept a cool head. We were prepared.</li></ul><div style=\"margin-top: 1rem;\">We’ll come back to this later in the talk (hosting/deployment + scaling + “production ready”):</div><ul><li>SQLite replication and the “wrong tool for the job” trap</li><li>Immutable containers + our stack choice (why it didn’t fit)</li><li>How “simple” can still fail if you pick the wrong supporting pieces</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
