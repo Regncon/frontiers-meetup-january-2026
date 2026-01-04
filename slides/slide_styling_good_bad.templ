@@ -1,0 +1,37 @@
+package slides
+
+/*
+Slide: Styling (Good / Bad / Ugly)
+
+Intent:
+- Short, concrete summary of styling tradeoffs across the two builds.
+
+Points (prefixed for clarity on-slide):
+- Good: Keep styling close to UI code (JSX/TSX locality).
+- Good: MUI was great for React.
+- Bad: Styling in templ was a major pain point in 2025.
+*/
+
+templ StylingGoodBad(isPresenter bool) {
+	<div class="slide">
+		<h1>Styling</h1>
+		<ul style="margin-top: 2rem;">
+			<li><strong>Good:</strong> We wanted to keep styling close to the UI code (JSX/TSX-style locality)</li>
+			<li><strong>Good:</strong> MUI as a component library was great for React</li>
+			<li><strong>Bad:</strong> Templ styling was one of the biggest pain points we faced in 2025</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@stylingGoodBadPresenterNotes()
+	}
+}
+
+templ stylingGoodBadPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li><strong>Good:</strong> Locality is the theme: we want styles next to what they style.</li>
+			<li><strong>Good:</strong> MUI helped us move fast with consistent UI without bikeshedding CSS.</li>
+			<li><strong>Bad:</strong> templ pain wasn’t “CSS is hard” — it was workflow pain (we’ll cover details later).</li>
+		</ul>
+	</div>
+}
