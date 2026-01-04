@@ -60,6 +60,8 @@ func deck(
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
 
 		func() templ.Component { return slides.StylingGoodBad(isPresenter) },
+		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
+		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
 	}
 }
