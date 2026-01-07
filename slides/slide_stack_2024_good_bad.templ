@@ -1,0 +1,43 @@
+package slides
+
+/*
+Slide: Stack (2024)
+
+Intent:
+- Quick, fair summary of the 2024 stack experience before we go topic-by-topic.
+- Keep it balanced: what was genuinely good, and what hurt in practice.
+
+On-slide:
+- Good: Server Components
+- Good: Firebase
+- Bad: Firebase local development
+
+Notes:
+- Keep deeper “we overused Server Components” and performance stories for later stack/complexity slides.
+*/
+
+templ Stack2024GoodBad(isPresenter bool) {
+	<div class="slide">
+		<h1>Stack (2024)</h1>
+		<ul style="margin-top: 2rem;">
+			<li><strong>Good:</strong> Server Components</li>
+			<li><strong>Good:</strong> Firebase</li>
+			<li><strong>Bad:</strong> Firebase local development</li>
+		</ul>
+	</div>
+
+	if isPresenter {
+		@stack2024GoodBadPresenterNotes()
+	}
+}
+
+templ stack2024GoodBadPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li><strong>Good:</strong> Server Components were exciting and powerful — we learned a lot.</li>
+			<li><strong>Good:</strong> Firebase is fast and capable when used correctly, and we had prior experience with it.</li>
+			<li><strong>Bad:</strong> Local development was painful compared to a local SQL database + server-rendered app.</li>
+			<li>We’ll come back later to what happened when we overused Server Components, and how that interacted with Firebase.</li>
+		</ul>
+	</div>
+}

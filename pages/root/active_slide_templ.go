@@ -26,6 +26,7 @@ func deck(
 	remoteKey string,
 ) []slideFunc {
 	poll := MustPoll("dom-checkbox-limit")
+	pollConcurrency := MustPoll("regncon-concurrency")
 
 	return []slideFunc{
 		func() templ.Component { return slides.LobbyWelcome(isPresenter) },
@@ -39,8 +40,8 @@ func deck(
 
 		func() templ.Component { return slides.Agenda(slides.Agenda2024, isPresenter) },
 		func() templ.Component { return slides.Build2024Philosophy(isPresenter) },
-		func() templ.Component { return slides.WhatIsNextJS(isPresenter) },
-		func() templ.Component { return slides.WhatIsFirebase(isPresenter) },
+		//func() templ.Component { return slides.WhatIsNextJS(isPresenter) },
+		//func() templ.Component { return slides.WhatIsFirebase(isPresenter) },
 		func() templ.Component { return slides.Build2024Snapshot(isPresenter) },
 		func() templ.Component { return slides.Build2024HowDidItGo(isPresenter) },
 
@@ -48,25 +49,30 @@ func deck(
 		func() templ.Component { return slides.Build2025Philosophy(isPresenter) },
 		func() templ.Component { return slides.GrugBrainMeme(isPresenter) },
 		func() templ.Component { return slides.Build2025HowWeChoseTheStack(isPresenter) },
-		func() templ.Component { return slides.WhatIsGo(isPresenter) },
+		//func() templ.Component { return slides.WhatIsGo(isPresenter) },
 		func() templ.Component { return slides.WhatIsTempl(isPresenter) },
 
-		// Datastar + trick question poll
 		func() templ.Component { return slides.WhatIsDatastar(isPresenter) },
 		func() templ.Component { return slides.DatastarCheckboxTrickSetup(isPresenter) },
 		func() templ.Component { return PollSlide(db, inviteKey, sessionID, poll) },
 		func() templ.Component { return PollResultsSlide(db, poll, localKey, remoteKey) },
 		func() templ.Component { return slides.DatastarCheckboxTrickReveal(isPresenter) },
 		func() templ.Component { return slides.DatastarCheckboxTrickDemo(isPresenter) },
-		func() templ.Component { return slides.WhatIsSQLite(isPresenter) },
-		func() templ.Component { return slides.WhatIsNATS(isPresenter) },
+		//func() templ.Component { return slides.WhatIsSQLite(isPresenter) },
+		//func() templ.Component { return slides.WhatIsNATS(isPresenter) },
 		func() templ.Component { return slides.Build2025Snapshot(isPresenter) },
 		func() templ.Component { return slides.Build2025HowDidItGoQuestion(isPresenter) },
 		func() templ.Component { return slides.Build2025ServerExplosion(isPresenter) },
 		func() templ.Component { return slides.Build2025HowDidItGo(isPresenter) },
 
 		func() templ.Component { return slides.Agenda(slides.AgendaCompare, isPresenter) },
+		func() templ.Component { return slides.Stack2024GoodBad(isPresenter) },
+		func() templ.Component { return slides.Stack2025GoodBad(isPresenter) },
 
+		func() templ.Component { return slides.RegnconConcurrencyPollSetup(isPresenter) },
+		func() templ.Component { return PollSlide(db, inviteKey, sessionID, pollConcurrency) },
+		func() templ.Component { return PollResultsSlide(db, pollConcurrency, localKey, remoteKey) },
+		func() templ.Component { return slides.RegnconConcurrencyPollReveal(isPresenter) },
 		func() templ.Component { return slides.StylingGoodBad(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
@@ -143,7 +149,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 111, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 117, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
