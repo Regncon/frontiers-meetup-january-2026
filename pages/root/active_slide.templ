@@ -65,6 +65,9 @@ func deck(
 		func() templ.Component { return PollSlide(db, inviteKey, sessionID, pollConcurrency) },
 		func() templ.Component { return PollResultsSlide(db, pollConcurrency, localKey, remoteKey) },
 		func() templ.Component { return slides.RegnconConcurrencyPollReveal(isPresenter) },
+
+		func() templ.Component { return slides.ComplexityEssentialVsAccidental(isPresenter) },
+
 		func() templ.Component { return slides.StylingGoodBad(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },

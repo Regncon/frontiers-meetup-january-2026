@@ -1,0 +1,41 @@
+package slides
+
+/*
+Slide: Complexity (essential vs accidental)
+
+Intent:
+- Introduce the core lens for the rest of the talk: essential vs accidental complexity.
+- Connect complexity to real outcomes: dev speed, cost, maintenance, and “time to spaghetti”.
+- Keep it grounded and non-spicy: this is about systems, not developer intelligence.
+
+Notes:
+- Essential complexity: the problem domain (Regncon rules, UX, workflows).
+- Accidental complexity: complexity caused by our choices (stack, architecture, abstractions, tooling).
+*/
+
+templ ComplexityEssentialVsAccidental(isPresenter bool) {
+	<div class="slide">
+		<h1>Complexity</h1>
+		<ul style="margin-top: 2rem;">
+			<li><strong>Essential:</strong> complexity we can’t avoid (the domain / the problem)</li>
+			<li><strong>Accidental:</strong> complexity we create (stack, architecture, abstractions)</li>
+			<li><strong>Bad:</strong> it’s hard to feel the cost early</li>
+			<li><strong>Ugly:</strong> it shows up later as slower development, higher cost, and faster “time to spaghetti”</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@complexityEssentialVsAccidentalPresenterNotes()
+	}
+}
+
+templ complexityEssentialVsAccidentalPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li>Essential complexity is the festival workflow: events, puljer, interest selection, admin work, allocation.</li>
+			<li>Accidental complexity is everything we chose: framework patterns, abstractions, glue, and “magic”.</li>
+			<li>The scary part: accidental complexity often feels productive at first.</li>
+			<li>Then it quietly taxes everything: speed of development, maintenance, onboarding, and debugging.</li>
+			<li>“Time to spaghetti” is real — complexity compounds.</li>
+		</ul>
+	</div>
+}
