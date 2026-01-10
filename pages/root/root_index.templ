@@ -167,19 +167,37 @@ templ rootPageContent(
 ) {
 	<div class="app">
 		if isPresenter {
-			<header class="presenter-bar" aria-label="Presenter controls">
-				@TopNavigation(db, inviteKey)
-			</header>
+			<div class="presenter-layout">
+				<aside class="presenter-sidebar" aria-label="Slide list">
+					@PresenterSlideList(db, inviteKey, sessionID, localKey, remoteKey)
+				</aside>
+				<div class="presenter-main">
+					<header class="presenter-bar" aria-label="Presenter controls">
+						@TopNavigation(db, inviteKey, sessionID, localKey, remoteKey)
+					</header>
+					<main class="stage" aria-label="Presentation">
+						@ActiveSlide(db, inviteKey, sessionID, isPresenter, localKey, remoteKey)
+					</main>
+					<footer class="reactions" aria-label="Reactions">
+						@EmojiCounter(db, inviteKey, "👍")
+						@EmojiCounter(db, inviteKey, "🎉")
+						@EmojiCounter(db, inviteKey, "😂")
+						@EmojiCounter(db, inviteKey, "🔥")
+						@EmojiCounter(db, inviteKey, "❤️")
+					</footer>
+				</div>
+			</div>
+		} else {
+			<main class="stage" aria-label="Presentation">
+				@ActiveSlide(db, inviteKey, sessionID, isPresenter, localKey, remoteKey)
+			</main>
+			<footer class="reactions" aria-label="Reactions">
+				@EmojiCounter(db, inviteKey, "👍")
+				@EmojiCounter(db, inviteKey, "🎉")
+				@EmojiCounter(db, inviteKey, "😂")
+				@EmojiCounter(db, inviteKey, "🔥")
+				@EmojiCounter(db, inviteKey, "❤️")
+			</footer>
 		}
-		<main class="stage" aria-label="Presentation">
-			@ActiveSlide(db, inviteKey, sessionID, isPresenter, localKey, remoteKey)
-		</main>
-		<footer class="reactions" aria-label="Reactions">
-			@EmojiCounter(db, inviteKey, "👍")
-			@EmojiCounter(db, inviteKey, "🎉")
-			@EmojiCounter(db, inviteKey, "😂")
-			@EmojiCounter(db, inviteKey, "🔥")
-			@EmojiCounter(db, inviteKey, "❤️")
-		</footer>
 	</div>
 }
