@@ -339,19 +339,25 @@ body {
 	width: 100%;
 	max-width: var(--stage-max-width);
 
-	/* Push notes to the bottom of the stage */
-	margin-top: auto;
-	margin-left: auto;
-	margin-right: auto;
+	position: fixed;
+	left: 50%;
+	bottom: calc(var(--reactions-min-height) + var(--space-2));
+	transform: translateX(-50%);
+	z-index: 5;
+	margin: 0;
 
 	padding: var(--space-3);
 	border: var(--border-subtle);
 	border-radius: var(--radius);
-	background: var(--surface-presenter);
+	background: #0f111af7;
 
 	font-size: var(--font-small);
 	line-height: 1.4;
 	color: var(--color-text-soft);
+}
+
+.presenter-layout .presenter-notes {
+	left: calc(50% + 10rem);
 }
 
 .presenter-notes::before {
