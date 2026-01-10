@@ -149,20 +149,33 @@ func TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey stri
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\">Home</button><div class=\"presenter-nav-preview\" role=\"button\" tabindex=\"0\" data-attr=\"{ 'data-disabled': $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }\" data-on:click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" aria-label=\"Home\"><img src=\"/static/house-regular-full.svg\" alt=\"\" class=\"presenter-nav-home-icon\"></button><div class=\"presenter-nav-preview\" role=\"button\" tabindex=\"0\" data-attr=\"{ 'data-disabled': $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }\" data-on:click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, current-1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 115, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 116, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"><div class=\"slide-preview-frame\" style=\"--preview-scale: 0.28;\"><div class=\"slide-preview-inner\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"><div class=\"presenter-nav-preview-meta\"><span class=\"presenter-nav-preview-label\">Previous</span> <span class=\"presenter-nav-preview-title\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(prevTitle)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 120, Col: 57}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"slide-preview-frame\" style=\"--preview-scale: 0.28;\"><div class=\"slide-preview-inner\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -172,38 +185,38 @@ func TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey stri
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"slide-preview-placeholder\">Start</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"slide-preview-placeholder\">Start</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</div></div><div class=\"presenter-nav-preview-meta\"><span class=\"presenter-nav-preview-label\">Previous</span> <span class=\"presenter-nav-preview-title\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(prevTitle)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 128, Col: 57}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div></div><div class=\"presenter-nav-preview\" role=\"button\" tabindex=\"0\" data-attr=\"{ 'data-disabled': $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }\" data-on:click=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div></div></div><div class=\"presenter-nav-preview presenter-nav-preview-next\" role=\"button\" tabindex=\"0\" data-attr=\"{ 'data-disabled': $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }\" data-on:click=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, current+1)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 136, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 137, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"><div class=\"slide-preview-frame\" style=\"--preview-scale: 0.28;\"><div class=\"slide-preview-inner\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\"><div class=\"presenter-nav-preview-meta\"><span class=\"presenter-nav-preview-label\">Next</span> <span class=\"presenter-nav-preview-title\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(nextTitle)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 141, Col: 57}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div><div class=\"slide-preview-frame\" style=\"--preview-scale: 0.28;\"><div class=\"slide-preview-inner\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -213,32 +226,19 @@ func TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey stri
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"slide-preview-placeholder\">End</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "<div class=\"slide-preview-placeholder\">End</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div></div><div class=\"presenter-nav-preview-meta\"><span class=\"presenter-nav-preview-label\">Next</span> <span class=\"presenter-nav-preview-title\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(nextTitle)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 149, Col: 57}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div><div class=\"presenter-nav-count\">Slide ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></div></div><div class=\"presenter-nav-count\">Slide ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d / %d", current+1, maxSlides))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 153, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 154, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -287,7 +287,7 @@ func PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKey
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", current == i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 167, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 168, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -300,7 +300,7 @@ func PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKey
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(slideSetPostURL(inviteKey, i)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 168, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 169, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -313,7 +313,7 @@ func PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKey
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%t", current == i))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 169, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 170, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -334,7 +334,7 @@ func PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKey
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", i+1))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 177, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 178, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -347,7 +347,7 @@ func PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKey
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(entry.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 178, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/top_navigation.templ`, Line: 179, Col: 54}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {

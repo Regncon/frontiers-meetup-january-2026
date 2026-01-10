@@ -104,8 +104,9 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 		<button
 			class="presenter-nav-button"
 			data-on:click={ templ.URL(slideSetPostURL(inviteKey, 0)) }
+			aria-label="Home"
 		>
-			Home
+			<img src="/static/house-regular-full.svg" alt="" class="presenter-nav-home-icon"/>
 		</button>
 		<div
 			class="presenter-nav-preview"
@@ -114,6 +115,10 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 			data-attr="{ 'data-disabled': $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
 			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current-1)) }
 		>
+			<div class="presenter-nav-preview-meta">
+				<span class="presenter-nav-preview-label">Previous</span>
+				<span class="presenter-nav-preview-title">{ prevTitle }</span>
+			</div>
 			<div class="slide-preview-frame" style="--preview-scale: 0.28;">
 				<div class="slide-preview-inner">
 					if !prevDisabled {
@@ -123,18 +128,18 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 					}
 				</div>
 			</div>
-			<div class="presenter-nav-preview-meta">
-				<span class="presenter-nav-preview-label">Previous</span>
-				<span class="presenter-nav-preview-title">{ prevTitle }</span>
-			</div>
 		</div>
 		<div
-			class="presenter-nav-preview"
+			class="presenter-nav-preview presenter-nav-preview-next"
 			role="button"
 			tabindex="0"
 			data-attr="{ 'data-disabled': $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }"
 			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current+1)) }
 		>
+			<div class="presenter-nav-preview-meta">
+				<span class="presenter-nav-preview-label">Next</span>
+				<span class="presenter-nav-preview-title">{ nextTitle }</span>
+			</div>
 			<div class="slide-preview-frame" style="--preview-scale: 0.28;">
 				<div class="slide-preview-inner">
 					if !nextDisabled {
@@ -143,10 +148,6 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 						<div class="slide-preview-placeholder">End</div>
 					}
 				</div>
-			</div>
-			<div class="presenter-nav-preview-meta">
-				<span class="presenter-nav-preview-label">Next</span>
-				<span class="presenter-nav-preview-title">{ nextTitle }</span>
 			</div>
 		</div>
 		<div class="presenter-nav-count">
