@@ -112,6 +112,7 @@ body {
 	gap: var(--space-2);
 	align-items: center;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .presenter-bar .presenter-nav {
@@ -126,8 +127,9 @@ body {
 
 .presenter-nav-preview {
 	display: flex;
-	gap: 0.75rem;
-	align-items: center;
+	flex-direction: column;
+	gap: 0.5rem;
+	align-items: flex-start;
 	padding: 0.5rem;
 	border-radius: 12px;
 	text-align: left;
@@ -157,16 +159,16 @@ body {
 .presenter-nav-preview-title {
 	font-weight: 650;
 	line-height: 1.2;
+	max-width: 14rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	max-width: 14rem;
 }
 
 .presenter-nav-count {
-	margin-left: auto;
 	font-weight: 650;
 	opacity: 0.8;
+	font-size: 2rem;
 }
 
 .slide-preview-frame {
@@ -180,6 +182,14 @@ body {
 	overflow: hidden;
 	background: #0f111a;
 	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.presenter-nav-preview .slide-preview-frame {
+	width: 14rem;
+}
+
+.presenter-slide-item .slide-preview-frame {
+	width: 100%;
 }
 
 .slide-preview-inner {
