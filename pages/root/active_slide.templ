@@ -66,9 +66,15 @@ func deck(
 		func() templ.Component { return PollResultsSlide(db, pollConcurrency, localKey, remoteKey) },
 		func() templ.Component { return slides.RegnconConcurrencyPollReveal(isPresenter) },
 
+		func() templ.Component { return slides.LanguageGoKOSlide(isPresenter) },
+		func() templ.Component { return slides.LanguageGoWins(isPresenter) },
+		func() templ.Component { return slides.LanguageGoNotPerfect(isPresenter) },
+		func() templ.Component { return slides.LanguageGoErrorHandling(isPresenter) },
+		func() templ.Component { return slides.LanguageJSTSWins(isPresenter) },
 		func() templ.Component { return slides.ComplexityEssentialVsAccidental(isPresenter) },
 
 		func() templ.Component { return slides.StylingGoodBad(isPresenter) },
+		func() templ.Component { return slides.ToolingDXKOSlide(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },

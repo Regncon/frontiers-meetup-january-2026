@@ -74,9 +74,15 @@ func deck(
 		func() templ.Component { return PollResultsSlide(db, pollConcurrency, localKey, remoteKey) },
 		func() templ.Component { return slides.RegnconConcurrencyPollReveal(isPresenter) },
 
+		func() templ.Component { return slides.LanguageGoKOSlide(isPresenter) },
+		func() templ.Component { return slides.LanguageGoWins(isPresenter) },
+		func() templ.Component { return slides.LanguageGoNotPerfect(isPresenter) },
+		func() templ.Component { return slides.LanguageGoErrorHandling(isPresenter) },
+		func() templ.Component { return slides.LanguageJSTSWins(isPresenter) },
 		func() templ.Component { return slides.ComplexityEssentialVsAccidental(isPresenter) },
 
 		func() templ.Component { return slides.StylingGoodBad(isPresenter) },
+		func() templ.Component { return slides.ToolingDXKOSlide(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
 		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
@@ -152,7 +158,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 120, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 126, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

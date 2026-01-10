@@ -1,0 +1,38 @@
+package slides
+
+/*
+Slide: Language - JS/TS wins (and prop drilling)
+
+Intent:
+- Keep it balanced: JS/TS (and React) have real wins.
+- Use prop drilling as the same “data flow” problem with different outcomes:
+  - React: often painful in deep trees.
+  - Go: explicit parameters are a feature (dependencies stay visible).
+
+Design:
+- Short bullets, Good/Bad prefix.
+*/
+
+templ LanguageJSTSWins(isPresenter bool) {
+	<div class="slide">
+		<h1>JS/TS wins</h1>
+		<ul style="margin-top: 2rem;">
+			<li><strong>Good:</strong> JSX/TSX is an amazing UI authoring experience</li>
+			<li><strong>Good:</strong> Ecosystem + UI libraries are massive</li>
+			<li><strong>Bad:</strong> React prop drilling gets painful in deep component trees</li>
+			<li><strong>Good:</strong> Go “prop drilling” (explicit parameters) keeps dependencies visible</li>
+		</ul>
+	</div>
+	if isPresenter {
+		@languageJSTSWinsPresenterNotes()
+	}
+}
+
+templ languageJSTSWinsPresenterNotes() {
+	<div class="presenter-notes">
+		<ul>
+			<li>We genuinely miss TSX sometimes.</li>
+			<li>The prop drilling point is about visibility: explicit dependencies are boring but honest.</li>
+		</ul>
+	</div>
+}
