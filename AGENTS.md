@@ -94,6 +94,12 @@ Keep all logic for a feature together.
 
 ---
 
+## Generated Files (templ)
+
+- Do not edit `*_templ.go` files; edit the `.templ` sources and run `go tool templ generate` (or `task build:templ`).
+
+---
+
 ## templ + SQL Workflow
 
 - Keep templates close to their data access logic.
@@ -109,6 +115,13 @@ Keep all logic for a feature together.
 - Keep SQL close to where it is used.
 - Handle all database errors explicitly.
 - Make failure cases obvious.
+
+---
+
+## Presentation Structure
+
+- Slide ordering is defined in `pages/root/active_slide.templ`; add new slides there and keep content under `slides/`.
+- Schema changes belong in `schema.sql`; avoid editing the runtime DB file directly.
 
 ---
 
