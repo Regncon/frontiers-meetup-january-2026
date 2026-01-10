@@ -122,6 +122,8 @@ Keep all logic for a feature together.
 
 - Slide ordering is defined in `pages/root/active_slide.templ`; add new slides there and keep content under `slides/`.
 - Schema changes belong in `schema.sql`; avoid editing the runtime DB file directly.
+- Slide intent/design notes live in top-of-file comments in `slides/*.templ`; keep them aligned with the slide content.
+- Keep `project_summary.md` and `agent_project.md` updated when the narrative or deck structure changes.
 
 ---
 
