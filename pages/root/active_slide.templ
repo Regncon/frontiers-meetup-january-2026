@@ -78,7 +78,8 @@ func deck(
 		func() templ.Component { return slides.ToolingDXKOSlide(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
-		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.AgendaWhatsNext, isPresenter) },
+		func() templ.Component { return slides.WhatsNext2026_2027(isPresenter) },
 	}
 }
 

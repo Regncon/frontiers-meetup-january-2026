@@ -86,7 +86,8 @@ func deck(
 		func() templ.Component { return slides.ToolingDXKOSlide(isPresenter) },
 		func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) },
 		func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) },
-		func() templ.Component { return slides.Agenda(slides.AgendaTakeaways, isPresenter) },
+		func() templ.Component { return slides.Agenda(slides.AgendaWhatsNext, isPresenter) },
+		func() templ.Component { return slides.WhatsNext2026_2027(isPresenter) },
 	}
 }
 
@@ -159,7 +160,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 127, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 128, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

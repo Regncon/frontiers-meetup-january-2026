@@ -34,7 +34,7 @@ const (
 	Agenda2024
 	Agenda2025
 	AgendaCompare
-	AgendaTakeaways
+	AgendaWhatsNext
 )
 
 type agendaItem struct {
@@ -47,7 +47,7 @@ var agendaItems = []agendaItem{
 	{step: Agenda2024, label: "2024: Heavy frontend (Next.js + Firebase)"},
 	{step: Agenda2025, label: "2025: Grug brain (Go + Datastar + templ + SQLite + NATS)"},
 	{step: AgendaCompare, label: "The Good / Bad / Ugly (by topic)"},
-	{step: AgendaTakeaways, label: "Takeaways"},
+	{step: AgendaWhatsNext, label: "What’s next (2026 → 2027)"},
 }
 
 func Agenda(current AgendaStep, isPresenter bool) templ.Component {
