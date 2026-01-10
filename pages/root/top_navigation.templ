@@ -107,9 +107,11 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 		>
 			Home
 		</button>
-		<button
+		<div
 			class="presenter-nav-preview"
-			data-attr="{ disabled: $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
+			role="button"
+			tabindex="0"
+			data-attr="{ 'data-disabled': $slideIndex == 0, 'aria-disabled': $slideIndex == 0 }"
 			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current-1)) }
 		>
 			<div class="slide-preview-frame" style="--preview-scale: 0.28;">
@@ -125,10 +127,12 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 				<span class="presenter-nav-preview-label">Previous</span>
 				<span class="presenter-nav-preview-title">{ prevTitle }</span>
 			</div>
-		</button>
-		<button
+		</div>
+		<div
 			class="presenter-nav-preview"
-			data-attr="{ disabled: $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }"
+			role="button"
+			tabindex="0"
+			data-attr="{ 'data-disabled': $slideIndex >= ($maxSlides - 1), 'aria-disabled': $slideIndex >= ($maxSlides - 1) }"
 			data-on:click={ templ.URL(slideSetPostURL(inviteKey, current+1)) }
 		>
 			<div class="slide-preview-frame" style="--preview-scale: 0.28;">
@@ -144,7 +148,7 @@ templ TopNavigation(db *sql.DB, inviteKey string, sessionID string, localKey str
 				<span class="presenter-nav-preview-label">Next</span>
 				<span class="presenter-nav-preview-title">{ nextTitle }</span>
 			</div>
-		</button>
+		</div>
 		<div class="presenter-nav-count">
 			Slide { fmt.Sprintf("%d / %d", current+1, maxSlides) }
 		</div>
@@ -156,8 +160,10 @@ templ PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKe
 	{{ deckEntries := deck(db, inviteKey, sessionID, false, localKey, remoteKey) }}
 	<div class="presenter-slide-list">
 		for i, entry := range deckEntries {
-			<button
+			<div
 				class="presenter-slide-item"
+				role="button"
+				tabindex="0"
 				data-active={ fmt.Sprintf("%t", current == i) }
 				data-on:click={ templ.URL(slideSetPostURL(inviteKey, i)) }
 				aria-current={ fmt.Sprintf("%t", current == i) }
@@ -171,7 +177,7 @@ templ PresenterSlideList(db *sql.DB, inviteKey string, sessionID string, localKe
 					<span class="presenter-slide-index">{ fmt.Sprintf("%d", i+1) }</span>
 					<span class="presenter-slide-title">{ entry.Title }</span>
 				</div>
-			</button>
+			</div>
 		}
 	</div>
 }

@@ -131,11 +131,13 @@ body {
 	padding: 0.5rem;
 	border-radius: 12px;
 	text-align: left;
+	cursor: pointer;
 }
 
-.presenter-nav-preview[disabled] {
+.presenter-nav-preview[data-disabled="true"] {
 	opacity: 0.55;
 	cursor: not-allowed;
+	pointer-events: none;
 }
 
 .presenter-nav-preview-meta {
@@ -214,6 +216,7 @@ body {
 	background: transparent;
 	color: inherit;
 	text-align: left;
+	cursor: pointer;
 }
 
 .presenter-slide-item[data-active="true"] {
