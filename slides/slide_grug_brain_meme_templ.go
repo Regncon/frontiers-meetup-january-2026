@@ -81,7 +81,7 @@ func grugBrainMemePresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Quick laugh + reset the vibe: we’re not here to dunk on anyone.</li><li>The point: “simple” can be more capable than people assume.</li><li>Transition: “Ok — now let’s explain what Datastar/templ/SQLite/NATS actually are.”</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We wanted to know if our asumptions about simplicity were true.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

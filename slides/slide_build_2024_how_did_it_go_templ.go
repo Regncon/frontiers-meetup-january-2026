@@ -43,7 +43,7 @@ func Build2024HowDidItGo(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>How did it go in 2024?</h1><ul><li>We underestimated the work (by a lot)</li><li>We shipped <strong>not production-ready</strong></li><li>Crunch happened — even coding during the festival</li><li>But it was usable in the end</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>How did it go in 2024?</h1><ul><li>We underestimated the work (by a lot)</li><li>We shipped <strong>not production-ready</strong> code</li><li>Crunch happened — even coding during the festival</li><li>But it was usable in the end</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,7 +78,7 @@ func build2024HowDidItGoPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, so of course we grossly underestimated how much work was involved.</li><li>We didn’t complete all the features and the website was definitely not production ready.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul><div style=\"margin-top: 1rem;\">We’ll come back to two major design mistakes later in the talk:</div><ul><li>We tried to use Server Components everywhere, even when it was the wrong fit.</li><li>Firebase is amazing and very performant when implemented correctly, but our usage (and mixing patterns with Server Components) resulted in poor performance, including in the core interest selection flow.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, so of course we grossly underestimated how much work was involved.</li><li>We didn’t complete all the features and the website was definitely not production ready.</li><li>Remember how I said we spent a lot of time on UX? We failed.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

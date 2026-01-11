@@ -41,7 +41,7 @@ func DatastarCheckboxTrickSetup(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Datastar demo</h1><ul><li>Remember the “1,000,000 checkboxes in React” meme?</li><li>Now the real question:</li><li><strong>How many can a simple Go + Datastar app handle?</strong></li><li><strong>Don’t spoil it</strong> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Datastar demo</h1><ul><li>Remember the “1,000,000 checkboxes in React” meme?</li><li>Now the real question:</li><li><strong>How many can a simple Go + Datastar app handle without a virtual DOM?</strong></li><li><strong>Don’t spoil it</strong> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -89,7 +89,7 @@ func datastarCheckboxTrickSetupPresenterNotes() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Tell the “React 1M checkboxes” story quickly.</li><li>Set the rules: don’t spoil it if you know.</li><li>Then immediately go to the poll slide and let chaos happen.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Tell the “Javascript/ React 1M checkboxes” story quickly.</li><li>Set the rules: don’t spoil it if you know.</li><li>Then immediately go to the poll slide and let chaos happen.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

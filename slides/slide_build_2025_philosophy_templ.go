@@ -43,7 +43,7 @@ func Build2025Philosophy(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>2025: The opposite experiment</h1><ul><li>We went in the complete opposite direction from 2024</li><li>Not just stack — also architecture</li><li>Started with <strong>HTMX + Go</strong> … then discovered <strong>Datastar</strong></li><li>Goal: simpler system, still reactive UI</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>2025: The opposite experiment</h1><ul><li>We went in the complete opposite direction from 2024</li><li>Not just stack — also architecture</li><li>Started with <strong>HTMX + Go</strong> … then discovered <strong>Datastar</strong></li><li>Goal: Simpler everything, try something completely different, still reactive UI</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,7 +78,7 @@ func build2025PhilosophyPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>2025 was an experiment: what happens if we invert almost every assumption from 2024?</li><li>We originally planned HTMX + Go.</li><li>One of us had HTMX experience and suggested something even simpler — that led us to Datastar.</li><li>Reactivity being a first-class feature was a big “yes!” moment for us.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had heard a lot about HTMX, and how good Html css had gotten.</li><li>We originally planned HTMX + Go.</li><li>One of us had HTMX experience and suggested something even simpler — that led us to Datastar.</li><li>Reactivity being a first-class feature was a big “yes!” moment for us.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

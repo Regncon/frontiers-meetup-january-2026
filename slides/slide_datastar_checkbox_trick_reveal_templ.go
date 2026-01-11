@@ -40,7 +40,7 @@ func DatastarCheckboxTrickReveal(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; flex-direction:column; justify-content:center; gap: 1.5rem;\"><h1 style=\"margin: 0; font-size: 4rem;\">One billion.</h1><img src=\"/static/one_billion.webp\" alt=\"Dr Evil one billion meme\" style=\"max-width: 100%; max-height: 60vh; object-fit: contain; border-radius: 14px;\"><div style=\"font-size: 1.35rem; opacity: 0.9;\">Yes, actually.</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; flex-direction:column; justify-content:center; gap: 1.5rem;\"><h1 style=\"margin: 0; font-size: 4rem;\">One billion.</h1><img src=\"/static/one_billion.webp\" alt=\"Dr Evil one billion meme\" style=\"max-width: 100%; max-height: 60vh; object-fit: contain; border-radius: 14px;\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

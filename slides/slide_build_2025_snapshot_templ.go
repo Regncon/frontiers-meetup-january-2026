@@ -46,7 +46,7 @@ func Build2025Snapshot(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What we built in 2025</h1><ul><li>Browse events by <strong>pulje</strong> (time slots: Friday evening, Saturday morning, …)</li><li>Participants mark interest: <strong>Not interested</strong> → <strong>Very interested</strong></li><li>Submit interest to the festival (core workflow)</li><li>Admins edit/publish events + help participants with ticketing support</li><li><s>Assign participants to events based on interest</s></li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What we built in 2025</h1><ul><li>Browse events by <strong>pulje</strong> (time slots: Friday evening, Saturday morning, …)</li><li>Participants mark interest: <strong>Not interested</strong> → <strong>Very interested</strong>(core workflow)</li><li>Submit events to the festival </li><li>Admins edit/publish events + help participants with ticketing support</li><li><s>Assign participants to events based on interest</s> ( forshadowing )</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,7 +81,7 @@ func build2025SnapshotPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">Sorry, puje is a bit of a domain language there. We intentionally kept the same core workflow as 2024 so the comparison is fair. We had a larger team this year, and a design/UX specialist, so the UX was better. Forshadowing.</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had a larger team this year, and a design/UX specialist, so the UX was better.</li><li>Forshadowing.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -76,7 +76,7 @@ func whatIsTemplPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We picked templ because we like the TSX workflow: UI and code close together.</li><li>This is server-rendered HTML as Go components — not a client framework.</li><li>It compiles into Go, so it’s fast and integrates naturally with the backend.</li><li>Later: we’ll talk about the tooling experience (good parts and rough edges).</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -41,7 +41,7 @@ func WhatIsDatastar(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What is Datastar?</h1><ul><li>A lightweight <strong>hypermedia</strong> framework for reactive web apps</li><li><strong>Bring your own backend</strong> (any language; SDKs exist)</li><li>Server-rendered HTML + reactive behavior in a single <strong>~10 KiB</strong> script</li><li>Can scale from simple sites to real-time / collaborative-style apps</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What is Datastar?</h1><ul><li>A lightweight <strong>hypermedia</strong> framework for reactive web apps</li><li><strong>Bring your own backend</strong> (any language; SDKs exist)</li><li>Server-rendered HTML + reactive behavior in a single <strong>~10 KiB</strong> script</li><li>Can scale from simple sites to real-time / collaborative-style apps</li><li>Closes the \"HTMX can do 95% of what I need\" gap</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

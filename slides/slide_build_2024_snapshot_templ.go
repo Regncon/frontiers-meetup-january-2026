@@ -45,7 +45,7 @@ func Build2024Snapshot(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What we built in 2024</h1><ul><li>Browse events by <strong>pulje</strong> (time slots: Friday evening, Saturday morning, …)</li><li>Participants mark interest: <strong>Not interested</strong> → <strong>Very interested</strong></li><li>Submit interest to the festival (core workflow)</li><li>Admins edit/publish events + assign participants based on interest</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What we built in 2024</h1><ul><li>Browse events by <strong>pulje</strong> (time slots: Friday evening, Saturday morning, …)</li><li>Participants mark interest: <strong>Not interested</strong> → <strong>Very interested</strong>(core workflow)</li><li>Submit events to the festival </li><li>Admins edit/publish events + assign participants based on interest... eventually (forshadowing)</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -80,7 +80,7 @@ func build2024SnapshotPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">Sorry, puje is a bit of a domain language there. Everything revolves around one thing: find an event and indicate interest. We spent a lot of UX attention on making that flow feel good. Admin work was real: editing/publishing, support, and allocation.</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Sorry, puje is a bit of a domain language there.</li><li>Everything revolves around one thing: find an event and indicate interest.</li><li>We spent a lot of UX attention on making that flow feel good.... we failed.</li><li>Admin work was real: editing/publishing, support, and allocation.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

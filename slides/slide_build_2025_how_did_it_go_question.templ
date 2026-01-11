@@ -14,6 +14,7 @@ Design:
 templ Build2025HowDidItGoQuestion(isPresenter bool) {
 	<div class="slide" style="display:flex; align-items:center; justify-content:center;">
 		<h1 style="margin:0; font-size:4rem;">So… how did it go in 2025?</h1>
+		( Forhadowing )
 	</div>
 	if isPresenter {
 		@build2025HowDidItGoQuestionPresenterNotes()
@@ -21,10 +22,5 @@ templ Build2025HowDidItGoQuestion(isPresenter bool) {
 }
 
 templ build2025HowDidItGoQuestionPresenterNotes() {
-	<div class="presenter-notes">
-		<ul>
-			<li>Pause. Let the room sit with it.</li>
-			<li>Then advance to the explosion slide.</li>
-		</ul>
-	</div>
+	<div class="presenter-notes"></div>
 }
