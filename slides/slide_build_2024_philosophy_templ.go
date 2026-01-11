@@ -47,7 +47,7 @@ func Build2024Philosophy(isPresenter bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">This wasn’t a “pick the simplest thing” year. This was a learning year. We already knew React, but Next.js has its own mental model — we wanted to understand it properly. And Firebase: we’d used it before, and realtime is genuinely cool when it fits.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>React had recently pivoted to Server Components, and we wanted to learn more about it.</li><li>We chose Firestore because we wanted the site to feel realtime and modern.</li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

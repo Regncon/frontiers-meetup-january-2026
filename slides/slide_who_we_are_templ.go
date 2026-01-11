@@ -40,7 +40,7 @@ func WhoWeAre(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Who we are</h1><ul><li>We’re a group of nerds who like trying new things.</li><li>Mixed experience levels: juniors + seniors.</li><li>Welcoming team — the more the merrier.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Who we are</h1><ul><li>We’re a group of nerds who like trying new things.</li><li>We have a good mix of experience levels, juniors and seniors.</li><li>Welcoming team — the more the merrier.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

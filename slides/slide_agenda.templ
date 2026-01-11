@@ -63,7 +63,7 @@ templ Agenda(current AgendaStep, isPresenter bool) {
 
 func agendaItemStyle(current, step AgendaStep) string {
 	if step == current {
-		return "font-weight:700; font-size: 1.6rem; margin: 0.6rem 0;"
+		return "font-weight:700; font-size: 3rem; margin: 0.6rem 0;"
 	}
 	if step < current {
 		return "opacity:0.75; margin: 0.5rem 0;"
@@ -83,7 +83,8 @@ func agendaItemPrefix(current, step AgendaStep) string {
 
 templ agendaPresenterNotes() {
 	<div class="presenter-notes">
-		Use this slide as a recurring “where we are” marker by passing the current AgendaStep.
-		Show only when needed (not on every slide).
+		<ul>
+			<li>This is what we are going to talk about today.</li>
+		</ul>
 	</div>
 }

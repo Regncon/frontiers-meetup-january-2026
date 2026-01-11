@@ -52,7 +52,7 @@ func WhyThisTalk(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Why we’re giving this talk</h1><ul><li>We want to share a real experience: what worked, what didn’t, what surprised us.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Why we’re giving this talk</h1><ul><li>We want to share our real experience: what worked, what didn’t, what surprised us.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -87,7 +87,7 @@ func whyThisTalkPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">We’re not here to change anyone’s mind. People aren’t rational — data helps, but stories travel. This isn’t a framework debate. There is no silver bullet or perfect framework. We’re sharing learnings and perspectives from two real builds. We’ll back up some claims with numbers and demos, but the goal is: new ideas you can try.</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>The 'why' of this talk is to share our experience building two different stacks.</li><li>We’re not here to change anyone’s mind. People aren’t rational — data helps, but stories travel.</li><li>This isn’t a framework debate. There is no silver bullet or perfect framework.</li><li>We’re sharing learnings and perspectives from two real builds.</li><li>We’ll back up some claims with numbers and demos, but we are not sell you something.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

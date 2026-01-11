@@ -46,7 +46,7 @@ func WhatIsRegncon(isPresenter bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">Quick context. Keep it warm. This is a real community event with real constraints.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

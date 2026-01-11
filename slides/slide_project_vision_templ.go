@@ -42,12 +42,12 @@ func ProjectVision(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Why this software exists</h1><div style=\"font-size: 1.8rem; margin-top: 2rem; line-height: 1.3;\"><strong>Vi gjør vårt beste at alle deltagere skal få spille minst et spill som de er veldig interessert i å spille.</strong></div><div style=\"font-size: 1.3rem; opacity: 0.9; margin-top: 1rem;\">We do our best to ensure every participant gets to play at least one game they’re really excited to play.</div><ul style=\"margin-top: 2rem;\"><li>We want to learn new things and try other thechniques than we use at work.</li></ul><ul style=\"margin-top: 2rem;\"><li>This is a real production system, used by real people.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Why this software exists</h1><div style=\"font-size: 1.8rem; margin-top: 2rem; line-height: 1.3;\"><strong>\"Vi gjør vårt beste for at alle deltagere skal få spille minst et spill som de er veldig interessert i.\"</strong></div><div style=\"font-size: 1.6rem; margin-top: 1rem; font-style: italic; \">\"We do our best to ensure every participant gets to play at least one game they’re really excited to play.\"</div><ul style=\"margin-top: 2rem;\"><li>The deves take the oppertunity to learn new things and try other thecnology's than we use at work.</li></ul><ul style=\"margin-top: 2rem;\"><li>This is a real production system, used by real people. <i>(forshadowing)</i></li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">This vision drives UX and prioritization. This is why a simple calendar plugin doesn’t fit. Foreshadowing: we’ve failed spectacularly at “production ready” every year — and we’ll explain why.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This vision drives UX and prioritization.</li><li>This is why a simple calendar plugin doesn’t fit.</li><li>Foreshadowing</li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

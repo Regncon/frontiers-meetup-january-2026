@@ -42,12 +42,12 @@ func DifferentViewpoints(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Different viewpoints</h1><div style=\"display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;\"><div style=\"font-size: 1.6rem;\">“I can’t see the value of heavy frontend frameworks.<br>Everything can be done with simple HTML, CSS, Go, Datastar…<br><strong>Prove me wrong.</strong>”</div><div style=\"font-size: 1.6rem;\">“I’m trying to decide where to get my<br><strong>VS Code + React</strong> tattoos.”</div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Different viewpoints</h1><div style=\"display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 2rem;\"><div style=\"font-size: 1.6rem;\">“I can’t see the value of heavy frontend frameworks. Anything React can do, simple HTML, CSS, Go, Datastar can do better and with less complexity.<br><strong>Prove me wrong.</strong>”</div><div style=\"font-size: 1.6rem;\">“I’m trying to decide where to get my<br><strong>VS Code + React</strong> tattoos.”</div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">We disagree internally — and that makes the comparison more honest. This is not a debate; it’s sharing perspectives and tradeoffs.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We disagree internally — and that's ok</li><li>While working on this presentation I relized  we have very different opinions, and that's a strength.</li><li>Personally I am biased towards less complexity, Html, Css, Go, Datastar</li><li>You will hear differnt viewpoints. Things some consider good, others consider bad.</li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

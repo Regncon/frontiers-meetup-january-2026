@@ -16,11 +16,10 @@ Design:
 templ DifferentViewpoints(isPresenter bool) {
 	<div class="slide">
 		<h1>Different viewpoints</h1>
-		<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+		<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 2rem;">
 			<div style="font-size: 1.6rem;">
 				“I can’t see the value of heavy frontend frameworks.
-				<br/>
-				Everything can be done with simple HTML, CSS, Go, Datastar…
+				Anything React can do, simple HTML, CSS, Go, Datastar can do better and with less complexity.
 				<br/>
 				<strong>Prove me wrong.</strong>”
 			</div>
@@ -33,8 +32,12 @@ templ DifferentViewpoints(isPresenter bool) {
 	</div>
 	if isPresenter {
 		<div class="presenter-notes">
-			We disagree internally — and that makes the comparison more honest.
-			This is not a debate; it’s sharing perspectives and tradeoffs.
+			<ul>
+				<li>We disagree internally — and that's ok</li>
+				<li>While working on this presentation I relized  we have very different opinions, and that's a strength.</li>
+				<li>Personally I am biased towards less complexity, Html, Css, Go, Datastar</li>
+				<li>You will hear differnt viewpoints. Things some consider good, others consider bad.</li>
+			</ul>
 		</div>
 	}
 }

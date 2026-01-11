@@ -136,7 +136,7 @@ func Agenda(current AgendaStep, isPresenter bool) templ.Component {
 
 func agendaItemStyle(current, step AgendaStep) string {
 	if step == current {
-		return "font-weight:700; font-size: 1.6rem; margin: 0.6rem 0;"
+		return "font-weight:700; font-size: 3rem; margin: 0.6rem 0;"
 	}
 	if step < current {
 		return "opacity:0.75; margin: 0.5rem 0;"
@@ -175,7 +175,7 @@ func agendaPresenterNotes() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"presenter-notes\">Use this slide as a recurring “where we are” marker by passing the current AgendaStep. Show only when needed (not on every slide).</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"presenter-notes\"><ul><li>This is what we are going to talk about today.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
