@@ -40,7 +40,7 @@ func RegnconConcurrencyPollSetup(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Scaling</h1><ul style=\"margin-top: 2rem;\"><li>I believe Next.js + Firebase could probably scale to ~10,000 concurrent users for this app</li><li>So… how many concurrent users does Regncon actually have?</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Question time? Scaling</h1><ul style=\"margin-top: 2rem;\"><li>I believe Next.js + Firebase could probably scale to ~10,000 concurrent users for this app</li><li>So… how many concurrent users does Regncon actually have?</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -75,7 +75,7 @@ func regnconConcurrencyPollSetupPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Frame it as “probably” and “for this app” — no need to defend the exact number.</li><li>Then advance immediately to the poll and let people guess.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

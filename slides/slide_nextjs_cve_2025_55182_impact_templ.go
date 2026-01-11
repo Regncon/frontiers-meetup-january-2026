@@ -77,7 +77,7 @@ func nextJSCVE202555182ImpactPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Critical severity. Pre-auth remote code execution.</li><li>It’s in React Server Components / Server Function endpoint handling.</li><li>Next.js is affected because it uses RSC (especially App Router).</li><li>Next slide: what to do.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Critical severity. Pre-auth remote code execution.</li><li>We had to include this slide because of recent events.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -41,7 +41,23 @@ func LanguageGoNotPerfect(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Go is not perfect</h1><ul style=\"margin-top: 2rem;\"><li><strong>Bad:</strong> time.Parse layouts are… weird</li><li><strong>Bad:</strong> Export-by-capital-letter is goofy</li><li><strong>Ugly:</strong> For some F*ing reason, go time.Parse cant take YYYY-MM-DD like a normal programming language.</li></ul><div style=\"margin-top: 2rem; padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.06); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace; font-size: 1.1rem; line-height: 1.35;\"><pre style=\"margin:0; white-space:pre-wrap;\">birthDate, err := time.Parse(\"2006-01-02\", born)</pre></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Go is not perfect</h1><ul style=\"margin-top: 2rem;\"><li><strong>Bad:</strong> Export-by-capital-letter is goofy</li><li><strong>Ugly:</strong> time.Parse layouts are… weird</li></ul><div style=\"margin-top: 2rem; padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.06); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, &quot;Liberation Mono&quot;, &quot;Courier New&quot;, monospace; font-size: 1.1rem; line-height: 1.35;\"><pre style=\"margin:0; white-space:pre-wrap;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(`
+For some F*ing reason, go time.Parse cant take YYYY-MM-DD like a normal programming language.
+birthDate, err := time.Parse("2006-01-02", born)
+				`)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_language_go_not_perfect.templ`, Line: 27, Col: 5}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</pre></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,12 +87,12 @@ func languageGoNotPerfectPresenterNotes() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var2 == nil {
-			templ_7745c5c3_Var2 = templ.NopComponent
+		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var3 == nil {
+			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This is the “yes, we know” slide. Quick laugh, move on.</li><li>Point out: once you internalize it, it’s fine — but the first time is hilarious.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Emphasize: no language is perfect.</li><li>There is probably more to say here.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

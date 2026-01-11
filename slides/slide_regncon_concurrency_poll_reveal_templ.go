@@ -75,7 +75,7 @@ func regnconConcurrencyPollRevealPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Let the laugh happen.</li><li>Then transition: the real problem is complexity + production readiness, not scale.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Let the laugh happen.</li><li>We are talkin about concurrent users, users actively using the system at the same time.</li><li>This is not completely true, when using Nats and Datastar. Connected clients will be updated at the same time.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

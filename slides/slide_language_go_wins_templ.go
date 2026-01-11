@@ -41,7 +41,7 @@ func LanguageGoWins(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Language: Go</h1><div style=\"display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2rem;\"><ul style=\"margin:0;\"><li>Real types</li><li>Stable syntax</li><li>Almost painless updates</li><li>Fast builds</li><li>Single binary deploy</li><li>Low dependency gravity</li><li>Small build output</li><li>Robust standard library</li></ul><ul style=\"margin:0;\"><li>Built for the web</li><li>Explicit control flow</li><li>Trust in the code</li><li>Simple by design</li><li>Punishes cleverness</li><li>Productive (gets out of the way)</li><li>Easy to reason about</li><li>“Dumb code” scales better</li></ul></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Language: Go</h1><div style=\"display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2rem;\"><ul style=\"margin:0;\"><li>Real types</li><li>Stable syntax</li><li>Almost painless updates</li><li>Fast builds</li><li>Single binary deploy</li><li>Fiew dependency's</li><li>Small build output</li></ul><ul style=\"margin:0;\"><li>Robust standard library</li><li>Built for the web</li><li>Explicit control flow</li><li>Simple by design</li><li>Punishes cleverness</li><li>Productive (gets out of the way)</li><li>Easy to reason about</li></ul></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,7 +76,7 @@ func languageGoWinsPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This slide is intentionally intense. It’s the “impact” moment.</li><li>Say the line: dumb code solving clever problems > clever code causing dumb bugs.</li><li>Emphasize “trust”: when you read Go, you usually know what it does.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Trust.</li><li>Dumb code solving clever problems not clever code causing dumb bugs.</li><li>Punishes cleverness.</li><li>Observation: When we struggled with Go we were trying to be too clever.</li><li>Boring.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
