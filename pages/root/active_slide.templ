@@ -77,6 +77,7 @@ func deck(
 		{Title: "JS/TS wins", Render: func() templ.Component { return slides.LanguageJSTSWins(isPresenter) }},
 		{Title: "Complexity", Render: func() templ.Component { return slides.ComplexityEssentialVsAccidental(isPresenter) }},
 
+		{Title: "Structure", Render: func() templ.Component { return slides.StructureGoodBad(isPresenter) }},
 		{Title: "Next.Js src tree", Render: func() templ.Component { return slides.NextJSSrcTree(isPresenter) }},
 
 		{Title: "Styling", Render: func() templ.Component { return slides.StylingGoodBad(isPresenter) }},

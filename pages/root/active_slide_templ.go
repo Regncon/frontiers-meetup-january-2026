@@ -85,6 +85,7 @@ func deck(
 		{Title: "JS/TS wins", Render: func() templ.Component { return slides.LanguageJSTSWins(isPresenter) }},
 		{Title: "Complexity", Render: func() templ.Component { return slides.ComplexityEssentialVsAccidental(isPresenter) }},
 
+		{Title: "Structure", Render: func() templ.Component { return slides.StructureGoodBad(isPresenter) }},
 		{Title: "Next.Js src tree", Render: func() templ.Component { return slides.NextJSSrcTree(isPresenter) }},
 
 		{Title: "Styling", Render: func() templ.Component { return slides.StylingGoodBad(isPresenter) }},
@@ -168,7 +169,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 136, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 137, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
