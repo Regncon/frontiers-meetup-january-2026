@@ -352,13 +352,14 @@ templ NextJSSrcTree(isPresenter bool) {
 		<h1 style="margin:0;">src/</h1>
 		<div
 			style="
-				flex:1;
-				border-radius:16px;
-				border:1px solid rgba(255,255,255,0.14);
-				background: rgba(0,0,0,0.45);
-				box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-				overflow:hidden;
-			"
+			     flex: 1 1 auto;
+			     min-height: 0;
+			     border-radius:16px;
+			     border:1px solid rgba(255,255,255,0.14);
+			     background: rgba(0,0,0,0.45);
+			     box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+			     overflow:hidden;
+			    "
 		>
 			<div
 				style="
@@ -379,13 +380,13 @@ templ NextJSSrcTree(isPresenter bool) {
 				<div style="opacity:0.9;">tree.txt</div>
 				<div style="margin-left:auto; opacity:0.65; font-weight:600;">scroll ↕ ↔</div>
 			</div>
-			<div style="height: calc(100% - 54px); padding: 1rem;">
+			<div style="display:flex; flex-direction:column; min-height:0; flex: 1 1 auto; padding: 1rem;">
 				<pre
 					style="
 						margin:0;
-						height:100%;
-						overflow:auto;
-						white-space:pre;
+						flex: 1 1 auto;
+						min-height: 0;
+						overflow: auto;
 						font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 						font-size:0.95rem;
 						line-height:1.25;
