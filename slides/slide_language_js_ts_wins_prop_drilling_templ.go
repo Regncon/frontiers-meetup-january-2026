@@ -42,7 +42,7 @@ func LanguageJSTSWins(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>JS/TS wins</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> JSX/TSX is an amazing UI authoring experience</li><li><strong>Good:</strong> Ecosystem + UI libraries are massive</li><li><strong>Bad:</strong> React prop drilling gets painful in deep component trees</li><li><strong>Good:</strong> Go “prop drilling” (explicit parameters) keeps dependencies visible</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>JS/TS wins</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> JSX/TSX is an amazing UI authoring experience</li><li><strong>Bad:</strong> React prop drilling.</li><li><strong>Good:</strong> Go prop drilling?</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -77,7 +77,7 @@ func languageJSTSWinsPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We genuinely miss TSX sometimes.</li><li>The prop drilling point is about visibility: explicit dependencies are boring but honest.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>JSX/TSX is excellent. High clocality and cohesion </li><li>Prop drilling in Go doesn't hide dependencies; it makes them explicit.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

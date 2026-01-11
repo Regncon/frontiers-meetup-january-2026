@@ -52,13 +52,15 @@ if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 	http.Error(w, "invalid json", http.StatusBadRequest)
 	return
 }
-if err := svc.CreateUser(r.Context(), req); err != nil {
-	http.Error(w, "failed to create user", http.StatusInternalServerError)
-	return
+
+
+v, err := doThing()
+if err != nil {
+    return err
 }
-				`)
+`)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_language_go_error_handling.templ`, Line: 33, Col: 5}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_language_go_error_handling.templ`, Line: 35, Col: 1}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -99,7 +101,7 @@ func languageGoErrorHandlingPresenterNotes() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Explicit failure paths are annoying until you’re debugging production.</li><li>Go makes it hard to “forget” errors, and that changes the reliability of the system.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Go makes error handling explicit.</li><li>This forces you to think about failure paths.</li><li>Main criticism: repetitive code.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

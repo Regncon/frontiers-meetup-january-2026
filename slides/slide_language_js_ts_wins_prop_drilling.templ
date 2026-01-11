@@ -18,9 +18,8 @@ templ LanguageJSTSWins(isPresenter bool) {
 		<h1>JS/TS wins</h1>
 		<ul style="margin-top: 2rem;">
 			<li><strong>Good:</strong> JSX/TSX is an amazing UI authoring experience</li>
-			<li><strong>Good:</strong> Ecosystem + UI libraries are massive</li>
-			<li><strong>Bad:</strong> React prop drilling gets painful in deep component trees</li>
-			<li><strong>Good:</strong> Go “prop drilling” (explicit parameters) keeps dependencies visible</li>
+			<li><strong>Bad:</strong> React prop drilling.</li>
+			<li><strong>Good:</strong> Go prop drilling?</li>
 		</ul>
 	</div>
 	if isPresenter {
@@ -31,8 +30,8 @@ templ LanguageJSTSWins(isPresenter bool) {
 templ languageJSTSWinsPresenterNotes() {
 	<div class="presenter-notes">
 		<ul>
-			<li>We genuinely miss TSX sometimes.</li>
-			<li>The prop drilling point is about visibility: explicit dependencies are boring but honest.</li>
+			<li>JSX/TSX is excellent. High clocality and cohesion </li>
+			<li>Prop drilling in Go doesn't hide dependencies; it makes them explicit.</li>
 		</ul>
 	</div>
 }

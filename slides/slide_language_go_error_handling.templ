@@ -26,11 +26,13 @@ if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 	http.Error(w, "invalid json", http.StatusBadRequest)
 	return
 }
-if err := svc.CreateUser(r.Context(), req); err != nil {
-	http.Error(w, "failed to create user", http.StatusInternalServerError)
-	return
+
+
+v, err := doThing()
+if err != nil {
+    return err
 }
-				` }
+` }
 			</pre>
 		</div>
 	</div>
@@ -42,8 +44,9 @@ if err := svc.CreateUser(r.Context(), req); err != nil {
 templ languageGoErrorHandlingPresenterNotes() {
 	<div class="presenter-notes">
 		<ul>
-			<li>Explicit failure paths are annoying until you’re debugging production.</li>
-			<li>Go makes it hard to “forget” errors, and that changes the reliability of the system.</li>
+			<li>Go makes error handling explicit.</li>
+			<li>This forces you to think about failure paths.</li>
+			<li>Main criticism: repetitive code.</li>
 		</ul>
 	</div>
 }
