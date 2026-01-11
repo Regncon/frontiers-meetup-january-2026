@@ -389,3 +389,41 @@ body {
 	backdrop-filter: blur(8px);
 	border-top: var(--border-subtle);
 }
+
+/* Landing page slide */
+.slide-landing-card-container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 4rem;
+}
+
+.slide-landing-card {
+	flex: 1;
+	border: 2px solid rgba(255, 255, 255, 0.15);
+	border-radius: 18px;
+	padding: 1.25rem 1.5rem;
+	width: 100%;
+	position: relative;
+}
+
+.slide-landing-card-year {
+	position: absolute;
+	width: fit-content;
+	bottom: 0;
+	left: 50%;
+	transform: translateY(50%) translateX(-50%);
+	background-color: var(--color-bg-base);
+	border: 2px solid rgba(255, 255, 255, 0.15);
+	border-radius: 18px;
+	padding: 0.2rem 1rem;
+}
+
+@media screen and (width < 575px) {
+	.slide-landing-card-container {
+		grid-template-columns: 1fr;
+	}
+
+	.slide-landing-font-face {
+		margin: 0 !important;
+	}
+}
