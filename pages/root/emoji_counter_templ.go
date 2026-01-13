@@ -161,7 +161,7 @@ func EmojiVoteWidget(inviteKey string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button class=\"emoji-balloon-button\" data-on:click=\"$emoji='👍';\"><span data-text=\"$ThumbsUpEmojiCount\"></span> 👍</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🎉';\"><span data-text=\"$ConfettiUpEmojiCount\"></span> 🎉</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='😂';\"><span data-text=\"$CryLaughEmojiCount\"></span> 😂</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🔥';\"><span data-text=\"$FireEmojiCount\"></span> 🔥</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='❤️';\"><span data-text=\"$HeartEmojiCount\"></span> ❤️</button></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button class=\"emoji-balloon-button\" data-on:click=\"$emoji='👍';\"><span data-text=\"$ThumbsUpEmojiCount\"></span> 👍</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🎉';\"><span data-text=\"$ConfettiEmojiCount\"></span> 🎉</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='😂';\"><span data-text=\"$CryLaughEmojiCount\"></span> 😂</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🔥';\"><span data-text=\"$FireEmojiCount\"></span> 🔥</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='❤️';\"><span data-text=\"$HeartEmojiCount\"></span> ❤️</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
