@@ -26,8 +26,8 @@ const animate = () => {
 				b._velocity.x = b._velocity.x * -1;
 			}
 		}
-		b.style.top = b._position.y + "px"  // `translate(${b._position.x}px, ${b._position.y}px);`	
-		b.style.left = b._position.x + "px" 
+		b.style.top = b._position.y + "px"; 
+		b.style.left = b._position.x + "px"; 
 	}
 	GLOBAL.balloons.forEach(b => {
 		if (b._position.y <= -32) {
@@ -39,7 +39,6 @@ const animate = () => {
 animate();
 
 class _EmojiBalloon extends HTMLElement {
-	_div = null;
 	_delete = false;
 	_velocity = { x: -1, y: -2.5 }; // px per tick (16ms)
 	_position = { x: 0, y: 0 };
@@ -81,7 +80,7 @@ class _EmojiBalloon extends HTMLElement {
 			this._position.y = rect.y;
 			this._startPositionX = rect.x;
 		}
-		console.log("EMOJI:", emoji)
+
 		this.shadowRoot.innerHTML = `<div>${emoji}</div>`;
 
 		this.style.position = "absolute";
