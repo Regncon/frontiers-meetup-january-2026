@@ -1,82 +1,119 @@
-class EmojiBalloon extends HTMLElement {
+const EmojiBalloon = (() => {
+
+const GLOBAL = {
+	balloons: []
+}
+
+const animate = () => {
+	requestAnimationFrame(animate);
+	for (let i = 0; i < GLOBAL.balloons.length; i++) {
+		const b = GLOBAL.balloons[i];
+		
+		b._position.y = b._position.y + b._velocity.y;
+		b._position.x = b._position.x + b._velocity.x;
+		
+		// moving left
+		if (b._driftDirection === "LEFT") {
+			const xLessThanMaxDrift = b._position.x < b._startPositionX - b._maxDriftX;
+			if (xLessThanMaxDrift) {
+				b._driftDirection = "RIGHT";
+				b._velocity.x = b._velocity.x * -1;
+			}
+		} else {
+			const xGreaterThanMaxDrift = b._position.x > b._startPositionX + b._maxDriftX;
+			if (xGreaterThanMaxDrift) {
+				b._driftDirection = "LEFT";
+				b._velocity.x = b._velocity.x * -1;
+			}
+		}
+		b.style.top = b._position.y + "px"  // `translate(${b._position.x}px, ${b._position.y}px);`	
+		b.style.left = b._position.x + "px" 
+	}
+	GLOBAL.balloons.forEach(b => {
+		if (b._position.y <= -32) {
+			document.body.removeChild(b);
+		}
+	})
+	GLOBAL.balloons = GLOBAL.balloons.filter(b => b._delete === false)
+};
+animate();
+
+class _EmojiBalloon extends HTMLElement {
+	_div = null;
+	_delete = false;
+	_velocity = { x: -1, y: -2.5 }; // px per tick (16ms)
+	_position = { x: 0, y: 0 };
+	
+	_startPositionX = 0;
+	_maxDriftX = 50
+	_driftDirection = "LEFT"
+
 	constructor() {
 		super();
-		this._storageKey = null;
-		this._hasConnected = false;
-		this._activeAnimation = null;
+
+		this._driftDirection = randomInt(0, 1) === 0 ? "LEFT" : "RIGHT";
+		this._velocity.x = this._driftDirection === "LEFT" ? -1 : 1;
+		
+
+		this._maxDriftX = randomInt(25, 75);
+		this._velocity.y = this._velocity.y * randomInt(0.5, 2)
+		this._velocity.x = this._velocity.x * randomInt(0.5, 2)
+
+
+		this.attachShadow({ mode: "open" })
+
+		const emoji = this.getAttribute("emoji") || "";
+		if (!emoji) {
+			return
+		}
+
+		// position the <emoji-balloon> at the location of the button
+		const buttons = document.body.querySelectorAll(".emoji-balloon-button");
+		let button = null;
+		buttons.forEach(b => {
+			if (b.innerHTML.includes(emoji)) {
+				button = b;
+			}
+		});
+		if (button) {
+			const rect = button.getBoundingClientRect();	
+			this._position.x = rect.x;
+			this._position.y = rect.y;
+			this._startPositionX = rect.x;
+		}
+		console.log("EMOJI:", emoji)
+		this.shadowRoot.innerHTML = `<div>${emoji}</div>`;
+
+		this.style.position = "absolute";
+		this.style.userSelect = "none";
 	}
 
 	static get observedAttributes() {
-		return ["data-emoji", "data-count"];
+		return ["emoji"];
 	}
 
 	connectedCallback() {
-		this._hasConnected = true;
-		this._runCheck();
+		GLOBAL.balloons.push(this)
 	}
 
-	attributeChangedCallback(name, oldValue, newValue) {
-		if (!this.isConnected) return;
-		if (!this._hasConnected) return;
-		if (oldValue === newValue) return;
-
-		this._runCheck();
+	disconnectedCallback() {
+		this._delete = true;	
 	}
 
-	_runCheck() {
-		const emoji = (this.getAttribute("data-emoji") || "").trim();
-
-		const countStrRaw = this.getAttribute("data-count") || "0";
-		const countStr = countStrRaw.trim();
-		const count = Number(countStr);
-
-		this._storageKey = "fmj26:emojiCount:" + encodeURIComponent(emoji);
-
-		const storedRaw = sessionStorage.getItem(this._storageKey);
-		const stored = storedRaw === null ? null : Number(storedRaw);
-
-		if (!Number.isFinite(count)) {
-			console.warn("[emoji-balloon] count is not a number:", countStrRaw);
-			return;
-		}
-
-		// No animation on first load per emoji per tab.
-		if (storedRaw === null) {
-			sessionStorage.setItem(this._storageKey, String(count));
-			return;
-		}
-
-		if (Number.isFinite(stored) && count > stored) {
-			this._animate();
-		}
-
-		sessionStorage.setItem(this._storageKey, String(count));
-	}
-
-	_animate() {
-		const target = this.querySelector("[data-emoji-balloon-target]");
-		if (!target) return;
-
-		if (this._activeAnimation) {
-			this._activeAnimation.cancel();
-			this._activeAnimation = null;
-		}
-
-		this._activeAnimation = target.animate(
-			[
-				{ transform: "translateY(0px) scale(1)" },
-				{ transform: "translateY(-12px) scale(1.14)", offset: 0.45 },
-				{ transform: "translateY(-18px) scale(1.02)" },
-			],
-			{
-				duration: 320,
-				easing: "cubic-bezier(0.2, 0.9, 0.2, 1)",
-				fill: "none",
-			}
-		);
-	}
 }
+
+return _EmojiBalloon
+})();
 
 if (!customElements.get("emoji-balloon")) {
 	customElements.define("emoji-balloon", EmojiBalloon);
+}
+
+function randomInt(min, max) {
+  // Ensure integers
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  // Inclusive of both min and max
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

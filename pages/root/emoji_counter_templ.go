@@ -9,57 +9,112 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
-	"net/url"
 
-	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
 	"github.com/go-chi/chi/v5"
-	"github.com/nats-io/nats.go/jetstream"
+
+	"encoding/json"
+	"github.com/Regncon/frontiers-meetup-january-2026/services"
+	"github.com/delaneyj/toolbelt/embeddednats"
+	"github.com/starfederation/datastar-go/datastar"
 )
 
-func getEmojiCount(db *sql.DB, emoji string) (int64, error) {
-	var count int64
-	err := db.QueryRow(`SELECT click_count FROM emoji_counter WHERE emoji = ?`, emoji).Scan(&count)
-	if err == sql.ErrNoRows {
-		return 0, nil
-	}
-	if err != nil {
-		return 0, err
-	}
-	return count, nil
-}
+func IncrementEmojiRoute(router chi.Router, ns *embeddednats.Server) {
+	ebs, _ := services.NewEmojiBalloonService(ns)
 
-func IncrementEmojiRoute(db *sql.DB, router chi.Router, kv jetstream.KeyValue) {
-	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
-		emoji := r.URL.Query().Get("emoji")
-		if emoji == "" {
-			http.Error(w, "missing emoji", http.StatusBadRequest)
-			return
-		}
+	router.Get("/emoji/sse", func(w http.ResponseWriter, r *http.Request) {
 
-		_, err := db.Exec(`UPDATE emoji_counter SET click_count = click_count + 1 WHERE emoji = ?`, emoji)
+		sse := datastar.NewSSE(w, r)
+		ctx := r.Context()
+
+		watcher, err := ebs.WatchUpdates(ctx)
 		if err != nil {
-			http.Error(w, "failed to increment emoji counter: "+err.Error(), http.StatusInternalServerError)
-			return
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 
-		if err := helpers.BroadcastUpdate(kv, r); err != nil {
-			http.Error(w, "unable to broadcast update", http.StatusInternalServerError)
-			return
+		fmt.Println(ebs.Counter)
+		thumbs_up := ebs.Counter.ThumbsUpEmojiCount
+		confetti := ebs.Counter.ConfettiEmojiCount
+		cry_laugh := ebs.Counter.CryLaughEmojiCount
+		fire := ebs.Counter.FireEmojiCount
+		heart := ebs.Counter.HeartEmojiCount
+
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-watcher.Updates():
+
+				b, err := json.Marshal(ebs.Counter)
+
+				if err != nil {
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				}
+
+				err = sse.PatchSignals(b)
+
+				if err != nil {
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				}
+
+				emoji := ""
+
+				if thumbs_up != ebs.Counter.ThumbsUpEmojiCount {
+					thumbs_up = ebs.Counter.ThumbsUpEmojiCount
+					emoji = "👍"
+				}
+				if confetti != ebs.Counter.ConfettiEmojiCount {
+					confetti = ebs.Counter.ConfettiEmojiCount
+					emoji = "🎉"
+				}
+				if cry_laugh != ebs.Counter.CryLaughEmojiCount {
+					cry_laugh = ebs.Counter.CryLaughEmojiCount
+					emoji = "😂"
+				}
+				if fire != ebs.Counter.FireEmojiCount {
+					fire = ebs.Counter.FireEmojiCount
+					emoji = "🔥"
+				}
+				if heart != ebs.Counter.HeartEmojiCount {
+					heart = ebs.Counter.HeartEmojiCount
+					emoji = "❤️"
+				}
+
+				err = sse.PatchElements(fmt.Sprintf(`<emoji-balloon emoji="%s"></emoji-balloon>`, emoji), datastar.WithSelector("body"), datastar.WithModeAppend())
+				if err != nil {
+					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+				}
+			}
+		}
+	})
+
+	router.Post("/emoji/increment", func(w http.ResponseWriter, r *http.Request) {
+		type Signals struct {
+			Emoji string
+		}
+		var signals Signals
+		err := datastar.ReadSignals(r, &signals)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		}
 
-		w.WriteHeader(http.StatusNoContent)
+		err = ebs.AddBalloon(r.Context(), signals.Emoji)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		}
 	})
 }
 
-func emojiIncrementPostURL(inviteKey string, emoji string) string {
-	escapedEmoji := url.QueryEscape(emoji)
-	return fmt.Sprintf("@post('/%s/root/api/emoji/increment?emoji=%s')", inviteKey, escapedEmoji)
+func emojiIncrementPostURL(inviteKey string) string {
+	return fmt.Sprintf("@post('/%s/root/api/emoji/increment')", inviteKey)
 }
 
-func EmojiCounter(db *sql.DB, inviteKey string, emoji string) templ.Component {
+func emojiVoteSSEGetURL(inviteKey string) string {
+	return fmt.Sprintf("@get('/%s/root/api/emoji/sse',{requestCancellation: 'disabled'})", inviteKey)
+}
+
+func EmojiVoteWidget(inviteKey string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -80,73 +135,33 @@ func EmojiCounter(db *sql.DB, inviteKey string, emoji string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		count, _ := getEmojiCount(db, emoji)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<emoji-balloon data-emoji=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"absolute bottom-0 left-0 p-4 w-full flex gap-4 justify-center items-center\" data-init=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(emoji)
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(emojiVoteSSEGetURL(inviteKey))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 56, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 111, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" data-count=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" data-on:click__stop=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(emojiIncrementPostURL(inviteKey))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 56, Col: 74}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 112, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button style=\"display:flex; align-items:center; gap:0.5rem; padding:0.5rem 0.75rem; border-radius:10px;\" data-on:click=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(templ.URL(emojiIncrementPostURL(inviteKey, emoji)))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 59, Col: 69}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "\"><span data-emoji-balloon-target style=\"font-size:1.25rem;\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(emoji)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 62, Col: 11}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span> <span>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", count))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 64, Col: 35}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></button></emoji-balloon>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><button class=\"emoji-balloon-button\" data-on:click=\"$emoji='👍';\"><span data-text=\"$ThumbsUpEmojiCount\"></span> 👍</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🎉';\"><span data-text=\"$ConfettiUpEmojiCount\"></span> 🎉</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='😂';\"><span data-text=\"$CryLaughEmojiCount\"></span> 😂</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='🔥';\"><span data-text=\"$FireEmojiCount\"></span> 🔥</button> <button class=\"emoji-balloon-button\" data-on:click=\"$emoji='❤️';\"><span data-text=\"$HeartEmojiCount\"></span> ❤️</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
