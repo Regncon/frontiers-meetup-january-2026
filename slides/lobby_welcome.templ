@@ -1,5 +1,7 @@
 package slides
 
+import "fmt"
+
 /*
 Slide: Lobby / Welcome (mingling slide)
 
@@ -42,28 +44,21 @@ templ LobbyWelcome(isPresenter bool) {
 	"
 	>
 		<div style="display:flex; flex-direction:column; gap: 1rem; align-items: center; text-align: center;">
-			<h1 style="margin: 0; font-size: 4rem; letter-spacing: 0.02em;">
-				THE GOOD · THE BAD · THE UGLY
-			</h1>
+			@FontFace("GOOD", -200, false)
+			@FontFace("BAD", 0, false)
+			@FontFace("UGLY", 200, true)
 			<div style="font-size: 1.6rem; opacity: 0.9;">
 				An honest comparison of two stacks — and what it did to complexity
 			</div>
 		</div>
-		<div style="display:grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
-			<div
-				style="
-				border: 2px solid rgba(255,255,255,0.15);
-				border-radius: 18px;
-				padding: 1.25rem 1.5rem;
-			"
-			>
+		<div class="slide-landing-card-container">
+			<div class="slide-landing-card">
 				<div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;">
 					<img
 						src="/static/nextjs.svg"
 						alt="Next.js"
 						style="height: 2.5rem; width: auto; opacity: 0.9;"
 					/>
-					<div style="font-size: 2.5rem; font-weight: 700;">2024</div>
 				</div>
 				<div style="font-size: 1.8rem; font-weight: 700;">
 					Heavy frontend
@@ -71,21 +66,15 @@ templ LobbyWelcome(isPresenter bool) {
 				<div style="font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;">
 					Next.js + Firebase
 				</div>
+				<span class="slide-landing-card-year">2024</span>
 			</div>
-			<div
-				style="
-				border: 2px solid rgba(255,255,255,0.15);
-				border-radius: 18px;
-				padding: 1.25rem 1.5rem;
-			"
-			>
+			<div class="slide-landing-card">
 				<div style="display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;">
 					<img
 						src="/static/Go-Logo_Blue.svg"
 						alt="Go"
 						style="height: 2.5rem; width: auto;"
 					/>
-					<div style="font-size: 2.5rem; font-weight: 700;">2025</div>
 				</div>
 				<div style="font-size: 1.8rem; font-weight: 700;">
 					Grug brain simple
@@ -93,29 +82,44 @@ templ LobbyWelcome(isPresenter bool) {
 				<div style="font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;">
 					Go + Datastar + SQLite <span style="opacity: 0.75;">(+ NATS)</span>
 				</div>
+				<span class="slide-landing-card-year">2025</span>
 			</div>
 		</div>
-		<div style="display:flex; justify-content: space-between; align-items: baseline; opacity: 0.85;">
-			<img
-				src="/static/frontiers-logo.svg"
-				alt="Frontiers"
-				style="height: 40px; width: auto;"
-			/>
-			<div>Frontiers Meetup · January 2026</div>
-			<img
-				src="/static/RegnconLogo.svg"
-				alt="Regncon"
-				style="height: 40px; width: auto;"
-			/>
-			<div style="font-size: 1.05rem;">Regncon dev team</div>
+		<div style="display: flex; flex-flow: column nowrap; align-items: center; gap: 1rem;">
+			<div style="display:flex; justify-content: space-between; align-items: flex-end; opacity: 0.85; gap: 4rem; ">
+				<div style="flex:1; display: flex; flex-direction: column; line-height: 0;">
+					<img
+						src="/static/frontiers-logo.svg"
+						alt="Frontiers"
+						style="height: 50px; width: auto; transform: scale(1.8);"
+					/>
+					<p>Frontiers Meetup</p>
+				</div>
+				<div style="flex:1; display: flex; flex-direction: column; line-height: 0;">
+					<img
+						src="/static/RegnconLogo.svg"
+						alt="Frontiers"
+						style="height: 50px; width: auto;"
+					/>
+					<p style="text-wrap-mode: nowrap;">Regncon dev team</p>
+				</div>
+			</div>
+			<small>Januar 2026</small>
 		</div>
-		<h2>
-			Starting soon
-		</h2>
 	</div>
 	if isPresenter {
 		<div class="presenter-notes">
 			Leave this slide on screen while people arrive. No QR code (stream-safe).
 		</div>
 	}
+}
+
+templ FontFace(text string, offset int, isLast bool) {
+	<div class="slide-landing-font-face" style={ "display: flex;","position: relative;", fmt.Sprintf("margin-left: %dpx;", offset) }>
+		if (isLast) {
+			<h1 style="font-size: 1.5rem; rotate: -90deg; align-self: flex-end; margin-right: -1.5rem;">AND</h1>
+		}
+		<h1 style="font-size: 1.5rem; rotate: -90deg; align-self: flex-end; margin-right: -1rem;">THE</h1>
+		<h1 style="font-size: 6rem; margin: 0;">{ text }</h1>
+	</div>
 }
