@@ -43,7 +43,7 @@ func WhatsNext2026_2027(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What’s next?</h1><ul style=\"margin-top: 2rem;\"><li><strong>2026:</strong> No new rewrite for October</li><li><strong>May 2026:</strong> Finish the 2025 project and make it <strong>production ready</strong></li><li><strong>October 2026:</strong> Use the hardened 2025 site for the festival</li><li><strong>2027:</strong> Decide what to try next</li><li><strong>Ideas:</strong> Svelte + Supabase <em>or</em> a retro 90s RPG makeover (with gold plating + easter eggs) on the current stack</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>What’s next?</h1><ul style=\"margin-top: 2rem;\"><li><strong>2026:</strong> No new rewrite for October</li><li><strong>May 2026:</strong> Finish the 2025 project and make it <strong>production ready</strong></li><li><strong>October 2026:</strong> Use the procudion ready 2025 site for the festival ( forshadowing? )</li><li><strong>2027:</strong> Decide what to try next</li><ul><li><strong>Ideas:</strong> Svelte + Supabase</li><li>Retro 90s RPG makeover (with gold plating + easter eggs) on the current stack</li></ul></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,7 +78,7 @@ func whatsNext2026_2027PresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This is the “break the curse” plan: stop rewriting and actually finish one.</li><li>May gives us time to harden, test, and run real usage before the October festival.</li><li>Then we earn the right to experiment again in 2027.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Complete the current stack and make it production ready</li><li>The deside what to try next</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

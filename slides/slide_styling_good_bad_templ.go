@@ -41,7 +41,7 @@ func StylingGoodBad(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Styling</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> We wanted to keep styling close to the UI code (JSX/TSX-style locality)</li><li><strong>Good:</strong> MUI as a component library was great for React</li><li><strong>Bad:</strong> Templ styling was one of the biggest pain points we faced in 2025</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Styling</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> We wanted to keep styling close to the UI code (JSX/TSX-style locality)</li><li><strong>Good:</strong> MUI as a component library was great for our use case</li><li><strong>Bad:</strong> Templ styling was one of the biggest pain points we faced in 2025</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

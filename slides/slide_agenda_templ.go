@@ -35,6 +35,7 @@ const (
 	Agenda2025
 	AgendaCompare
 	AgendaWhatsNext
+	Discussion
 )
 
 type agendaItem struct {
@@ -48,6 +49,7 @@ var agendaItems = []agendaItem{
 	{step: Agenda2025, label: "2025: Grug brain (Go + Datastar + templ + SQLite + NATS)"},
 	{step: AgendaCompare, label: "The Good / Bad / Ugly (by topic)"},
 	{step: AgendaWhatsNext, label: "What’s next (2026 → 2027)"},
+	{step: Discussion, label: "Discussion + Q&A"},
 }
 
 func Agenda(current AgendaStep, isPresenter bool) templ.Component {
@@ -83,7 +85,7 @@ func Agenda(current AgendaStep, isPresenter bool) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(agendaItemStyle(current, it.step))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 50, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 52, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -96,7 +98,7 @@ func Agenda(current AgendaStep, isPresenter bool) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(agendaItemPrefix(current, it.step))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 52, Col: 42}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 54, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -109,7 +111,7 @@ func Agenda(current AgendaStep, isPresenter bool) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(it.label)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 54, Col: 15}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/slide_agenda.templ`, Line: 56, Col: 15}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {

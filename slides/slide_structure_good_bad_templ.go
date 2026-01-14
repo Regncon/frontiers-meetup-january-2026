@@ -43,7 +43,7 @@ func StructureGoodBad(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Structure</h1><div style=\"display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;\"><div><div style=\"font-weight:800; font-size:1.3rem; margin-bottom:0.75rem;\">Next.js</div><ul style=\"margin:0;\"><li><strong>Good:</strong> Folder routing is super discoverable</li><li><strong>Bad:</strong> Folder routing ⇒ <strong>page.tsx</strong> everywhere</li><li><strong>Bad:</strong> Too many folders (deep nesting)</li></ul></div><div><div style=\"font-weight:800; font-size:1.3rem; margin-bottom:0.75rem;\">Go</div><ul style=\"margin:0;\"><li><strong>Good:</strong> Not opinionated about folders — structure by <strong>feature</strong>, not framework rules</li><li><strong>Bad:</strong> Routers can get messy quick</li></ul></div><div><ul style=\"margin:0;\"><li><strong>Good:</strong> You can achieve high locality and cohesion in both Next.js and Go</li></ul></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Structure</h1><div style=\"display:flex; flex-direction:column; gap:1.5rem; margin-top:2rem;\"><div><ul style=\"margin:0;\"><li><strong>Good:</strong> Next.js folder routing is super nice. Yo, Old school.</li><li><strong>Bad:</strong> Nesxt.js folder routing ⇒ <strong>page.tsx</strong> everywhere</li><li><strong>Bad:</strong> Too many folders (deep nesting)</li><li><strong>Good:</strong> Go is not opinionated about folders — structure by <strong>feature</strong>, not framework rules</li><li><strong>Bad:</strong> Routers can get messy quick</li><li><strong>Good:</strong> You can achieve high locality and cohesion in both Next.js and Go</li></ul></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -78,7 +78,7 @@ func structureGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This slide is not “Next bad / Go good” — it’s about tradeoffs.</li><li>Next.js helps you find routes fast, but it can push features to spread across many folders.</li><li>Go gives you freedom: feature folders can keep templates, SQL, handlers, and related code together.</li><li>The risk with Go is letting routing become a dumping ground. Keep route logic close to the feature.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

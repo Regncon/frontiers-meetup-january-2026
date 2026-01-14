@@ -45,7 +45,7 @@ func LLMAssistanceGoodBad(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; flex-direction:column; gap:1.5rem;\"><h1 style=\"margin:0;\">LLM assistance</h1><div style=\"display:grid; grid-template-columns: 1.1fr 0.9fr; gap:1.5rem; align-items:start; flex:1;\"><div><ul style=\"margin-top: 0;\"><li><strong>Bad:</strong> templ is newer and evolving — LLM support was not great</li><li><strong>Good:</strong> React has strong LLM support — it generates React code well</li><li><strong>Bad:</strong> That’s also a trap: it’s easy to generate huge amounts of React code</li></ul></div><div style=\"display:flex; align-items:center; justify-content:center;\"><img src=\"/static/ai_developer.webp\" alt=\"Obviously LLM-generated developer chaos illustration\" style=\"max-width:100%; max-height:65vh; object-fit:contain; border-radius:16px;\"></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"display:flex; flex-direction:column; gap:1.5rem;\"><h1 style=\"margin:0;\">LLM assistance</h1><div style=\"display:grid; grid-template-columns: 1.1fr 0.9fr; gap:1.5rem; align-items:start; flex:1;\"><div><ul style=\"margin-top: 0;\"><li><strong>Bad:</strong> templ is newer and evolving — LLM support was not great</li><li><strong>Good:</strong> React has strong LLM support</li><li><strong>Bad:</strong> React has strong LLM support</li></ul></div><div style=\"display:flex; align-items:center; justify-content:center;\"><img src=\"/static/ai_developer.webp\" alt=\"Obviously LLM-generated developer chaos illustration\" style=\"max-width:100%; max-height:65vh; object-fit:contain; border-radius:16px;\"></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -80,7 +80,7 @@ func llmAssistanceGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We can’t have a presentation in 2026 without talking about AI.</li><li><strong>Bad:</strong> With templ, the model often didn’t “know the ecosystem” well enough, so suggestions were lower quality or off-pattern.</li><li><strong>Good:</strong> With React, the model can be extremely productive because the patterns are widely represented.</li><li><strong>Bad:</strong> The downside is speed: you can create complexity faster than you can review it. “It compiles” isn’t the same as “it’s maintainable.”</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We can’t have a presentation in 2026 without talking about AI.</li><li>Templ is newer and evolving — LLM support was not great</li><li>React has strong LLM support; LLMs generate React code well.</li><li>That also bad, it's easy to vibe code messy unmaintainable code quickly.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

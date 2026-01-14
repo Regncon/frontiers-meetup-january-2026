@@ -88,12 +88,13 @@ func deck(
 		{Title: "Structure", Render: func() templ.Component { return slides.StructureGoodBad(isPresenter) }},
 		{Title: "Next.Js src tree", Render: func() templ.Component { return slides.NextJSSrcTree(isPresenter) }},
 
-		{Title: "Styling", Render: func() templ.Component { return slides.StylingGoodBad(isPresenter) }},
 		{Title: "Tooling / DX (KO)", Render: func() templ.Component { return slides.ToolingDXKOSlide(isPresenter) }},
 		{Title: "Tooling / DX", Render: func() templ.Component { return slides.ToolingAndDXGoodBad(isPresenter) }},
+		{Title: "Styling", Render: func() templ.Component { return slides.StylingGoodBad(isPresenter) }},
 		{Title: "LLM assistance", Render: func() templ.Component { return slides.LLMAssistanceGoodBad(isPresenter) }},
 		{Title: "Agenda: What's next", Render: func() templ.Component { return slides.Agenda(slides.AgendaWhatsNext, isPresenter) }},
 		{Title: "What's next?", Render: func() templ.Component { return slides.WhatsNext2026_2027(isPresenter) }},
+		{Title: "Agenda: QnA", Render: func() templ.Component { return slides.Agenda(slides.Discussion, isPresenter) }},
 	}
 }
 
@@ -169,7 +170,7 @@ func ActiveSlide(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("{ slideIndex: %d }", index))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 137, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/active_slide.templ`, Line: 138, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

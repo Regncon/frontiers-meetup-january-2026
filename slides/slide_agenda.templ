@@ -27,6 +27,7 @@ const (
 	Agenda2025
 	AgendaCompare
 	AgendaWhatsNext
+	Discussion
 )
 
 type agendaItem struct {
@@ -40,6 +41,7 @@ var agendaItems = []agendaItem{
 	{step: Agenda2025, label: "2025: Grug brain (Go + Datastar + templ + SQLite + NATS)"},
 	{step: AgendaCompare, label: "The Good / Bad / Ugly (by topic)"},
 	{step: AgendaWhatsNext, label: "What’s next (2026 → 2027)"},
+	{step: Discussion, label: "Discussion + Q&A"},
 }
 
 templ Agenda(current AgendaStep, isPresenter bool) {
