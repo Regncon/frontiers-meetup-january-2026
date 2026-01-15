@@ -92,6 +92,10 @@ body {
 	flex: 1;
 }
 
+.presenter-layout .presenter-main {
+	height: 100vh;
+}
+
 .presenter-sidebar {
 	flex: 0 0 20rem;
 	max-width: 20rem;
@@ -104,7 +108,7 @@ body {
 
 .presenter-main {
 	flex: 1;
-	min-width: 0;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 }
@@ -434,10 +438,10 @@ body {
 
 
 .emoji-balloon-button {
-	padding: 12px;
-	font-size: 22px;
+	padding: 6px;
+	font-size: 18px;
 }
 
 emoji-balloon {
-	font-size: 22px;
+	font-size: 18px;
 }
