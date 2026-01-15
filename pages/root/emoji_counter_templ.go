@@ -135,7 +135,7 @@ func EmojiVoteWidget(inviteKey string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"absolute bottom-0 left-0 p-4 w-full flex gap-4 justify-center items-center\" data-init=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"display: flex; justify-content: center; flex: 1; gap: 12px; padding: 4px;\" class=\"bottom-0 left-0 w-full flex justify-center flex flex-1 items-center\" data-init=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

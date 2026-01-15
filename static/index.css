@@ -55,8 +55,9 @@ html {
 }
 
 body {
-	min-height: 100%;
+	height: 100%;
 	margin: 0;
+	display: flex;
 	background: var(--color-bg-base);
 	color: var(--color-primary-text);
 }
@@ -64,12 +65,13 @@ body {
 #root-page-wrapper {
 	min-height: 100vh;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 }
 
 .app {
-	min-height: 100vh;
 	display: flex;
+	flex: 1;
 	flex-direction: column;
 }
 
@@ -87,13 +89,13 @@ body {
 
 .presenter-layout {
 	display: flex;
-	min-height: 100vh;
+	flex: 1;
 }
 
 .presenter-sidebar {
 	flex: 0 0 20rem;
 	max-width: 20rem;
-	height: 100vh;
+	flex: 1;
 	overflow-y: auto;
 	padding: var(--space-2);
 	background: var(--surface-presenter);
@@ -426,4 +428,12 @@ body {
 	.slide-landing-font-face {
 		margin: 0 !important;
 	}
+}
+
+
+
+
+.emoji-balloon-button {
+	padding: 12px;
+	font-size: 22px;
 }

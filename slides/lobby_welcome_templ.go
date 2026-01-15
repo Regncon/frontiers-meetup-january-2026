@@ -8,6 +8,8 @@ package slides
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "fmt"
+
 /*
 Slide: Lobby / Welcome (mingling slide)
 
@@ -59,15 +61,96 @@ func LobbyWelcome(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"\n\t\tdisplay: flex;\n\t\tflex-direction: column;\n\t\tjustify-content: space-between;\n\t\talign-items: center;\n\t\tgap: 2.5rem;\n\t\"><div style=\"display:flex; flex-direction:column; gap: 1rem; align-items: center; text-align: center;\"><h1 style=\"margin: 0; font-size: 4rem; letter-spacing: 0.02em;\">THE GOOD · THE BAD · THE UGLY</h1><div style=\"font-size: 1.6rem; opacity: 0.9;\">An honest comparison of two stacks — and what it did to complexity</div></div><div style=\"display:grid; grid-template-columns: 1fr 1fr; gap: 4rem;\"><div style=\"\n\t\t\t\tborder: 2px solid rgba(255,255,255,0.15);\n\t\t\t\tborder-radius: 18px;\n\t\t\t\tpadding: 1.25rem 1.5rem;\n\t\t\t\"><div style=\"display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;\"><img src=\"/static/nextjs.svg\" alt=\"Next.js\" style=\"height: 2.5rem; width: auto; opacity: 0.9;\"><div style=\"font-size: 2.5rem; font-weight: 700;\">2024</div></div><div style=\"font-size: 1.8rem; font-weight: 700;\">Heavy frontend</div><div style=\"font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;\">Next.js + Firebase</div></div><div style=\"\n\t\t\t\tborder: 2px solid rgba(255,255,255,0.15);\n\t\t\t\tborder-radius: 18px;\n\t\t\t\tpadding: 1.25rem 1.5rem;\n\t\t\t\"><div style=\"display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;\"><img src=\"/static/Go-Logo_Blue.svg\" alt=\"Go\" style=\"height: 2.5rem; width: auto;\"><div style=\"font-size: 2.5rem; font-weight: 700;\">2025</div></div><div style=\"font-size: 1.8rem; font-weight: 700;\">Grug brain simple</div><div style=\"font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;\">Go + Datastar + SQLite <span style=\"opacity: 0.75;\">(+ NATS)</span></div></div></div><div style=\"display:flex; justify-content: space-between; align-items: baseline; opacity: 0.85;\"><img src=\"/static/frontiers-logo.svg\" alt=\"Frontiers\" style=\"height: 40px; width: auto;\"><div>Frontiers Meetup · January 2026</div><img src=\"/static/RegnconLogo.svg\" alt=\"Regncon\" style=\"height: 40px; width: auto;\"><div style=\"font-size: 1.05rem;\">Regncon dev team</div></div><h2>Starting soon</h2></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\" style=\"\n\t\tdisplay: flex;\n\t\tflex-direction: column;\n\t\tjustify-content: space-between;\n\t\talign-items: center;\n\t\tgap: 2.5rem;\n\t\"><div style=\"display:flex; flex-direction:column; gap: 1rem; align-items: center; text-align: center;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = FontFace("GOOD", -200, false).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = FontFace("BAD", 0, false).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = FontFace("UGLY", 200, true).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"font-size: 1.6rem; opacity: 0.9;\">An honest comparison of two stacks — and what it did to complexity</div></div><div class=\"slide-landing-card-container\"><div class=\"slide-landing-card\"><div style=\"display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;\"><img src=\"/static/nextjs.svg\" alt=\"Next.js\" style=\"height: 2.5rem; width: auto; opacity: 0.9;\"></div><div style=\"font-size: 1.8rem; font-weight: 700;\">Heavy frontend</div><div style=\"font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;\">Next.js + Firebase</div><span class=\"slide-landing-card-year\">2024</span></div><div class=\"slide-landing-card\"><div style=\"display:flex; align-items:center; gap: 0.75rem; margin-bottom: 0.75rem;\"><img src=\"/static/Go-Logo_Blue.svg\" alt=\"Go\" style=\"height: 2.5rem; width: auto;\"></div><div style=\"font-size: 1.8rem; font-weight: 700;\">Grug brain simple</div><div style=\"font-size: 1.35rem; opacity: 0.9; margin-top: 0.25rem;\">Go + Datastar + SQLite <span style=\"opacity: 0.75;\">(+ NATS)</span></div><span class=\"slide-landing-card-year\">2025</span></div></div><div style=\"display: flex; flex-flow: column nowrap; align-items: center; gap: 1rem;\"><div style=\"display:flex; justify-content: space-between; align-items: flex-end; opacity: 0.85; gap: 4rem; \"><div style=\"flex:1; display: flex; flex-direction: column; line-height: 0;\"><img src=\"/static/frontiers-logo.svg\" alt=\"Frontiers\" style=\"height: 50px; width: auto; transform: scale(1.8);\"><p>Frontiers Meetup</p></div><div style=\"flex:1; display: flex; flex-direction: column; line-height: 0;\"><img src=\"/static/RegnconLogo.svg\" alt=\"Frontiers\" style=\"height: 50px; width: auto;\"><p style=\"text-wrap-mode: nowrap;\">Regncon dev team</p></div></div><small>Januar 2026</small></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\">Leave this slide on screen while people arrive. No QR code (stream-safe).</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\">Leave this slide on screen while people arrive. No QR code (stream-safe).</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
+		}
+		return nil
+	})
+}
+
+func FontFace(text string, offset int, isLast bool) templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var2 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var2 == nil {
+			templ_7745c5c3_Var2 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"slide-landing-font-face\" style=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var3 string
+		templ_7745c5c3_Var3, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues("display: flex;", "position: relative;", fmt.Sprintf("margin-left: %dpx;", offset))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/lobby_welcome.templ`, Line: 118, Col: 127}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if isLast {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<h1 style=\"font-size: 1.5rem; rotate: -90deg; align-self: flex-end; margin-right: -1.5rem;\">AND</h1>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<h1 style=\"font-size: 1.5rem; rotate: -90deg; align-self: flex-end; margin-right: -1rem;\">THE</h1><h1 style=\"font-size: 6rem; margin: 0;\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(text)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `slides/lobby_welcome.templ`, Line: 123, Col: 48}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</h1></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
 		}
 		return nil
 	})
