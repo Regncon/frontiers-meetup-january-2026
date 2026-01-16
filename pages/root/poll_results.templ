@@ -82,7 +82,7 @@ templ PollResultsSlide(db *sql.DB, poll PollDefinition, localKey string, remoteK
 				} else {
 					<h1 style="margin:0;">Poll results</h1>
 				}
-				<div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:baseline;">
+				<div style="display:none; gap:0.75rem; flex-wrap:wrap; align-items:baseline;">
 					<div style="font-size:2rem; font-weight:900; letter-spacing:-0.02em;">
 						Total: { fmt.Sprintf("%d", grandTotal) }
 					</div>
@@ -113,7 +113,7 @@ templ PollResultsSlide(db *sql.DB, poll PollDefinition, localKey string, remoteK
 					}}
 					<div
 						style={ fmt.Sprintf(
-						`display:flex; flex-direction:column; gap:0.75rem; padding:1rem; border-radius:18px; border:2px solid rgba(0,0,0,0.12); background:white; box-shadow:0 8px 24px rgba(0,0,0,0.08);`,
+						`display:flex; flex-direction:column; gap:0.75rem; padding:1rem; border-radius:18px; border:2px solid rgba(0,0,0,0.12); color: #1a1b26; background:white; box-shadow:0 8px 24px rgba(0,0,0,0.08);`,
 					) }
 					>
 						<div style="display:flex; align-items:center; gap:0.75rem;">
@@ -134,7 +134,7 @@ templ PollResultsSlide(db *sql.DB, poll PollDefinition, localKey string, remoteK
 								<div style="opacity:0.85; font-weight:800;">
 									<span style="font-size:1.4rem;">{ fmt.Sprintf("%d", total) }</span>
 									<span style="opacity:0.8;">votes</span>
-									<span style="opacity:0.75;">(L { fmt.Sprintf("%d", local) } · R { fmt.Sprintf("%d", remote) })</span>
+									<span style="display:none; opacity:0.75;">(L { fmt.Sprintf("%d", local) } · R { fmt.Sprintf("%d", remote) })</span>
 								</div>
 							</div>
 						</div>
@@ -143,7 +143,7 @@ templ PollResultsSlide(db *sql.DB, poll PollDefinition, localKey string, remoteK
 						}
 						<div style="display:flex; flex-direction:column; gap:0.35rem;">
 							<div style="display:flex; justify-content:space-between; font-weight:800;">
-								<span style="opacity:0.85;">Strength</span>
+								<span style="opacity:0;">Strength</span>
 								<span>{ fmt.Sprintf("%.0f%%", pct) }</span>
 							</div>
 							<div style="height:16px; border-radius:999px; background:rgba(0,0,0,0.08); overflow:hidden;">
@@ -161,7 +161,7 @@ templ PollResultsSlide(db *sql.DB, poll PollDefinition, localKey string, remoteK
 									></div>
 								</div>
 							</div>
-							<div style="display:flex; justify-content:space-between; gap:0.75rem; font-weight:800; opacity:0.85;">
+							<div style="display:none; justify-content:space-between; gap:0.75rem; font-weight:800; opacity:0.85;">
 								<span>Local { fmt.Sprintf("%.0f%%", localPct) }</span>
 								<span>Remote { fmt.Sprintf("%.0f%%", remotePct) }</span>
 							</div>
