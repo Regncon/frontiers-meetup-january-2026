@@ -31,7 +31,7 @@ func DemoPage() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"display: flex; width: 100%; flex: 1; justify-content: center;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div style=\"display: flex; width: 100%; flex: 1; gap: 24px; justify-content: center; align-items: center;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -39,7 +39,7 @@ func DemoPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"display: flex; flex-direction: column; position: relative; flex: 0 1;\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div style=\"display: flex; flex-direction: column; position: relative; flex: 0 1; height: 1387px;\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -47,7 +47,7 @@ func DemoPage() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"demo-container\" style=\"flex: 1; overflow:auto; width: 100%; margin: 0 auto; max-width: 1407px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto;\"></div></div><div data-init=\"@get('/demo/sse')\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div id=\"demo-container\" style=\"flex: 1; overflow:auto; width: 100%; margin: 0 auto; max-width: 1407px; display: flex; flex-direction: column; justify-content: start; align-items: center; margin: 0 auto;\"></div></div><div data-init=\"@get('/demo/sse')\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
