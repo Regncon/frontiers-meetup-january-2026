@@ -7,13 +7,13 @@ import "github.com/Regncon/frontiers-meetup-january-2026/components"
 
 templ DemoPage() {
 
-	<div style="display: flex; width: 100%; flex: 1; justify-content: center;">
+	<div style="display: flex; width: 100%; flex: 1; gap: 24px; justify-content: center; align-items: center;">
 		@components.WebComponentScreenshot()
-		<div style="display: flex; flex-direction: column; position: relative; flex: 0 1;">
+		<div style="display: flex; flex-direction: column; position: relative; flex: 0 1; height: 1387px;">
 			@components.DemoNetworkTabHeader()
 			<div 
 				id="demo-container"
-				style="flex: 1; overflow:auto; width: 100%; margin: 0 auto; max-width: 1407px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto;"
+				style="flex: 1; overflow:auto; width: 100%; margin: 0 auto; max-width: 1407px; display: flex; flex-direction: column; justify-content: start; align-items: center; margin: 0 auto;"
 			>
 			</div>
 		</div>
