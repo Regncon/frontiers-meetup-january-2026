@@ -17,8 +17,8 @@ Intent:
 - Light humor, not hostile.
 
 Design:
-- Two big quotes.
-- Optional: a simple spectrum line via inline CSS.
+- Two big quotes + one image per side.
+- Images are decorative and should not dominate the text.
 */
 
 func DifferentViewpoints(isPresenter bool) templ.Component {
@@ -42,12 +42,12 @@ func DifferentViewpoints(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Different viewpoints</h1><div style=\"display:grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 2rem;\"><div style=\"font-size: 1.6rem;\">“I can’t see the value of heavy frontend frameworks. Anything React can do, simple HTML, CSS, Go, Datastar can do better and with less complexity.<br><strong>Prove me wrong.</strong>”</div><div style=\"font-size: 1.6rem;\">“I’m trying to decide where to get my<br><strong>VS Code + React</strong> tattoos.”</div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Different viewpoints</h1><div style=\"\n\t\t\t\tdisplay:grid;\n\t\t\t\tgrid-template-columns: 1fr 1fr;\n\t\t\t\tgrid-template-rows: auto 1fr;\n\t\t\t\tgap: 2.5rem 4rem;\n\t\t\t\tmargin-top: 2rem;\n\t\t\t\talign-items:start;\n\t\t\t\"><div style=\"font-size: 1.6rem;\">“I can’t see the value of heavy frontend frameworks. Anything React can do, simple HTML, CSS, Go, Datastar can do better and with less complexity.<br><strong>Prove me wrong.</strong>”</div><div style=\"font-size: 1.6rem;\">“I’m trying to decide where to get my<br><strong>VS Code + React</strong> tattoos.”</div><img src=\"/static/change-my-mind.webp\" alt=\"Change my mind meme\" style=\"width:100%; max-height:40vh; object-fit:contain;\"> <img src=\"/static/react-tattoo.webp\" alt=\"React tattoo\" style=\"width:100%; max-height:40vh; object-fit:contain;\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We disagree internally — and that's ok</li><li>While working on this presentation I relized  we have very different opinions, and that's a strength.</li><li>Personally I am biased towards less complexity, Html, Css, Go, Datastar</li><li>You will hear differnt viewpoints. Things some consider good, others consider bad.</li></ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>While working on this presentation we realized we have very different opinions — and that’s a strength.</li><li>Personally I’m biased towards less complexity: HTML, CSS, Go, Datastar.</li><li>You will hear different viewpoints.</li><li>Paradoxically some things can be good and bad at the same time.</li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

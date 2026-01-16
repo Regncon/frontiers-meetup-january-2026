@@ -177,7 +177,7 @@ func agendaPresenterNotes() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"presenter-notes\"><ul><li>This is what we are going to talk about today.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"presenter-notes\"><ul><li>This is what we are going to talk about today.</li><li>Introducing our selves</li><li>What we built in 2024 and 2025 and why we made those choices</li><li>The we get to the heart of the presentation</li><li>There is so munch we want to talk about.</li><li>We have lots to time for the q&a</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

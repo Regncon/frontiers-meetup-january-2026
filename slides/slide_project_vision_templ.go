@@ -47,7 +47,7 @@ func ProjectVision(isPresenter bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if isPresenter {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This vision drives UX and prioritization.</li><li>This is why a simple calendar plugin doesn’t fit.</li><li>Foreshadowing</li></ul></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>This vision drives UX and prioritization.</li><li>This is why a simple calendar plugin doesn’t fit.</li><li>Production ready code</li><li>Foreshadowing</li></ul></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

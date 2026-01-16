@@ -80,7 +80,7 @@ func build2024SnapshotPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Sorry, puje is a bit of a domain language there.</li><li>Everything revolves around one thing: find an event and indicate interest.</li><li>We spent a lot of UX attention on making that flow feel good.... we failed.</li><li>Admin work was real: editing/publishing, support, and allocation.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Sorry, puje is a bit of a domain language there.</li><li>Everything revolves around one thing: find an event and indicate interest.</li><li>We spent a lot of UX attention on making that flow feel good.</li><li>Admin work was real: chefe editor, tickt support, and interest allocation.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

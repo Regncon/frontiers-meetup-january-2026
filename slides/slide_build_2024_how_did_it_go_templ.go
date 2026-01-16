@@ -78,7 +78,7 @@ func build2024HowDidItGoPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, so of course we grossly underestimated how much work was involved.</li><li>We didn’t complete all the features and the website was definitely not production ready.</li><li>Remember how I said we spent a lot of time on UX? We failed.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We’re real developers, we grossly underestimated how much work was involved.</li><li>We did not ship production-ready code.</li><li>Remember how I said we spent a lot of time on UX? We failed.</li><li>With a lot of crunch — and some wild coding during the festival — it was usable in the end.</li><li>We decided we would not make that mistake again… (foreshadowing).</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
