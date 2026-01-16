@@ -81,7 +81,7 @@ func build2025SnapshotPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had a larger team this year, and a design/UX specialist, so the UX was better.</li><li>Forshadowing.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had a larger team this year,</li><li>We had a Design/UX specialist, so the UX was better.</li><li>Forshadowing.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

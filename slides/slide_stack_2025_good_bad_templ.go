@@ -82,7 +82,7 @@ func stack2025GoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Speeeed</li><li><strong>Good:</strong> Just write the dam SQL.</li><li><strong>Bad:</strong> templ immaturity showed up as tooling/workflow/styling css pain. </li><li>Datastar was evolving, but it didn’t significantly hamper development for us.</li><li><strong>Catastrophic:</strong> Replication failed under real traffic; </li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Speeeed</li><li><strong>Good:</strong> Just write the dam SQL.</li><li><strong>Bad:</strong> templ immature.</li><li>Datastar was evolving, but it didn’t significantly hamper development for us.</li><li><strong>Catastrophic:</strong> Replication failed under real traffic; </li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -80,7 +80,7 @@ func stack2024GoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li><strong>Good:</strong> Server Components were exciting and powerful — we learned a lot.</li><li><strong>Good:</strong> Firebase is fast and capable when used correctly, and we had prior experience with it.</li><li><strong>Bad:</strong> Local development was painful.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Lest start at the top.</li><li>We really liked Server Components.</li><li>We liked Firebase a lot too.</li><li><strong>Bad:</strong> Local development was painful.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
