@@ -78,7 +78,7 @@ func build2025ServerExplosionPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Once we saw actual traffic (not even dozens of concurrent users), it started falling apart.</li><li>Replication failed because the Litestream VFS package was immature. We lost data.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Once we saw actual traffic, it started falling apart.</li><li>Replication failed because the Litestream VFS package was immature. We lost data.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
