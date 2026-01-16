@@ -78,7 +78,7 @@ func build2025HowWeChoseTheStackPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We spent real time on this; it wasn’t random.</li><li>SQL was deliberate: we wanted structure and to feel the difference from Firestore/NoSQL.</li><li>We like the .jsx/.tsx experience (UI + logic close together), so we tried to get that with Go templ.</li><li>HTMX was the initial plan; Datastar was the “even simpler” suggestion.</li><li>SQLite and NATS were recommended by Datastar folks, so we followed that path.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We spent real time on this; it wasn’t random.</li><li>We wanted SQL since we had done NoSQL in 2024.</li><li>We like the .jsx/.tsx experience.</li><li>We found templ</li><li>SQLite and NATS were recommended by Datastar folks, so we followed that path.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -78,7 +78,7 @@ func build2025PhilosophyPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had heard a lot about HTMX, and how good Html css had gotten.</li><li>We originally planned HTMX + Go.</li><li>One of us had HTMX experience and suggested something even simpler — that led us to Datastar.</li><li>Reactivity being a first-class feature was a big “yes!” moment for us.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We had heard a lot about HTMX.</li><li>How good Html css had gotten.</li><li>One of us had HTMX experience and suggested something even simpler.</li><li>Modern realtime.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
