@@ -77,7 +77,7 @@ func languageJSTSWinsPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>JSX/TSX is excellent. High clocality and cohesion </li><li>Prop drilling in Go doesn't hide dependencies; it makes them explicit.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>JS/TS has wins.</li><li>JSX/TSX is excellent. High clocality and cohesion </li><li>Funny paradox about prop drilling:</li><li>In React, prop drilling is consederd painful.</li><li>Prop drilling in Go doesn't hide dependencies; it makes them explicit.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

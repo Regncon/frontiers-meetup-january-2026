@@ -42,7 +42,7 @@ func ComplexityEssentialVsAccidental(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Complexity</h1><ul style=\"margin-top: 2rem;\"><li><strong>Essential:</strong> complexity we can’t avoid (the domain / the problem)</li><li><strong>Accidental:</strong> complexity we create (stack, architecture, abstractions)</li><li><strong>Bad:</strong> it’s hard to feel the cost early</li><li><strong>Ugly:</strong> it shows up later as slower development, higher cost, and faster “time to spaghetti”</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Complexity</h1><ul style=\"margin-top: 2rem;\"><li><strong>Essential:</strong> complexity we can’t avoid (the domain / the problem)</li><li><strong>Accidental:</strong> complexity we create (stack, architecture, abstractions)</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -77,7 +77,7 @@ func complexityEssentialVsAccidentalPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Essential complexity is the festival workflow: events, puljer, interest selection, admin work, allocation.</li><li>Accidental complexity is everything we chose: framework patterns, abstractions, glue, and “magic”.</li><li>The scary part: accidental complexity often feels productive at first.</li><li>Then it quietly taxes everything: speed of development, maintenance, onboarding, and debugging.</li><li>“Time to spaghetti” is real — complexity compounds.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Essential complexity is the prolem you are trying to solve.</li><li>Accidental complexity is everything we add on top.</li><li>Abstractons, dependenies, obfuscation layers</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

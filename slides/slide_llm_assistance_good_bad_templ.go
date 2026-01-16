@@ -80,7 +80,7 @@ func llmAssistanceGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We can’t have a presentation in 2026 without talking about AI.</li><li>Templ is newer and evolving — LLM support was not great</li><li>React has strong LLM support; LLMs generate React code well.</li><li>That also bad, it's easy to vibe code messy unmaintainable code quickly.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We can’t have a presentation in 2026 without talking about AI.</li><li>Templ llm support is terrible</li><li>React llm support is great</li><li>Good lle support leeds to vibe coding</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

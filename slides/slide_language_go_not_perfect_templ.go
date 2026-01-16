@@ -92,7 +92,7 @@ func languageGoNotPerfectPresenterNotes() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Emphasize: no language is perfect.</li><li>There is probably more to say here.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>Emphasize: no language is perfect.</li><li>Capital letter exports</li><li>There is probably more to say here.</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

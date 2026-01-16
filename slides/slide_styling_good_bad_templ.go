@@ -41,7 +41,7 @@ func StylingGoodBad(isPresenter bool) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Styling</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> We wanted to keep styling close to the UI code (JSX/TSX-style locality)</li><li><strong>Good:</strong> MUI as a component library was great for our use case</li><li><strong>Bad:</strong> Templ styling was one of the biggest pain points we faced in 2025</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"slide\"><h1>Styling</h1><ul style=\"margin-top: 2rem;\"><li><strong>Good:</strong> We wanted to keep styling close to the UI code (JSX/TSX-style locality)</li><li><strong>Good:</strong> MUI as a component library was great for our use case</li><li><strong>Bad:</strong> Templ styling was one of the biggest pain points we faced in 2025</li><li><strong>Good:</strong> Native CSS is amazing</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,7 +76,7 @@ func stylingGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li><strong>Good:</strong> Locality is the theme: we want styles next to what they style.</li><li><strong>Good:</strong> MUI helped us move fast with consistent UI without bikeshedding CSS.</li><li><strong>Bad:</strong> templ pain wasn’t “CSS is hard” — it was workflow pain (we’ll cover details later).</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Another big win with React</li><li><strong>Good:</strong> Locality </li><li><strong>Good:</strong> MUI was great.</li><li>Templ was terrible for styling.</li><li>Native CSS is amazing</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
