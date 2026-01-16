@@ -422,7 +422,7 @@ func nextJSSrcTreePresenterNotes() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul><li>This is a static snapshot of the Next.js project’s <strong>src/</strong> folder.</li><li>The point isn’t “many files is bad” — it’s the feeling of deep nesting and scattered logic.</li><li>We’ll contrast this with a flatter Go structure later.</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"presenter-notes\"><ul></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

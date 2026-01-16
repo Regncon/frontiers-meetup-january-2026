@@ -78,7 +78,7 @@ func structureGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Folder-based routing was super nice. Old school.</li><li>Page.tsx everywhere, finding files</li><li>Too many folders, deep nesting</li><li>Go is not opinionated about folders</li><li>Features at root level</li><li>Routers can get messy quick</li><li>Locality and cohesion achievable in both</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

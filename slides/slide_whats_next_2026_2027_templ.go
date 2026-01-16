@@ -78,7 +78,7 @@ func whatsNext2026_2027PresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>Complete the current stack and make it production ready</li><li>The deside what to try next</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>We will first finish the 2025 stack</li><li>The deside what to try next</li><li>Some ideas are Svelte + Supabase</li><li>Or a retro 90s RPG makeover on the current stack</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

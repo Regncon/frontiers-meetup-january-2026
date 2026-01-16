@@ -77,7 +77,7 @@ func toolingAndDXGoodBadPresenterNotes() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li><strong>Good:</strong> React/Next.js has a mature ecosystem: editor support, debugging, formatting, and smooth feedback loops.</li><li><strong>Bad:</strong> templ slowed us down because basic editor capabilities were hard to get stable (LSP, navigation, go-to-definition).</li><li><strong>Good:</strong> Go’s core tooling is excellent (formatting, builds, tests, standard workflows).</li></ul></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"presenter-notes\"><ul><li>React's tooling is amazing.</li><li>Templ's tooling is awful, LSP,</li><li><strong>Good:</strong> Go’s core tooling is excellent (formatting, builds, tests, standard workflows).</li></ul></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
