@@ -7,13 +7,11 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"github.com/Regncon/frontiers-meetup-january-2026/services"
-	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/starfederation/datastar-go/datastar"
 	"encoding/json"
 )
 
-func IncrementEmojiRoute(router chi.Router, ns *embeddednats.Server) {
-	ebs, _ := services.NewEmojiBalloonService(ns)
+func IncrementEmojiRoute(router chi.Router, ebs *services.EmojiBalloonService) {
 	
 	router.Get("/emoji/sse", func(w http.ResponseWriter, r *http.Request) {
 
@@ -37,7 +35,7 @@ func IncrementEmojiRoute(router chi.Router, ns *embeddednats.Server) {
 			case <- ctx.Done():
 				return
 			case <-watcher.Updates():
-
+				fmt.Println("emoji_counter.templ")
 				b, err := json.Marshal(ebs.Counter)
 
 				if err != nil {
