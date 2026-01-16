@@ -10,8 +10,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Regncon/frontiers-meetup-january-2026/handler"
 	"github.com/Regncon/frontiers-meetup-january-2026/pages"
 	root "github.com/Regncon/frontiers-meetup-january-2026/pages/root"
+	"github.com/Regncon/frontiers-meetup-january-2026/services"
 	"github.com/delaneyj/toolbelt"
 	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"
@@ -84,6 +86,7 @@ func main() {
 		}
 	})
 
+
 	rootCtx := context.Background()
 
 	ns, err := embeddednats.New(rootCtx, embeddednats.WithNATSServerOptions(&natsserver.Options{
@@ -93,6 +96,11 @@ func main() {
 	if err != nil {
 		panic(fmt.Sprintf("failed to start embedded nats server: %v", err))
 	}
+
+	ebs, _ := services.NewEmojiBalloonService(ns)
+	demoHandler, _ := handler.NewDemoHandler(ns, ebs)	
+	router.Get("/demo", demoHandler.DemoRoute)
+	router.Get("/demo/sse", demoHandler.DemoSSE)
 
 	nc, err := ns.Client()
 	if err != nil {
@@ -120,7 +128,7 @@ func main() {
 	// Keyed access: /<key>/...
 	router.Route("/{inviteKey}", func(inviteRouter chi.Router) {
 		inviteRouter.Use(inviteKeyMiddleware(sessionStore, localKey, remoteKey, logger))
-		root.RootLayoutRoute(inviteRouter, db, sessionStore, kv, logger, localKey, remoteKey, ns)
+		root.RootLayoutRoute(inviteRouter, db, sessionStore, kv, logger, localKey, remoteKey, ns, ebs)
 	})
 
 	address := ":8080"

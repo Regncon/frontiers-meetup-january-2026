@@ -17,6 +17,7 @@ import (
 
 	"github.com/Regncon/frontiers-meetup-january-2026/components"
 	"github.com/Regncon/frontiers-meetup-january-2026/helpers"
+	"github.com/Regncon/frontiers-meetup-january-2026/services"
 	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/sessions"
@@ -35,6 +36,7 @@ func RootLayoutRoute(
 	localKey string,
 	remoteKey string,
 	ns *embeddednats.Server,
+	ebs *services.EmojiBalloonService,
 ) {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
@@ -121,7 +123,7 @@ func RootLayoutRoute(
 				}
 			})
 
-			IncrementEmojiRoute(rootApiRouter, ns)
+			IncrementEmojiRoute(rootApiRouter, ebs)
 			TopNavigationRoutes(db, rootApiRouter, kv)
 
 			// Poll feature routes (vote writes DB + broadcast update).
@@ -176,7 +178,7 @@ func rootPageFirstLoad(
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(dataInit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 144, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/root_index.templ`, Line: 146, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {

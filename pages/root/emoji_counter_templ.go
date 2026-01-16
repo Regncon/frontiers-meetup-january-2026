@@ -16,12 +16,10 @@ import (
 
 	"encoding/json"
 	"github.com/Regncon/frontiers-meetup-january-2026/services"
-	"github.com/delaneyj/toolbelt/embeddednats"
 	"github.com/starfederation/datastar-go/datastar"
 )
 
-func IncrementEmojiRoute(router chi.Router, ns *embeddednats.Server) {
-	ebs, _ := services.NewEmojiBalloonService(ns)
+func IncrementEmojiRoute(router chi.Router, ebs *services.EmojiBalloonService) {
 
 	router.Get("/emoji/sse", func(w http.ResponseWriter, r *http.Request) {
 
@@ -45,7 +43,7 @@ func IncrementEmojiRoute(router chi.Router, ns *embeddednats.Server) {
 			case <-ctx.Done():
 				return
 			case <-watcher.Updates():
-
+				fmt.Println("emoji_counter.templ")
 				b, err := json.Marshal(ebs.Counter)
 
 				if err != nil {
@@ -142,7 +140,7 @@ func EmojiVoteWidget(inviteKey string) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(emojiVoteSSEGetURL(inviteKey))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 111, Col: 43}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 109, Col: 43}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -155,7 +153,7 @@ func EmojiVoteWidget(inviteKey string) templ.Component {
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(emojiIncrementPostURL(inviteKey))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 112, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `pages/root/emoji_counter.templ`, Line: 110, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
